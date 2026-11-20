@@ -542,7 +542,8 @@ public final class ShowcaseScenes {
         Vec3 center = Vec3.atBottomCenterOf(origin);
         String[] items = {"void_anchor", "rift_tether", "gateway_compass", "shulker_satchel", "void_lens", "spire_key", "rift_key",
             "echo_tablet", "heart_of_stillness", "slumbering_egg", "bottled_tidewisp", "gale_upgrade_template", "still_upgrade_template",
-            "hover_upgrade_template", "tide_sigil", "under_sigil", "spire_sigil", "music_disc_unmade"};
+            "hover_upgrade_template", "spire_armor_trim_smithing_template", "drift_armor_trim_smithing_template",
+            "undersong_armor_trim_smithing_template", "tide_sigil", "under_sigil", "spire_sigil", "music_disc_unmade"};
         return Plan.at(Level.END, center.add(0, 3, -9), center.add(0, 3, 0)).decorate((s, plan) -> {
             ServerLevel l = c.end();
             buildStage(l, origin);
@@ -552,13 +553,13 @@ public final class ShowcaseScenes {
                     l.setBlockAndUpdate(origin.offset(dx, dy, 2), dy == 5 || Math.abs(dx) == 6 ? WFBlocks.STILLSTONE_BRICKS.get().defaultBlockState() : back);
                 }
             }
-            int perRow = 6;
+            int perRow = 7;
             for (int i = 0; i < items.length; i++) {
                 int col = i % perRow, rowI = i / perRow;
-                double x = center.x + (col - (perRow - 1) / 2.0) * 1.7;
+                double x = center.x - (col - (perRow - 1) / 2.0) * 1.7; // camera looks south: west is screen-right
                 double y = center.y + 4.1 - rowI * 1.45;
                 String cmd = String.format(java.util.Locale.ROOT,
-                    "summon minecraft:item_display %.2f %.2f %.2f {item:{id:\"worldsfall:%s\",count:1},item_display:\"gui\",Rotation:[180f,0f],"
+                    "summon minecraft:item_display %.2f %.2f %.2f {item:{id:\"worldsfall:%s\",count:1},item_display:\"gui\",Rotation:[0f,0f],"
                         + "brightness:{sky:15,block:15},transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],"
                         + "translation:[0f,0f,0f],scale:[1.25f,1.25f,0.1f]}}",
                     x, y, center.z + 1.45, items[i]);

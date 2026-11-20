@@ -27,7 +27,7 @@ document are recorded in [`docs/DECISIONS.md`](docs/DECISIONS.md).
 ## Installing
 
 1. Install NeoForge 26.3 for your launcher profile.
-2. Download `worldsfall-1.1.1.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
+2. Download `worldsfall-1.1.2.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
 3. Drop it into the profile's `mods/` folder and start the game.
 
 The mod adds its biomes to the vanilla End biome source and keeps the vanilla dragon fight, End Cities, Shulkers and
@@ -120,6 +120,7 @@ All art is produced by scripts so it can be rebuilt and reviewed:
 | Blockstates, models, loot, recipes, tags, worldgen, lang | `tools/gen/gen_all.sh` |
 | Armor trim patterns and material palettes | `python3 tools/gen/gen_trims.py <extracted 26.3 client assets/minecraft/textures>` |
 | Void Lens scope overlay | `python3 tools/gen/gen_lens_scope.py` |
+| Smithing template icons (trims and elytra upgrades) | `python3 tools/gen/gen_templates.py` |
 
 ### In-game visual capture
 
