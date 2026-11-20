@@ -1,0 +1,19 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:paletted_permutations",
+      "palette_key": "minecraft:trim_base",
+      "permutations": {
+        "worldsfall_lumen": "worldsfall:trim/lumen",
+        "worldsfall_still": "worldsfall:trim/still",
+        "worldsfall_frill": "worldsfall:trim/frill"
+      },
+      "textures": [
+        "minecraft:trims/items/helmet_trim",
+        "minecraft:trims/items/chestplate_trim",
+        "minecraft:trims/items/leggings_trim",
+        "minecraft:trims/items/boots_trim"
+      ]
+    }
+  ]
+}

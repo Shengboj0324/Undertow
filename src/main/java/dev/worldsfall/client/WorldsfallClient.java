@@ -43,6 +43,7 @@ public final class WorldsfallClient {
     public WorldsfallClient(IEventBus modBus, ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
         dev.worldsfall.client.showcase.ShowcaseDirector.init();
+        dev.worldsfall.client.showcase.MultiplayerProbe.init();
         modBus.addListener(WFLayers::register);
         modBus.addListener(WorldsfallClient::renderers);
         modBus.addListener(WorldsfallClient::playerLayers);

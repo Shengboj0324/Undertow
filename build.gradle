@@ -64,6 +64,20 @@ neoForge {
             programArguments.addAll '--width', '1920', '--height', '1080'
         }
 
+        // Dev clients for the multiplayer test (tools/mptest/mp_test.py): join localhost and report what they see
+        mpAlice {
+            client()
+            gameDirectory = project.file('run/mp_alice')
+            systemProperty 'worldsfall.mpprobe', project.file('build/mptest').getAbsolutePath()
+            programArguments.addAll '--username', 'Alice', '--quickPlayMultiplayer', 'localhost:25565', '--width', '1600', '--height', '900'
+        }
+        mpBob {
+            client()
+            gameDirectory = project.file('run/mp_bob')
+            systemProperty 'worldsfall.mpprobe', project.file('build/mptest').getAbsolutePath()
+            programArguments.addAll '--username', 'Bob', '--quickPlayMultiplayer', 'localhost:25565', '--width', '1600', '--height', '900'
+        }
+
         server {
             server()
             programArgument '--nogui'

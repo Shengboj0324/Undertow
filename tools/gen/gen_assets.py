@@ -50,6 +50,35 @@ def gen_equipment():
     for up in ("gale", "still", "hover"):
         write(os.path.join(ASSETS, f"equipment/elytra_{up}.json"), {"layers": {"wings": [{"texture": f"{NS}:elytra_{up}"}]}})
 
+# --------------------------------------------------------------------------- trim icons (§9.11)
+TRIM_MATERIALS = ("lumen", "still", "frill")
+ARMOR_SETS = ("leather", "chainmail", "copper", "iron", "golden", "diamond", "netherite")
+SLOTS = ("helmet", "chestplate", "leggings", "boots")
+
+def gen_trim_icons():
+    """Armor item icons show the mod's trim materials: the items atlas gains paletted variants of the vanilla trim
+    overlays, and every vanilla armor item definition gains a select case per material (copied from its quartz case)."""
+    write(os.path.join(os.path.dirname(ASSETS), "minecraft/atlases/items.json"), {"sources": [{
+        "type": "minecraft:paletted_permutations", "palette_key": "minecraft:trim_base",
+        "permutations": {f"{NS}_{m}": f"{NS}:trim/{m}" for m in TRIM_MATERIALS},
+        "textures": [f"minecraft:trims/items/{slot}_trim" for slot in SLOTS]}]})
+    items = [f"{a}_{slot}" for a in ARMOR_SETS for slot in SLOTS] + ["turtle_helmet"]
+    for item in items:
+        slot = next(sl for sl in SLOTS if item.endswith(sl))
+        d = vanilla_json(f"assets/minecraft/items/{item}.json")
+        cases = d["model"]["cases"]
+        template = next(c for c in cases if c["when"] == "minecraft:quartz")
+        quartz_model = vanilla_json(f"assets/minecraft/models/item/{item}_quartz_trim.json")
+        for m in TRIM_MATERIALS:
+            tex = json.loads(json.dumps(quartz_model["textures"]).replace(f"trims/items/{slot}_trim_quartz", f"trims/items/{slot}_trim_{NS}_{m}"))
+            write(f"{IM}/trim/{item}_{m}.json", {"parent": quartz_model["parent"], "textures": tex})
+            mid = f"{NS}:item/trim/{item}_{m}"
+            case = copy.deepcopy(template)
+            case["when"] = f"{NS}:{m}"
+            case["model"]["model"] = mid
+            cases.append(case)
+        write(os.path.join(os.path.dirname(ASSETS), f"minecraft/items/{item}.json"), d)
+
 # --------------------------------------------------------------------------- emissive helpers
 def cube_elements(tex_faces, frm=(0, 0, 0), to=(16, 16, 16), emission=0, cull=True):
     faces = {}
@@ -429,5 +458,5 @@ def gen_particles():
           {"sources": [{"type": "minecraft:directory", "source": "particle", "prefix": ""}]}) if False else None
 
 if __name__ == "__main__":
-    gen_blocks(); gen_items(); gen_particles(); gen_equipment()
+    gen_blocks(); gen_items(); gen_particles(); gen_equipment(); gen_trim_icons()
     print(f"assets written: {len(WRITTEN)}")

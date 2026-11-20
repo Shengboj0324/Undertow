@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.1
+
+- **Trimmed armor icons** now show the Lumen, Still and Frill materials: the items atlas gains paletted variants of the
+  vanilla trim overlays, and all 29 vanilla armor item definitions gain a case per material.
+- New operator command `/worldsfall wyrm shoulder <player>` puts a Hatchling Wyrm on a player's shoulder.
+- **Tested on a real production server**: NeoForge 26.3.0.113 installed with the official installer, the release jar in
+  `mods/`, and two clients joined over the network. `tools/mptest/mp_test.py` checks from the second client that the mod
+  channel, tide state, every trim, the elytra upgrade and its wing look, and the shoulder Wyrm all sync, takes screenshots
+  from both clients, and fails on any error in the server or client logs.
+- Showcase: the capture now waits for every screenshot read-back before exiting.
+
 ## 1.1.0
 
 New (closing the gaps left in 1.0.0 against the design document):

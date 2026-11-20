@@ -27,7 +27,7 @@ document are recorded in [`docs/DECISIONS.md`](docs/DECISIONS.md).
 ## Installing
 
 1. Install NeoForge 26.3 for your launcher profile.
-2. Download `worldsfall-1.1.0.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
+2. Download `worldsfall-1.1.1.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
 3. Drop it into the profile's `mods/` folder and start the game.
 
 The mod adds its biomes to the vanilla End biome source and keeps the vanilla dragon fight, End Cities, Shulkers and
@@ -71,7 +71,7 @@ All captured in-game by the automated showcase run (default settings, no shader 
 ## Commands (operators)
 
 `/worldsfall tide get|set <low|rising|high|falling>|pause|resume` · `/worldsfall sundering status|trigger` ·
-`/worldsfall gravity debug` · `/worldsfall wyrm stage <player> <stage>` · `/worldsfall boss reset` ·
+`/worldsfall gravity debug` · `/worldsfall wyrm stage <player> <stage>` · `/worldsfall wyrm shoulder <player>` · `/worldsfall boss reset` ·
 `/worldsfall locate <structure>`
 
 ## Configuration
@@ -94,6 +94,18 @@ The jar is written to `build/libs/`. Compilation runs with `-Xlint:all -Werror`.
 ./gradlew test --no-configuration-cache                 # JUnit (tide maths, region rules)
 ./gradlew runGameTestServer --no-configuration-cache    # 23 in-world GameTests, exits non-zero on failure
 ```
+
+### Multiplayer test
+
+`tools/mptest/mp_test.py <server dir> <jar>` starts a production NeoForge server (installed with the official installer,
+EULA accepted) running the built jar, joins it with two dev clients (`runMpAlice`, `runMpBob`), stages trimmed armor, an
+upgraded elytra and a shoulder Wyrm on Alice in the End, and checks from Bob's client that everything synced (mod channel,
+tide state, trims, elytra upgrade and wing look, shoulder Wyrm). It takes screenshots from both clients and fails on any
+error or exception in the server or client logs.
+
+| | |
+|---|---|
+| ![Alice seen from Bob's client](docs/images/mp_Bob_front.jpg) Alice as Bob's client sees her on the production server: trims and a shoulder Wyrm | ![Alice's Gale wings](docs/images/mp_Bob_back.jpg) Her Gale elytra wings from behind |
 
 ### Asset pipeline
 

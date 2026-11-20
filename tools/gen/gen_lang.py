@@ -88,6 +88,8 @@ ADV = {
  "warm_hands": ("Warm Hands", "Hatch the Dragon Egg"), "fully_grown": ("Fully Grown", "Raise a Drake"),
 }
 MESSAGES = {
+ "command.worldsfall.wyrm.shoulder": "A Hatchling Wyrm settles on %s's shoulder.",
+ "command.worldsfall.wyrm.shoulder_failed": "No free shoulder (stand on the ground, not riding or swimming).",
  "hud.worldsfall.void_lens.wreck": "Driftwreck · %s m",
  "hud.worldsfall.void_lens.tide": "Tide · Y %s %s",
  "message.worldsfall.vault.sealed": "Sealed. Something here was taken apart.",

@@ -474,7 +474,18 @@ public final class ShowcaseScenes {
                 l.setBlockAndUpdate(o.offset(x, y, -3), WFBlocks.STILLGLASS.get().defaultBlockState());
             }
         }
-        return new Vec3[] {center.add(-0.9, 1.75, 4.6), center.add(-0.6, 1.1, -0.4)};
+        // a shelf of trimmed armor icons (the item models carry the mod's trim materials too)
+        String[][] icons = {{"iron_chestplate", "lumen", "spire"}, {"netherite_helmet", "still", "drift"}, {"diamond_leggings", "frill", "undersong"},
+            {"leather_chestplate", "lumen", "drift"}, {"golden_boots", "frill", "spire"}, {"chainmail_chestplate", "still", "undersong"}};
+        for (int i = 0; i < icons.length; i++) {
+            String cmd = String.format(java.util.Locale.ROOT,
+                "summon minecraft:item_display %.2f %.2f %.2f {item:{id:\"minecraft:%s\",count:1,components:{\"minecraft:trim\":{material:\"worldsfall:%s\","
+                    + "pattern:\"worldsfall:%s\"}}},item_display:\"gui\",Rotation:[0f,0f],brightness:{sky:15,block:15},"
+                    + "transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[0.9f,0.9f,0.1f]}}",
+                center.x - 2.6 + i * 1.04, center.y + 3.1, center.z - 2.4, icons[i][0], icons[i][1], icons[i][2]);
+            l.getServer().getCommands().performPrefixedCommand(l.getServer().createCommandSourceStack().withLevel(l).withSuppressedOutput(), cmd);
+        }
+        return new Vec3[] {center.add(-0.9, 1.9, 4.9), center.add(-0.6, 1.5, -0.4)};
     }
 
     private static void buildStage(ServerLevel l, BlockPos o) {

@@ -161,6 +161,8 @@
   "command.worldsfall.sundering.status": "Sundering done: %s, Descent: %s, Rift: %s",
   "command.worldsfall.tide.bad_phase": "Unknown tide phase: %s",
   "command.worldsfall.tide.get": "Tide %s at Y %s, next phase in %s s (paused: %s)",
+  "command.worldsfall.wyrm.shoulder": "A Hatchling Wyrm settles on %s's shoulder.",
+  "command.worldsfall.wyrm.shoulder_failed": "No free shoulder (stand on the ground, not riding or swimming).",
   "command.worldsfall.wyrm.stage": "Set %s Wyrm(s) to %s",
   "container.worldsfall.shulker_satchel": "Shulker Satchel",
   "death.attack.worldsfall.lurker_snare": "%1$s was snared by %2$s",

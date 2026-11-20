@@ -52,7 +52,8 @@ public final class WFCommands {
             .then(Commands.literal("wyrm").then(Commands.literal("stage").then(Commands.argument("player", EntityArgument.player())
                 .then(Commands.argument("stage", StringArgumentType.word())
                     .suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Wyrm.Stage.values()).map(s -> s.name().toLowerCase(Locale.ROOT)), b))
-                    .executes(WFCommands::wyrmStage)))))
+                    .executes(WFCommands::wyrmStage))))
+                .then(Commands.literal("shoulder").then(Commands.argument("player", EntityArgument.player()).executes(WFCommands::wyrmShoulder))))
             .then(Commands.literal("boss").then(Commands.literal("reset").executes(WFCommands::bossReset)))
             .then(Commands.literal("locate").then(Commands.argument("structure", StringArgumentType.word())
                 .suggests((c, b) -> SharedSuggestionProvider.suggest(new String[] {"fallen_spire", "hoard", "driftwreck", "skate_roost",
@@ -148,6 +149,27 @@ public final class WFCommands {
         final int count = n;
         c.getSource().sendSuccess(() -> Component.translatable("command.worldsfall.wyrm.stage", count, stage.name()), true);
         return n;
+    }
+
+    /** Puts a new Hatchling Wyrm, owned by the player, straight onto their shoulder (testing §10.3 shoulder riding). */
+    private static int wyrmShoulder(CommandContext<CommandSourceStack> c) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer player = EntityArgument.getPlayer(c, "player");
+        Wyrm w = dev.worldsfall.registry.WFEntities.WYRM.get().create(player.level(), net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+        if (w == null) {
+            return 0;
+        }
+        w.snapTo(player.getX(), player.getY(), player.getZ(), player.getYRot(), 0f);
+        w.tame(player);
+        player.level().addFreshEntity(w);
+        boolean ok = w.setEntityOnShoulder(player);
+        if (!ok) {
+            w.discard();
+            c.getSource().sendFailure(Component.translatable("command.worldsfall.wyrm.shoulder_failed"));
+            return 0;
+        }
+        dev.worldsfall.world.WFEvents.syncShoulders(player);
+        c.getSource().sendSuccess(() -> Component.translatable("command.worldsfall.wyrm.shoulder", player.getDisplayName()), true);
+        return 1;
     }
 
     private static int bossReset(CommandContext<CommandSourceStack> c) {

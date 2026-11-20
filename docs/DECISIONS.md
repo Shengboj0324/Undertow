@@ -59,10 +59,10 @@ left room or where the platform forced a different route. Section numbers refer 
   `minecraft:equippable` component to `worldsfall:elytra_<upgrade>`, so the vanilla wings layer draws the upgrade texture;
   no renderer replacement is needed and other elytra mods keep working.
 - **Armor trims use 26.3's paletted trim textures.** Patterns are greyscale in the vanilla `trim_base` ramp with a `palette`
-  `.mcmeta`, and the three materials ship 8-colour palettes. Worn armor shows every pattern/material combination. The
-  *item icons* of vanilla armor only list vanilla materials in their item model definitions; the mod does not override
-  vanilla item model files (that would conflict with other trim mods), so a trimmed armor icon shows the untrimmed icon
-  for the mod's three materials.
+  `.mcmeta`, and the three materials ship 8-colour palettes. For item icons the mod adds a `paletted_permutations` source
+  to the items atlas (`worldsfall_lumen/still/frill` variants of the vanilla trim overlays) and ships its own copies of the
+  29 vanilla armor item definitions with a select case per material. Replacing those vanilla files is deliberate: this mod
+  is not meant to be combined with other trim mods, whose own copies would override or be overridden by these.
 - **Void Lens** outlines Echoes and hidden Lurkers with the vanilla entity-outline pass (teal), and draws Driftwreck boxes
   and the tide line as a HUD layer projected with the frame's camera matrices. Driftwrecks come from the server (loaded
   chunks within 128 blocks, refreshed once a second while scoped), so the client never needs structure data.
