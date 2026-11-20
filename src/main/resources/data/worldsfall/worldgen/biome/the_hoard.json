@@ -9,6 +9,7 @@
     },
     "minecraft:visual/fog_color": "#1A2420",
     "minecraft:visual/sky_color": "#2B3A33",
+    "minecraft:visual/ambient_light_color": "#5a5450",
     "neoforge:custom_skybox": "worldsfall:end_sky",
     "minecraft:gameplay/natural_mob_spawns": {
       "argument": {

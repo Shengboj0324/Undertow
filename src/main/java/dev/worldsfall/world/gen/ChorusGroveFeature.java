@@ -31,32 +31,39 @@ public record ChorusGroveFeature() implements Feature {
         if (ground == null || GenUtil.halfWidth(level, ground, 8) < 6) {
             return false;
         }
-        int plants = 4 + random.nextInt(6);
+        int plants = 3 + random.nextInt(4);
         int placed = 0;
         for (int i = 0; i < plants * 3 && placed < plants; i++) {
             int dx = random.nextInt(11) - 5, dz = random.nextInt(11) - 5;
             BlockPos g = GenUtil.surface(level, ground.getX() + dx, ground.getZ() + dz);
-            if (g == null || !level.getBlockState(g.above()).isAir()) {
+            if (g == null || !GenUtil.get(level, g.above()).isAir()) {
                 continue;
             }
-            level.setBlock(g, WFBlocks.PALE_LOAM.get().defaultBlockState(), 2);
+            GenUtil.set(level, g, WFBlocks.PALE_LOAM.get().defaultBlockState(), 2);
             ChorusFlowerBlock.generatePlant(level, g.above(), random, 8);
             placed++;
         }
         if (placed == 0) {
             return false;
         }
+        // §4.1: grove tips glow a soft lavender -- an invisible light source above each chorus flower
+        BlockState glow = Blocks.LIGHT.defaultBlockState().setValue(net.minecraft.world.level.block.LightBlock.LEVEL, 7);
+        for (BlockPos p : BlockPos.betweenClosed(ground.offset(-7, 1, -7), ground.offset(7, 20, 7))) {
+            if (GenUtil.get(level, p).is(Blocks.CHORUS_FLOWER) && GenUtil.get(level, p.above()).isAir()) {
+                GenUtil.set(level, p.above().immutable(), glow, 2);
+            }
+        }
         // hang pods on the side of chorus stems
         int pods = 0;
         for (BlockPos p : BlockPos.betweenClosed(ground.offset(-7, 1, -7), ground.offset(7, 14, 7))) {
-            if (!level.getBlockState(p).is(Blocks.CHORUS_PLANT) || random.nextInt(3) != 0) {
+            if (!GenUtil.get(level, p).is(Blocks.CHORUS_PLANT) || random.nextInt(3) != 0) {
                 continue;
             }
             for (Direction d : Direction.Plane.HORIZONTAL) {
                 BlockPos podPos = p.relative(d);
-                if (level.getBlockState(podPos).isAir() && random.nextInt(3) == 0 && pods < 14) {
+                if (GenUtil.get(level, podPos).isAir() && random.nextInt(3) == 0 && pods < 14) {
                     int age = random.nextInt(10) < 6 ? ChorusPodBlock.RIPE : random.nextInt(2);
-                    level.setBlock(podPos, WFBlocks.CHORUS_POD.get().defaultBlockState().setValue(ChorusPodBlock.FACING, d.getOpposite())
+                    GenUtil.set(level, podPos, WFBlocks.CHORUS_POD.get().defaultBlockState().setValue(ChorusPodBlock.FACING, d.getOpposite())
                         .setValue(ChorusPodBlock.AGE, age), 2);
                     pods++;
                     break;
@@ -67,11 +74,11 @@ public record ChorusGroveFeature() implements Feature {
         BlockState tuft = WFBlocks.LILAC_TUFT.get().defaultBlockState();
         for (int i = 0; i < 26; i++) {
             BlockPos g = GenUtil.surface(level, ground.getX() + random.nextInt(13) - 6, ground.getZ() + random.nextInt(13) - 6);
-            if (g != null && level.getBlockState(g.above()).isAir()) {
+            if (g != null && GenUtil.get(level, g.above()).isAir()) {
                 if (random.nextInt(3) != 0) {
-                    level.setBlock(g, WFBlocks.PALE_LOAM.get().defaultBlockState(), 2);
+                    GenUtil.set(level, g, WFBlocks.PALE_LOAM.get().defaultBlockState(), 2);
                 }
-                level.setBlock(g.above(), tuft, 2);
+                GenUtil.set(level, g.above(), tuft, 2);
             }
         }
         BlockPos drift = GenUtil.surface(level, ground.getX() + random.nextInt(7) - 3, ground.getZ() + random.nextInt(7) - 3);
@@ -79,8 +86,8 @@ public record ChorusGroveFeature() implements Feature {
             int n = 3 + random.nextInt(6);
             for (int i = 0; i < n; i++) {
                 BlockPos g = GenUtil.surface(level, drift.getX() + random.nextInt(3) - 1, drift.getZ() + random.nextInt(3) - 1);
-                if (g != null && (level.getBlockState(g.above()).isAir() || level.getBlockState(g.above()).is(WFBlocks.LILAC_TUFT.get()))) {
-                    level.setBlock(g.above(), WFBlocks.CHORUS_POD.get().defaultBlockState().setValue(ChorusPodBlock.FALLEN, true)
+                if (g != null && (GenUtil.get(level, g.above()).isAir() || GenUtil.get(level, g.above()).is(WFBlocks.LILAC_TUFT.get()))) {
+                    GenUtil.set(level, g.above(), WFBlocks.CHORUS_POD.get().defaultBlockState().setValue(ChorusPodBlock.FALLEN, true)
                         .setValue(ChorusPodBlock.AGE, ChorusPodBlock.RIPE).setValue(ChorusPodBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random)), 2);
                 }
             }

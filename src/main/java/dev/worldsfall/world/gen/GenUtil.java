@@ -11,6 +11,25 @@ import net.minecraft.world.level.levelgen.Heightmap;
 final class GenUtil {
     private GenUtil() {}
 
+    /** True when {@code pos} is inside the 3x3-chunk write window of the chunk being decorated. */
+    static boolean inBounds(WorldGenLevel level, BlockPos pos) {
+        if (level instanceof net.minecraft.server.level.WorldGenRegion region) {
+            net.minecraft.world.level.ChunkPos c = region.getCenter();
+            return Math.abs((pos.getX() >> 4) - c.x()) <= 1 && Math.abs((pos.getZ() >> 4) - c.z()) <= 1;
+        }
+        return true;
+    }
+
+    /** Bounds-checked read: outside the write window the world is treated as void. */
+    static BlockState get(WorldGenLevel level, BlockPos pos) {
+        return inBounds(level, pos) ? level.getBlockState(pos) : Blocks.VOID_AIR.defaultBlockState();
+    }
+
+    /** Bounds-checked write; silently clips features at the edge of the write window. */
+    static boolean set(WorldGenLevel level, BlockPos pos, BlockState state, int flags) {
+        return inBounds(level, pos) && level.setBlock(pos, state, flags);
+    }
+
     static boolean isGround(BlockState s) {
         return s.is(Blocks.END_STONE) || s.is(dev.worldsfall.registry.WFBlocks.PALE_LOAM.get())
             || s.is(dev.worldsfall.registry.WFBlocks.STILLSTONE.get()) || s.is(dev.worldsfall.registry.WFBlocks.DRIFTSTONE.get());
@@ -18,12 +37,15 @@ final class GenUtil {
 
     /** Top solid ground block at x/z, or null. */
     static BlockPos surface(WorldGenLevel level, int x, int z) {
+        if (!inBounds(level, new BlockPos(x, 0, z))) {
+            return null;
+        }
         int y = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) - 1;
         if (y <= level.getMinY()) {
             return null;
         }
         BlockPos p = new BlockPos(x, y, z);
-        return isGround(level.getBlockState(p)) ? p : null;
+        return isGround(get(level, p)) ? p : null;
     }
 
     /** Distance along a direction until the island edge (no ground), capped. */
@@ -50,9 +72,9 @@ final class GenUtil {
     static BlockPos islandBottom(WorldGenLevel level, int x, int z, int minThickness) {
         for (int y = 8; y < 64; y++) {
             BlockPos p = new BlockPos(x, y, z);
-            if (!level.getBlockState(p).isAir() && level.getBlockState(p.below()).isAir()) {
+            if (!get(level, p).isAir() && get(level, p.below()).isAir()) {
                 for (int k = 1; k < minThickness; k++) {
-                    if (level.getBlockState(p.above(k)).isAir()) {
+                    if (get(level, p.above(k)).isAir()) {
                         return null;
                     }
                 }

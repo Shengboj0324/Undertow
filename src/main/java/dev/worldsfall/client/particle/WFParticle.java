@@ -75,7 +75,7 @@ public final class WFParticle extends SimpleAnimatedParticle {
         reg(e, WFParticles.SKATE_WAKE.get(), new Behaviour(0f, 0f, 0.01f, 26, 10, 0.75f, true, 0, false));
         reg(e, WFParticles.TIDE_CREST.get(), new Behaviour(-0.001f, 0.004f, 0.02f, 24, 12, 0.6f, true, 0, false));
         reg(e, WFParticles.EROSION_STATIC.get(), new Behaviour(0f, 0f, 0.05f, 6, 6, 0.6f, true, 0, false));
-        reg(e, WFParticles.ASH_INFLOW.get(), new Behaviour(-0.0005f, 0.004f, 0.02f, 140, 60, 0.7f, false, 0.0008f, true));
+        reg(e, WFParticles.ASH_INFLOW.get(), new Behaviour(-0.0005f, 0.004f, 0.02f, 140, 60, 0.32f, false, 0.0008f, true));
         reg(e, WFParticles.SHARD_SPARK.get(), new Behaviour(0.01f, 0.02f, 0.06f, 18, 10, 0.6f, true, 0, false));
         reg(e, WFParticles.TIDEWISP_TRAIL.get(), new Behaviour(0f, 0.002f, 0.004f, 20, 10, 0.5f, true, 0, false));
         reg(e, WFParticles.SHELL_FRAGMENT.get(), new Behaviour(0.04f, 0.08f, 0.2f, 40, 20, 0.9f, false, 0, false));

@@ -53,18 +53,48 @@ void main() {
     vec3 starCol = mix(vec3(0.80, 0.94, 0.99), vec3(1.0), wf_hash13(floor(d * 120.0)));
     col += starCol * s * starFade * (1.0 - glow * 0.35);
 
-    // 4. distant debris silhouettes: a faint ring of blocky island shapes near the horizon
+    // 4. distant islands: hazy floating masses ringing the horizon -- flat chorus-bumped tops, tapering
+    //    rocky undersides, a rim of nebula light on top and atmospheric fade with distance
     float az = atan(d.z, d.x);
-    float stepAz = floor(az * 38.0) / 38.0;
-    float islandTop = 0.035 + 0.11 * pow(wf_hash13(vec3(stepAz * 17.0, 3.0, 1.0)), 3.0);
-    float islandOn = step(0.58, wf_hash13(vec3(floor(az * 9.0), 7.0, 2.0)));
-    float sil = islandOn * (step(h, islandTop) * step(-0.02, h));
-    col = mix(col, vec3(0.035, 0.022, 0.06), sil * 0.65);
+    const float CELLS = 16.0;
+    float cellF = (az + 3.14159265) / 6.2831853 * CELLS;
+    float cell = floor(cellF);
+    float aa = fwidth(h) * 1.5 + 0.0008;
+    for (int k = -1; k <= 1; k++) {
+        float ci = mod(cell + float(k), CELLS);
+        vec3 seed = vec3(ci, 5.0, 9.0);
+        if (wf_hash13(seed) < 0.38) continue;
+        float center = (ci + 0.2 + 0.6 * wf_hash13(seed + 1.0)) / CELLS * 6.2831853 - 3.14159265;
+        float halfW = (0.05 + 0.13 * wf_hash13(seed + 2.0)) * (6.2831853 / CELLS) * 2.2;
+        float dist = wf_hash13(seed + 3.0);               // 0 near .. 1 far
+        float elev = mix(0.10, -0.02, dist) + 0.05 * (wf_hash13(seed + 4.0) - 0.5);
+        float da = az - center;
+        da = da - 6.2831853 * floor((da + 3.14159265) / 6.2831853);
+        float x = da / halfW;
+        if (abs(x) > 1.0) continue;
+        float scale = halfW * mix(0.55, 0.35, dist);
+        float bumps = wf_fbm(vec3(x * 6.0, ci, 1.0), 3) * 0.10 + wf_fbm(vec3(x * 23.0, ci, 4.0), 2) * 0.04;
+        float top = elev + scale * (0.10 * (1.0 - x * x) + bumps);
+        float taper = pow(max(1.0 - abs(x), 0.0), 0.75);
+        float jag = 0.65 + 0.35 * wf_fbm(vec3(x * 14.0, ci, 7.0), 3);
+        float bottom = elev - scale * 0.95 * taper * jag;
+        float inside = smoothstep(bottom - aa, bottom + aa, h) * (1.0 - smoothstep(top - aa, top + aa, h))
+                     * smoothstep(1.0, 0.92, abs(x));
+        if (inside <= 0.0) continue;
+        vec3 rock = mix(vec3(0.030, 0.020, 0.058), horizon * 0.85, 0.25 + 0.55 * dist);
+        // underside picks up a faint teal bounce from the tide; top rim catches the nebula
+        float under = smoothstep(top, bottom, h);
+        rock += vec3(0.02, 0.09, 0.085) * under * tideGlow * 0.6;
+        float rim = 1.0 - smoothstep(0.0, scale * 0.035 + aa * 2.0, top - h);
+        rock += (tint * 0.25 + vec3(0.05, 0.03, 0.08)) * rim * (1.0 - dist * 0.5) * ColorModulator.a;
+        col = mix(col, rock, inside * mix(0.92, 0.55, dist));
+    }
 
     // 5. tide glow from below (teal), silver-blue once calmed by the Still Throne
     vec3 tideCol = mix(vec3(0.227, 0.878, 0.816), vec3(0.725, 0.827, 1.0), calmed);
     float below = smoothstep(0.05, -0.65, h);
-    col += tideCol * below * tideGlow * 0.35;
+    float band = smoothstep(0.035, -0.06, h) * smoothstep(-0.55, -0.08, h);
+    col += tideCol * (below * 0.22 + band * 0.20) * tideGlow;
     // Underside / Drift: teal haze rising from below
     col += vec3(0.04, 0.20, 0.19) * haze * smoothstep(0.3, -0.6, h) * 0.6;
 

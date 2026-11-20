@@ -65,23 +65,23 @@ public record StillwaterBasinFeature() implements Feature {
                     double edge = 1 - Math.min(1, edgeDistance(dx, dz, r) / 3.0);
                     int d = Math.max(1, (int) Math.round(depth - edge * (depth - 1)));
                     for (int y = surfaceY + 2; y > surfaceY - d; y--) {
-                        level.setBlock(new BlockPos(x, y, z), y <= surfaceY - 1 ? water : Blocks.AIR.defaultBlockState(), 2);
+                        GenUtil.set(level, new BlockPos(x, y, z), y <= surfaceY - 1 ? water : Blocks.AIR.defaultBlockState(), 2);
                     }
                     for (int y = surfaceY - d; y > surfaceY - d - 2; y--) {
-                        level.setBlock(new BlockPos(x, y, z), stillstone, 2);
+                        GenUtil.set(level, new BlockPos(x, y, z), stillstone, 2);
                     }
                 } else if (lip) {
                     BlockPos top = new BlockPos(x, surfaceY, z);
-                    level.setBlock(top, random.nextInt(3) == 0 ? stillstone : Blocks.END_STONE.defaultBlockState(), 2);
+                    GenUtil.set(level, top, random.nextInt(3) == 0 ? stillstone : Blocks.END_STONE.defaultBlockState(), 2);
                     for (int y = surfaceY - 1; y > surfaceY - depth - 1; y--) {
-                        level.setBlock(new BlockPos(x, y, z), stillstone, 2);
+                        GenUtil.set(level, new BlockPos(x, y, z), stillstone, 2);
                     }
                     if (random.nextInt(5) == 0) {
-                        level.setBlock(top.above(), random.nextInt(4) == 0 ? WFBlocks.RIMGLASS.get().defaultBlockState()
+                        GenUtil.set(level, top.above(), random.nextInt(4) == 0 ? WFBlocks.RIMGLASS.get().defaultBlockState()
                             : stillstone, 2);
                     }
-                    if (random.nextInt(6) == 0 && level.getBlockState(top.above()).isAir()) {
-                        level.setBlock(top.above(), WFBlocks.MIRROR_SHARD.get().defaultBlockState().setValue(AmethystClusterBlock.FACING, Direction.UP), 2);
+                    if (random.nextInt(6) == 0 && GenUtil.get(level, top.above()).isAir()) {
+                        GenUtil.set(level, top.above(), WFBlocks.MIRROR_SHARD.get().defaultBlockState().setValue(AmethystClusterBlock.FACING, Direction.UP), 2);
                     }
                 }
             }
@@ -91,7 +91,7 @@ public record StillwaterBasinFeature() implements Feature {
         for (int i = 0; i < relics; i++) {
             int dx = random.nextInt((int) r) - (int) (r / 2), dz = random.nextInt((int) r) - (int) (r / 2);
             if (inShape(dx, dz, r * 0.7)) {
-                level.setBlock(new BlockPos(center.getX() + dx, surfaceY - 1, center.getZ() + dz), RELICS[random.nextInt(RELICS.length)], 2);
+                GenUtil.set(level, new BlockPos(center.getX() + dx, surfaceY - 1, center.getZ() + dz), RELICS[random.nextInt(RELICS.length)], 2);
             }
         }
         // Spill point toward the nearest edge: a notch and a slow Stillfall
@@ -100,9 +100,9 @@ public record StillwaterBasinFeature() implements Feature {
         BlockPos.MutableBlockPos p = center.mutable();
         for (int i = (int) (r * 0.6); i <= ext + 1; i++) {
             p.set(center.relative(spill, i));
-            level.setBlock(p.atY(surfaceY), Blocks.AIR.defaultBlockState(), 2);
-            level.setBlock(p.atY(surfaceY - 1), i <= ext ? water : Blocks.AIR.defaultBlockState(), 2);
-            level.setBlock(p.atY(surfaceY - 2), stillstone, 2);
+            GenUtil.set(level, p.atY(surfaceY), Blocks.AIR.defaultBlockState(), 2);
+            GenUtil.set(level, p.atY(surfaceY - 1), i <= ext ? water : Blocks.AIR.defaultBlockState(), 2);
+            GenUtil.set(level, p.atY(surfaceY - 2), stillstone, 2);
             if (i <= ext) {
                 level.scheduleTick(p.atY(surfaceY - 1).immutable(), WFFluids.STILLWATER.get(), 1);
             }

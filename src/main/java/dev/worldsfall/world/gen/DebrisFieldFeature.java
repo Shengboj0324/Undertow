@@ -21,7 +21,7 @@ public record DebrisFieldFeature() implements Feature {
 
     @Override
     public boolean place(WorldGenLevel level, ChunkGenerator generator, RandomSource random, BlockPos origin) {
-        if (!level.getBlockState(origin).isAir()) {
+        if (!GenUtil.get(level, origin).isAir()) {
             return false;
         }
         boolean path = random.nextInt(4) == 0;
@@ -41,8 +41,8 @@ public record DebrisFieldFeature() implements Feature {
             int size = path ? 2 : (random.nextInt(6) == 0 ? 2 : 1);
             for (int dx = 0; dx < size; dx++) {
                 for (int dz = 0; dz < size; dz++) {
-                    if (level.getBlockState(p.offset(dx, 0, dz)).isAir()) {
-                        level.setBlock(p.offset(dx, 0, dz), st, 2);
+                    if (GenUtil.get(level, p.offset(dx, 0, dz)).isAir()) {
+                        GenUtil.set(level, p.offset(dx, 0, dz), st, 2);
                     }
                 }
             }

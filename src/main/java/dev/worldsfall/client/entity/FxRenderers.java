@@ -122,9 +122,9 @@ public final class FxRenderers {
             pose.translate(0, 2.0, 0);
             // core: white -> hot pink -> magenta, layered for bloom; calm white after the final blow
             int coreTint = finale ? ARGB.color(255, 255, 255, 255) : -1;
-            billboard(pose, c, camera.orientation, CORE, 2.1f + pulse * 0.15f, coreTint);
-            billboard(pose, c, camera.orientation, CORE, 4.4f + pulse * 0.4f, ARGB.color(reduced ? 70 : 120, 255, finale ? 255 : 120, finale ? 255 : 210));
-            billboard(pose, c, camera.orientation, CORE, 8.5f, ARGB.color(reduced ? 25 : 45, 255, finale ? 240 : 63, finale ? 255 : 180));
+            billboard(pose, c, camera.orientation, CORE, 3.0f + pulse * 0.25f, coreTint);
+            billboard(pose, c, camera.orientation, CORE, 6.5f + pulse * 0.6f, ARGB.color(reduced ? 70 : 120, 255, finale ? 255 : 120, finale ? 255 : 210));
+            billboard(pose, c, camera.orientation, CORE, 14f, ARGB.color(reduced ? 25 : 55, 255, finale ? 240 : 63, finale ? 255 : 180));
             if (s.hitFlash > 0) {
                 float k = s.hitFlash / 8f;
                 billboard(pose, c, camera.orientation, CORE, 3.0f + (1 - k) * 3f, ARGB.color((int) ((reduced ? 60 : 200) * k), 255, 255, 255));

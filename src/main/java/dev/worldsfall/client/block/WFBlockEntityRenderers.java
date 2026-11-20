@@ -209,24 +209,39 @@ public final class WFBlockEntityRenderers {
                 // the field edge: a faint teal sphere, only visible within 4 blocks of the boundary
                 pose.pushPose();
                 pose.translate(0.5, 0.5, 0.5);
-                int alpha = (int) (40 * s.shell);
                 float r = s.radius;
+                float t = s.time;
+                // smooth rim-lit sphere: opacity follows the view angle (bright where the shell is seen edge-on),
+                // with slow latitude ripples so the field reads as a living membrane, not a grid
+                Vec3 rel = new Vec3(s.blockPos.getX() + 0.5 - camera.pos.x, s.blockPos.getY() + 0.5 - camera.pos.y,
+                    s.blockPos.getZ() + 0.5 - camera.pos.z);
+                float shell = s.shell;
                 c.submitCustomGeometry(pose, RenderTypes.lightning(), (p, b) -> {
-                    int lat = 18, lon = 36;
+                    int lat = 32, lon = 64;
                     for (int i = 0; i < lat; i++) {
                         float t0 = Mth.PI * i / lat - Mth.HALF_PI, t1 = Mth.PI * (i + 1) / lat - Mth.HALF_PI;
                         for (int j = 0; j < lon; j++) {
                             float p0 = Mth.TWO_PI * j / lon, p1 = Mth.TWO_PI * (j + 1) / lon;
-                            int col = ARGB.color((j + i) % 3 == 0 ? alpha : alpha / 2, 120, 255, 240);
-                            b.addVertex(p, r * Mth.cos(t0) * Mth.cos(p0), r * Mth.sin(t0), r * Mth.cos(t0) * Mth.sin(p0)).setColor(col);
-                            b.addVertex(p, r * Mth.cos(t0) * Mth.cos(p1), r * Mth.sin(t0), r * Mth.cos(t0) * Mth.sin(p1)).setColor(col);
-                            b.addVertex(p, r * Mth.cos(t1) * Mth.cos(p1), r * Mth.sin(t1), r * Mth.cos(t1) * Mth.sin(p1)).setColor(col);
-                            b.addVertex(p, r * Mth.cos(t1) * Mth.cos(p0), r * Mth.sin(t1), r * Mth.cos(t1) * Mth.sin(p0)).setColor(col);
+                            shellVertex(p, b, r, t0, p0, rel, shell, t);
+                            shellVertex(p, b, r, t0, p1, rel, shell, t);
+                            shellVertex(p, b, r, t1, p1, rel, shell, t);
+                            shellVertex(p, b, r, t1, p0, rel, shell, t);
                         }
                     }
                 });
                 pose.popPose();
             }
+        }
+
+        private static void shellVertex(PoseStack.Pose p, VertexConsumer b, float r, float lat, float lon, Vec3 rel, float shell, float time) {
+            float nx = Mth.cos(lat) * Mth.cos(lon), ny = Mth.sin(lat), nz = Mth.cos(lat) * Mth.sin(lon);
+            double vx = rel.x + nx * r, vy = rel.y + ny * r, vz = rel.z + nz * r;
+            double len = Math.sqrt(vx * vx + vy * vy + vz * vz) + 1e-4;
+            float facing = (float) Math.abs((nx * vx + ny * vy + nz * vz) / len);
+            float rim = (float) Math.pow(1.0f - facing, 3.0);
+            float ripple = 0.75f + 0.25f * Mth.sin(lat * 9f + time * 0.06f);
+            int alpha = (int) Mth.clamp((10 + 150 * rim) * ripple * shell, 0, 255);
+            b.addVertex(p, r * nx, r * ny, r * nz).setColor(ARGB.color(alpha, 120, 255, 240));
         }
 
         static void cube(PoseStack.Pose p, VertexConsumer b, float h, int light) {

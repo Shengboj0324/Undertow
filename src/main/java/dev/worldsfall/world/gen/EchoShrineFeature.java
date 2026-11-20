@@ -27,7 +27,7 @@ public record EchoShrineFeature() implements Feature {
     @Override
     public boolean place(WorldGenLevel level, ChunkGenerator generator, RandomSource random, BlockPos origin) {
         for (BlockPos p : BlockPos.betweenClosed(origin.offset(-4, -4, -4), origin.offset(4, 5, 4))) {
-            if (!level.getBlockState(p).isAir()) {
+            if (!GenUtil.get(level, p).isAir()) {
                 return false;
             }
         }
@@ -36,20 +36,20 @@ public record EchoShrineFeature() implements Feature {
             for (int dx = -4; dx <= 4; dx++) {
                 for (int dz = -4; dz <= 4; dz++) {
                     if (dx * dx + dz * dz <= size * size) {
-                        level.setBlock(origin.offset(dx, y, dz), Blocks.END_STONE.defaultBlockState(), 2);
+                        GenUtil.set(level, origin.offset(dx, y, dz), Blocks.END_STONE.defaultBlockState(), 2);
                     }
                 }
             }
             size -= 0.9f + random.nextFloat() * 0.4f;
         }
-        level.setBlock(origin.above(), Blocks.PURPUR_PILLAR.defaultBlockState(), 2);
+        GenUtil.set(level, origin.above(), Blocks.PURPUR_PILLAR.defaultBlockState(), 2);
         BlockPos vault = origin.above(2);
-        level.setBlock(vault, WFBlocks.SPIRE_VAULT.get().defaultBlockState(), 2);
+        GenUtil.set(level, vault, WFBlocks.SPIRE_VAULT.get().defaultBlockState(), 2);
         if (level.getBlockEntity(vault) instanceof PerPlayerLootBlockEntity be) {
             be.configure(ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Worldsfall.MODID, "vault/echo_shrine")), false);
         }
-        level.setBlock(origin.offset(2, 1, 0), Blocks.END_STONE_BRICK_WALL.defaultBlockState(), 2);
-        level.setBlock(origin.offset(2, 2, 0), WFBlocks.SPIRE_LANTERN.get().defaultBlockState().setValue(LanternBlock.HANGING, false), 2);
+        GenUtil.set(level, origin.offset(2, 1, 0), Blocks.END_STONE_BRICK_WALL.defaultBlockState(), 2);
+        GenUtil.set(level, origin.offset(2, 2, 0), WFBlocks.SPIRE_LANTERN.get().defaultBlockState().setValue(LanternBlock.HANGING, false), 2);
         return true;
     }
 }

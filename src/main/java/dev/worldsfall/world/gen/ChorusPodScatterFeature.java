@@ -32,12 +32,12 @@ public record ChorusPodScatterFeature() implements Feature {
             }
             for (int y = 1; y < 10; y++) {
                 BlockPos p = new BlockPos(x, g.getY() + y, z);
-                if (!level.getBlockState(p).is(Blocks.CHORUS_PLANT)) {
+                if (!GenUtil.get(level, p).is(Blocks.CHORUS_PLANT)) {
                     continue;
                 }
                 Direction d = Direction.Plane.HORIZONTAL.getRandomDirection(random);
-                if (level.getBlockState(p.relative(d)).isAir()) {
-                    level.setBlock(p.relative(d), WFBlocks.CHORUS_POD.get().defaultBlockState().setValue(ChorusPodBlock.FACING, d.getOpposite())
+                if (GenUtil.get(level, p.relative(d)).isAir()) {
+                    GenUtil.set(level, p.relative(d), WFBlocks.CHORUS_POD.get().defaultBlockState().setValue(ChorusPodBlock.FACING, d.getOpposite())
                         .setValue(ChorusPodBlock.AGE, random.nextInt(3)), 2);
                     placed++;
                     break;

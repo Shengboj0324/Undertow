@@ -53,6 +53,16 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        // Dev-only automated visual capture (see ShowcaseDirector). Scene subset: -Pshowcase.scenes=a,b
+        showcase {
+            client()
+            gameDirectory = project.file('run/showcase')
+            systemProperty 'worldsfall.showcase', project.file('build/showcase').getAbsolutePath()
+            systemProperty 'worldsfall.showcase.scenes', (project.findProperty('showcase.scenes') ?: '').toString()
+            systemProperty 'worldsfall.showcase.video', (project.findProperty('showcase.video') ?: 'true').toString()
+            programArguments.addAll '--width', '1920', '--height', '1080'
+        }
+
         server {
             server()
             programArgument '--nogui'

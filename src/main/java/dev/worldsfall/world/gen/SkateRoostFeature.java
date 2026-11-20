@@ -31,7 +31,7 @@ public record SkateRoostFeature() implements Feature {
     @Override
     public boolean place(WorldGenLevel level, ChunkGenerator generator, RandomSource random, BlockPos origin) {
         for (BlockPos p : BlockPos.betweenClosed(origin.offset(-3, -6, -3), origin.offset(3, 20, 3))) {
-            if (!level.getBlockState(p).isAir()) {
+            if (!GenUtil.get(level, p).isAir()) {
                 return false;
             }
         }
@@ -41,7 +41,7 @@ public record SkateRoostFeature() implements Feature {
             for (int dx = -3; dx <= 3; dx++) {
                 for (int dz = -3; dz <= 3; dz++) {
                     if (dx * dx + dz * dz <= size * size) {
-                        level.setBlock(origin.offset(dx, y, dz), y == 0 ? Blocks.END_STONE.defaultBlockState() : WFBlocks.DRIFTSTONE.get().defaultBlockState(), 2);
+                        GenUtil.set(level, origin.offset(dx, y, dz), y == 0 ? Blocks.END_STONE.defaultBlockState() : WFBlocks.DRIFTSTONE.get().defaultBlockState(), 2);
                     }
                 }
             }
@@ -57,14 +57,14 @@ public record SkateRoostFeature() implements Feature {
             for (int dx = -w; dx <= w; dx++) {
                 for (int dz = -w; dz <= w; dz++) {
                     if (w == 0 || Math.abs(dx) + Math.abs(dz) <= 1) {
-                        level.setBlock(origin.offset(ox + dx, y, oz + dz), WFBlocks.DRIFTSTONE.get().defaultBlockState(), 2);
+                        GenUtil.set(level, origin.offset(ox + dx, y, oz + dz), WFBlocks.DRIFTSTONE.get().defaultBlockState(), 2);
                     }
                 }
             }
             if (y > 3 && y % 4 == 0) {
                 Direction d = Direction.Plane.HORIZONTAL.getRandomDirection(random);
-                level.setBlock(origin.offset(ox, y, oz).relative(d), WFBlocks.DRIFTSTONE.get().defaultBlockState(), 2);
-                level.setBlock(origin.offset(ox, y, oz).relative(d, 2), WFBlocks.FAMILIES.get("driftstone").get(0).get().defaultBlockState()
+                GenUtil.set(level, origin.offset(ox, y, oz).relative(d), WFBlocks.DRIFTSTONE.get().defaultBlockState(), 2);
+                GenUtil.set(level, origin.offset(ox, y, oz).relative(d, 2), WFBlocks.FAMILIES.get("driftstone").get(0).get().defaultBlockState()
                     .setValue(SlabBlock.TYPE, SlabType.BOTTOM), 2);
             }
         }
@@ -72,8 +72,8 @@ public record SkateRoostFeature() implements Feature {
         if (dist < 1000) {
             for (int i = 0; i < 5; i++) {
                 BlockPos g = origin.offset(random.nextInt(3) - 1, 1, random.nextInt(3) - 1);
-                if (level.getBlockState(g).isAir() && !level.getBlockState(g.below()).isAir()) {
-                    level.setBlock(g, WFBlocks.CHORUS_POD.get().defaultBlockState().setValue(ChorusPodBlock.FALLEN, true)
+                if (GenUtil.get(level, g).isAir() && !GenUtil.get(level, g.below()).isAir()) {
+                    GenUtil.set(level, g, WFBlocks.CHORUS_POD.get().defaultBlockState().setValue(ChorusPodBlock.FALLEN, true)
                         .setValue(ChorusPodBlock.AGE, ChorusPodBlock.RIPE), 2);
                 }
             }

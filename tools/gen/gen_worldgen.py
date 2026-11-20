@@ -30,8 +30,8 @@ def gen_features():
     for f in ("chorus_grove", "pale_loam_patch", "stillwater_basin", "underside_growth", "debris_field", "skate_roost", "wild_shulker_colony",
               "echo_shrine", "chorus_pod_scatter"):
         feature(f)
-    placed("chorus_grove", i("chorus_grove"), [count(2), SQUARE, heightmap(), BIOME])
-    placed("pale_loam_patch", i("pale_loam_patch"), [count(3), SQUARE, heightmap(), BIOME])
+    placed("chorus_grove", i("chorus_grove"), [rarity(4), SQUARE, heightmap(), BIOME])
+    placed("pale_loam_patch", i("pale_loam_patch"), [count(1), SQUARE, heightmap(), BIOME])
     placed("pale_loam_patch_sparse", i("pale_loam_patch"), [rarity(4), SQUARE, heightmap(), BIOME])
     placed("chorus_pod_scatter", i("chorus_pod_scatter"), [rarity(2), SQUARE, heightmap(), BIOME])
     placed("chorus_pod_scatter_dense", i("chorus_pod_scatter"), [count(1), SQUARE, heightmap(), BIOME])
@@ -48,12 +48,19 @@ def gen_features():
 def mob(t, w, lo, hi):
     return {"type": t, "count": {"type": "minecraft:uniform", "min_inclusive": lo, "max_inclusive": hi}, "weight": w}
 
+# Per-biome ambient light (entities and unlit blocks in the skylight-less End are lit by this alone, §18.2)
+AMBIENT = {
+    "chorus_reach": "#584a70", "stillwater_basins": "#404866", "fallen_spires": "#5a4668", "the_hoard": "#5a5450",
+    "the_underside": "#34505a", "the_drift": "#3e4a62", "fracture_ring": "#5a2638",
+}
+
 def biome(name, fog, sky_tint, particles, music, loop, additions, spawns, features, fog_end=None, extra=None):
     attrs = {
         "minecraft:audio/ambient_sounds": {"loop": i(f"ambient.{name}.loop"),
                                            "additions": {"sound": i(f"ambient.{name}.additions"), "tick_chance": 0.0111}},
         "minecraft:visual/fog_color": fog,
         "minecraft:visual/sky_color": sky_tint,
+        "minecraft:visual/ambient_light_color": AMBIENT.get(name, "#4e4868"),
         "neoforge:custom_skybox": i("end_sky") if name != "fracture_ring" else i("fracture_sky"),
     }
     if music:
@@ -81,7 +88,7 @@ def gen_biomes():
     ender = mob("minecraft:enderman", 10, 1, 4)
     biome("chorus_reach", "#3A2448", "#4B2A7A", [p("pollen_mote", 0.012)], i("music.pale_pasture"), None, None,
           {"creature": [mob(i("chorus_grazer"), 12, 3, 6)], "monster": [ender]},
-          common_end + [("vegetal_decoration", "minecraft:chorus_plant"), ("vegetal_decoration", i("pale_loam_patch")),
+          common_end + [("vegetal_decoration", i("pale_loam_patch")),
                         ("vegetal_decoration", i("chorus_grove")), ("top_layer_modification", i("chorus_pod_scatter_dense")),
                         ("underground_decoration", i("underside_growth_outer"))])
     biome("stillwater_basins", "#0B1024", "#21446B", [], i("music.hold_still"), None, None, {"monster": [ender]},
@@ -97,7 +104,7 @@ def gen_biomes():
     biome("the_drift", "#08121C", "#0B1A2A", [p("dust_fall", 0.002)], i("music.below_the_bottom"), None, None, {},
           [("raw_generation", "minecraft:end_island_decorated"), ("local_modifications", i("debris_field")),
            ("surface_structures", i("skate_roost")), ("surface_structures", i("echo_shrine"))])
-    biome("fracture_ring", "#1A0510", "#2A0812", [p("ash_inflow", 0.03)], None, None, None, {}, [])
+    biome("fracture_ring", "#1A0510", "#2A0812", [p("ash_inflow", 0.012)], None, None, None, {}, [])
 
 def gen_modifiers():
     mod = f"{D}/neoforge/biome_modifier"

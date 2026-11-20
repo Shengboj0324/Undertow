@@ -28,7 +28,7 @@ public record WildShulkerColonyFeature() implements Feature {
         int n = 2 + random.nextInt(3);
         for (int i = 0; i < n; i++) {
             BlockPos g = GenUtil.surface(level, ground.getX() + random.nextInt(7) - 3, ground.getZ() + random.nextInt(7) - 3);
-            if (g == null || !level.getBlockState(g.above()).isAir()) {
+            if (g == null || !GenUtil.get(level, g.above()).isAir()) {
                 continue;
             }
             WildShulker s = WFEntities.WILD_SHULKER.get().create(level.getLevel(), EntitySpawnReason.STRUCTURE);

@@ -42,9 +42,10 @@ public record UndersideGrowthFeature() implements Feature {
                 }
                 any = true;
                 // reshape the ceiling into Undershale with violet bands
-                for (int k = 0; k < 3; k++) {
-                    if (random.nextInt(3) != 0 && GenUtil.isGround(level.getBlockState(bottom.above(k)))) {
-                        level.setBlock(bottom.above(k), WFBlocks.UNDERSHALE.get().defaultBlockState(), 2);
+                int depth = 1 + (EndRegions.valueNoise(x / 5.0, z / 5.0, 41) > -0.2 ? 2 : 0);
+                for (int k = 0; k < depth; k++) {
+                    if (GenUtil.isGround(GenUtil.get(level, bottom.above(k)))) {
+                        GenUtil.set(level, bottom.above(k), WFBlocks.UNDERSHALE.get().defaultBlockState(), 2);
                     }
                 }
                 BlockPos hang = bottom.below();
@@ -60,11 +61,11 @@ public record UndersideGrowthFeature() implements Feature {
                 } else if (roll < 120) {
                     hangColumn(level, hang, WFBlocks.VOIDROOT.get().defaultBlockState(), 3 + random.nextInt(10));
                 } else if (roll < 145) {
-                    level.setBlock(hang, WFBlocks.GLOWBULB_BLOCK.get().defaultBlockState(), 2);
+                    GenUtil.set(level, hang, WFBlocks.GLOWBULB_BLOCK.get().defaultBlockState(), 2);
                 } else if (roll < 175) {
-                    level.setBlock(hang, WFBlocks.LUMEN_CLUSTER.get().defaultBlockState().setValue(AmethystClusterBlock.FACING, Direction.DOWN), 2);
+                    GenUtil.set(level, hang, WFBlocks.LUMEN_CLUSTER.get().defaultBlockState().setValue(AmethystClusterBlock.FACING, Direction.DOWN), 2);
                 } else if (roll < 330) {
-                    level.setBlock(hang, WFBlocks.CEILING_MOSS.get().defaultBlockState(), 2);
+                    GenUtil.set(level, hang, WFBlocks.CEILING_MOSS.get().defaultBlockState(), 2);
                 }
             }
         }
@@ -84,7 +85,7 @@ public record UndersideGrowthFeature() implements Feature {
     private static boolean hangColumn(WorldGenLevel level, BlockPos top, BlockState base, int len) {
         int actual = 0;
         for (int k = 0; k < len; k++) {
-            if (!level.getBlockState(top.below(k)).isAir()) {
+            if (!GenUtil.get(level, top.below(k)).isAir()) {
                 break;
             }
             actual++;
@@ -95,7 +96,7 @@ public record UndersideGrowthFeature() implements Feature {
         for (int k = 0; k < actual; k++) {
             HangingCrystalBlock.Part part = k == actual - 1 ? HangingCrystalBlock.Part.TIP : k == 0 && actual > 2 ? HangingCrystalBlock.Part.BASE
                 : HangingCrystalBlock.Part.MIDDLE;
-            level.setBlock(top.below(k), base.setValue(HangingCrystalBlock.PART, part), Block.UPDATE_CLIENTS);
+            GenUtil.set(level, top.below(k), base.setValue(HangingCrystalBlock.PART, part), Block.UPDATE_CLIENTS);
         }
         return true;
     }
@@ -114,10 +115,10 @@ public record UndersideGrowthFeature() implements Feature {
                     continue;
                 }
                 BlockPos p = c.offset(dx, 0, dz);
-                if (level.getBlockState(p).isAir()) {
-                    level.setBlock(p, WFBlocks.UNDERSHALE.get().defaultBlockState(), 2);
-                    if (random.nextInt(3) == 0 && level.getBlockState(p.below()).isAir()) {
-                        level.setBlock(p.below(), WFBlocks.CEILING_MOSS.get().defaultBlockState(), 2);
+                if (GenUtil.get(level, p).isAir()) {
+                    GenUtil.set(level, p, WFBlocks.UNDERSHALE.get().defaultBlockState(), 2);
+                    if (random.nextInt(3) == 0 && GenUtil.get(level, p.below()).isAir()) {
+                        GenUtil.set(level, p.below(), WFBlocks.CEILING_MOSS.get().defaultBlockState(), 2);
                     }
                 }
             }

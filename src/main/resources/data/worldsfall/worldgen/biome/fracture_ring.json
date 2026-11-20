@@ -9,6 +9,7 @@
     },
     "minecraft:visual/fog_color": "#1A0510",
     "minecraft:visual/sky_color": "#2A0812",
+    "minecraft:visual/ambient_light_color": "#5a2638",
     "neoforge:custom_skybox": "worldsfall:fracture_sky",
     "minecraft:visual/ambient_particles": {
       "argument": [
@@ -16,7 +17,7 @@
           "particle": {
             "type": "worldsfall:ash_inflow"
           },
-          "probability": 0.03
+          "probability": 0.012
         }
       ],
       "modifier": "append"

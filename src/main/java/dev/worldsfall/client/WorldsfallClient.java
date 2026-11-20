@@ -42,6 +42,7 @@ import net.neoforged.neoforge.common.NeoForge;
 public final class WorldsfallClient {
     public WorldsfallClient(IEventBus modBus, ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+        dev.worldsfall.client.showcase.ShowcaseDirector.init();
         modBus.addListener(WFLayers::register);
         modBus.addListener(WorldsfallClient::renderers);
         modBus.addListener(WFPipelines::register);

@@ -51,19 +51,21 @@ void main() {
     col += crestCol * sparkle * 0.8;
 
     bool fromBelow = viewRel.y > 0.0;
-    float alpha = ColorModulator.a * (fromBelow ? 0.88 : (0.62 + 0.25 * flowA));
+    // Fresnel-like opacity: see down into the tide (drowned islands) near you, a solid sheet toward the horizon
+    float fres = pow(grazing, 2.5);
+    float alpha = ColorModulator.a * (fromBelow ? 0.88 : mix(0.30, 0.92, fres) + 0.12 * flowA);
     if (fromBelow) {
         col = mix(col * 0.55, vec3(0.03, 0.10, 0.11), 0.4);
     }
-    col *= brightness;
+    col *= brightness * 0.82;
     // motion cue: rising tide brightens, falling dims slightly
     col *= 1.0 + 0.15 * motion;
 
-    vec4 outCol = vec4(col, clamp(alpha, 0.0, 1.0));
-    // distance haze like vanilla fog, so the far edge melts into the void
-    float sph = fog_spherical_distance(viewRel);
+    // distance: melt into the sky's own below-horizon tide glow (end_sky.fsh §5) instead of the fog colour,
+    // so the sheet has no visible edge at render distance
     float cyl = fog_cylindrical_distance(viewRel);
-    outCol = apply_fog(outCol, sph, cyl, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
-    outCol.a *= 1.0 - smoothstep(FogRenderDistanceEnd * 0.85, FogRenderDistanceEnd * 1.15, cyl) * 0.6;
-    fragColor = outCol;
+    float far = smoothstep(FogRenderDistanceEnd * 0.35, FogRenderDistanceEnd * 0.95, cyl);
+    col = mix(col, tint * 0.42 + crestCol * 0.05, far * 0.8);
+    alpha *= 1.0 - far;
+    fragColor = vec4(col, clamp(alpha, 0.0, 1.0));
 }
