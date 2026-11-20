@@ -44,3 +44,4 @@ art/blender/out/
 *.blend1
 tools/__pycache__/
 **/__pycache__/
+showcase_out/
