@@ -44,6 +44,12 @@ def remap_state(vanilla_name, our_name, mapping):
         s = s.replace(f'"minecraft:block/{k}"', f'"{v}"')
     write(f"{BS}/{our_name}.json", json.loads(s))
 
+# --------------------------------------------------------------------------- equipment assets
+def gen_equipment():
+    """Elytra upgrade wings (§9.7): textures/entity/equipment/wings/elytra_<upgrade>.png, swapped in by the smithing recipe."""
+    for up in ("gale", "still", "hover"):
+        write(os.path.join(ASSETS, f"equipment/elytra_{up}.json"), {"layers": {"wings": [{"texture": f"{NS}:elytra_{up}"}]}})
+
 # --------------------------------------------------------------------------- emissive helpers
 def cube_elements(tex_faces, frm=(0, 0, 0), to=(16, 16, 16), emission=0, cull=True):
     faces = {}
@@ -280,6 +286,13 @@ def gen_blocks():
     family("stillstone_brick", "stillstone_bricks", "stillstone_bricks")
     facing_cluster("mirror_shard", "mirror_shard", None)
     cube_all("rimglass"); cube_all("stillglass")
+    # Stillwater cauldron (§7.5): vanilla cauldron templates with the Stillwater surface as content
+    caul = {"bottom": "minecraft:block/cauldron_bottom", "content": b("stillwater_still"), "inside": "minecraft:block/cauldron_inner",
+            "particle": "minecraft:block/cauldron_side", "side": "minecraft:block/cauldron_side", "top": "minecraft:block/cauldron_top"}
+    lv = {1: model("stillwater_cauldron_level1", "minecraft:block/template_cauldron_level1", caul),
+          2: model("stillwater_cauldron_level2", "minecraft:block/template_cauldron_level2", caul),
+          3: model("stillwater_cauldron_full", "minecraft:block/template_cauldron_full", caul)}
+    write(f"{BS}/stillwater_cauldron.json", {"variants": {f"level={k}": {"model": v} for k, v in lv.items()}})
     pane = {"pane": b("stillglass"), "edge": b("stillglass_pane_top")}
     pm = {k: model(f"stillglass_pane_{k}", f"minecraft:block/template_glass_pane_{k}", pane) for k in ("noside", "noside_alt", "post", "side", "side_alt")}
     remap_state("black_stained_glass_pane", "stillglass_pane", {f"black_stained_glass_pane_{k}": v for k, v in pm.items()})
@@ -416,5 +429,5 @@ def gen_particles():
           {"sources": [{"type": "minecraft:directory", "source": "particle", "prefix": ""}]}) if False else None
 
 if __name__ == "__main__":
-    gen_blocks(); gen_items(); gen_particles()
+    gen_blocks(); gen_items(); gen_particles(); gen_equipment()
     print(f"assets written: {len(WRITTEN)}")

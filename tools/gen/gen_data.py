@@ -80,6 +80,8 @@ def gen_block_loot():
     for n in SELF_DROP:
         drop_self(n)
     drop_self("tidewisp_jar", "bottled_tidewisp")
+    block_loot("stillwater_cauldron", [{"rolls": 1, "conditions": [{"condition": "minecraft:survives_explosion"}],
+                                        "entries": [{"type": "minecraft:item", "name": "minecraft:cauldron"}]}])
     for base, wall in FAMILIES.items():
         slab = f"{base}_slab"
         block_loot(slab, [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": i(slab), "functions": [
@@ -294,7 +296,10 @@ def gen_recipes():
     # elytra upgrades (§9.7): smithing writes the data component
     for up, mat in (("gale", i("skate_membrane")), ("still", i("mirror_shard_fragment")), ("hover", i("glow_gland"))):
         smithing(f"elytra_{up}_upgrade", i(f"{up}_upgrade_template"), "minecraft:elytra", mat, "minecraft:elytra",
-                 {"worldsfall:elytra_upgrade": up})
+                 {"worldsfall:elytra_upgrade": up,
+                  # swaps the wing equipment asset so the upgrade is visible on the player (§9.7 visual requirement)
+                  "minecraft:equippable": {"slot": "chest", "asset_id": i(f"elytra_{up}"), "equip_sound": "minecraft:item.armor.equip_elytra",
+                                           "damage_on_hurt": False}})
     # trims
     for p in ("spire", "drift", "undersong"):
         write(f"{D}/recipe/{p}_armor_trim_smithing_template_smithing_trim.json", {"type": "minecraft:smithing_trim",
@@ -327,7 +332,8 @@ def gen_tags():
     fam = []
     for base, wall in FAMILIES.items():
         fam += [f"{base}_slab", f"{base}_stairs"] + ([f"{base}_wall"] if wall else [])
-    tag("block", "minecraft", "mineable/pickaxe", [i(n) for n in stone_like + fam])
+    tag("block", "minecraft", "mineable/pickaxe", [i(n) for n in stone_like + fam] + [i("stillwater_cauldron")])
+    tag("block", "minecraft", "cauldrons", [i("stillwater_cauldron")])
     tag("block", "minecraft", "mineable/axe", [i("voidroot")])
     tag("block", "minecraft", "mineable/hoe", [i("ceiling_moss"), i("lilac_tuft")])
     tag("block", "minecraft", "needs_diamond_tool", [i("null_obsidian")])
@@ -389,6 +395,7 @@ def gen_tags():
     # structures
     tag("worldgen/structure", NS, "driftwrecks", [i("driftwreck")])
     tag("worldgen/structure", NS, "fallen_spires", [i("fallen_spire")])
+    tag("worldgen/structure", NS, "stillwater_basins", [i("stillwater_basin")])
     for s in ("fallen_spire", "hoard", "driftwreck", "root_hollow"):
         tag("worldgen/structure", NS, s, [i(s)])
     tag("worldgen/structure", NS, "deep_root_hollow", [i("root_hollow")])
@@ -400,6 +407,7 @@ def gen_tags():
     tag("worldgen/biome", NS, "outer_islands", [i(b) for b in ours] + ["minecraft:end_highlands", "minecraft:end_midlands", "minecraft:end_barrens",
                                                                         "minecraft:small_end_islands"])
     tag("worldgen/biome", NS, "has_structure/fallen_spire", [i("fallen_spires"), i("stillwater_basins"), "minecraft:end_highlands"])
+    tag("worldgen/biome", NS, "has_structure/stillwater_basin", [i("stillwater_basins")])
     tag("worldgen/biome", NS, "has_structure/hoard", [i("the_hoard"), i("the_drift"), "minecraft:small_end_islands"])
     tag("worldgen/biome", NS, "has_structure/driftwreck", [i("the_drift"), "minecraft:small_end_islands", "minecraft:end_barrens"])
     tag("worldgen/biome", NS, "has_structure/root_hollow", [i("the_underside"), "minecraft:end_highlands", i("chorus_reach"), i("fallen_spires"),

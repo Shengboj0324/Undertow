@@ -27,7 +27,7 @@ document are recorded in [`docs/DECISIONS.md`](docs/DECISIONS.md).
 ## Installing
 
 1. Install NeoForge 26.3 for your launcher profile.
-2. Download `worldsfall-1.0.0.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
+2. Download `worldsfall-1.1.0.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
 3. Drop it into the profile's `mods/` folder and start the game.
 
 The mod adds its biomes to the vanilla End biome source and keeps the vanilla dragon fight, End Cities, Shulkers and
@@ -44,8 +44,10 @@ the **Undercroft**, Driftwrecks, Hoards, Root Hollows, Skate Roosts and Echo Shr
 Shulker, Tidewisp, Shardling, the Wyrm companion (three growth stages) and the boss **The Unmade** with three phases.
 
 **Reach, not power** — Void Anchor (void-death item capsule), Rift Tether (pearl grappling hook), Gateway Compass,
-Shulker Satchel, Void Lens, Gale/Still/Hover elytra upgrades, Gravity Anchor and Anchor Frames, Spire Keys and
-**Reassembly** of ruined spire rooms, Echo Tablet lore, armor trims, Stillwater (a heavy mirror-black fluid) and food.
+Shulker Satchel, Void Lens (reveals Echoes, Lurkers, Driftwrecks and the tide height), Gale/Still/Hover elytra upgrades
+with their own wing looks, Gravity Anchor and Anchor Frames, Spire Keys and
+**Reassembly** of ruined spire rooms, Echo Tablet lore, three armor trim patterns and three trim materials, Stillwater (a heavy mirror-black fluid you can
+bottle and keep in a cauldron), sound-muffling Stillglass, and food. A Hatchling Wyrm rides on your shoulder.
 
 **Presentation** — a custom layered End sky shader (biome-tinted nebula, three star layers, distant islands, tide glow), a
 Fracture sky, the tide plane shader, Blender-authored entity models and textures with emissive layers, 15 particle types,
@@ -63,6 +65,8 @@ All captured in-game by the automated showcase run (default settings, no shader 
 | ![Egg Cradle and Wyrm stages](docs/images/egg_cradle_wyrm.jpg) Egg Cradle and Wyrm stages | ![The Unmade](docs/images/the_unmade.jpg) The Unmade |
 | ![Fallen Spires](docs/images/fallen_spires.jpg) Fallen Spires | ![Items](docs/images/items.jpg) Reach, not power |
 | ![The Sundering](docs/images/sundering.jpg) The Sundering opens the Descent | ![Creatures](docs/images/creatures.jpg) End castes |
+| ![Stillwater Basin](docs/images/stillwater_basins.jpg) A Stillwater Basin and its Stillfall | ![Void Lens](docs/images/void_lens.jpg) A Driftwreck through the Void Lens |
+| ![Armor trims and a shoulder Wyrm](docs/images/wardrobe.jpg) Spire, Drift and Undersong trims; Gale wings; a Wyrm on the shoulder | ![Stillfall](docs/images/stillwater_basins_1.jpg) The Stillfall leaves the island |
 
 ## Commands (operators)
 
@@ -88,7 +92,7 @@ The jar is written to `build/libs/`. Compilation runs with `-Xlint:all -Werror`.
 
 ```bash
 ./gradlew test --no-configuration-cache                 # JUnit (tide maths, region rules)
-./gradlew runGameTestServer --no-configuration-cache    # 20 in-world GameTests, exits non-zero on failure
+./gradlew runGameTestServer --no-configuration-cache    # 23 in-world GameTests, exits non-zero on failure
 ```
 
 ### Asset pipeline
@@ -102,6 +106,8 @@ All art is produced by scripts so it can be rebuilt and reviewed:
 | Mod icon | `Blender -b --python tools/blender/icon/build_icon.py -- src/main/resources/worldsfall_icon.png` |
 | Sounds and music | `python3 tools/audio/synth.py` (spec in `tools/audio/sound_spec.py`) |
 | Blockstates, models, loot, recipes, tags, worldgen, lang | `tools/gen/gen_all.sh` |
+| Armor trim patterns and material palettes | `python3 tools/gen/gen_trims.py <extracted 26.3 client assets/minecraft/textures>` |
+| Void Lens scope overlay | `python3 tools/gen/gen_lens_scope.py` |
 
 ### In-game visual capture
 

@@ -76,6 +76,9 @@ public final class WFTests {
         out.put("echo_scramble_swaps_two_slots", WFTests::echoScramble);
         out.put("echo_tablets_are_numbered", WFTests::tablets);
         out.put("data_integrity", WFTests::dataIntegrity);
+        out.put("stillwater_cauldron_bottles", WFTests::stillwaterCauldron);
+        out.put("wyrm_shoulder_sync", WFTests::wyrmShoulder);
+        out.put("basin_shape_and_trims", WFTests::basinAndTrims);
     }
 
     static int maxTicks(String name) {
@@ -204,6 +207,11 @@ public final class WFTests {
         h.assertTrue(recipe.matches(input, h.getLevel()), "recipe matches its inputs");
         ItemStack out = recipe.assemble(input);
         h.assertTrue(out.is(Items.ELYTRA) && ElytraActionPayload.upgradeOf(out) == ElytraUpgrade.GALE, "result is an elytra with the Gale upgrade");
+        var equippable = out.get(net.minecraft.core.component.DataComponents.EQUIPPABLE);
+        h.assertTrue(equippable != null && equippable.assetId().isPresent() && equippable.assetId().get().equals(ElytraUpgrade.GALE.asset()),
+            "the upgrade swaps the wing look to worldsfall:elytra_gale");
+        h.assertTrue(equippable.slot() == net.minecraft.world.entity.EquipmentSlot.CHEST && out.has(net.minecraft.core.component.DataComponents.GLIDER),
+            "still a chest-slot glider");
         h.succeed();
     }
 
@@ -351,6 +359,69 @@ public final class WFTests {
             h.assertTrue(block.get().asItem() != Items.AIR, "block item for " + block.getId());
         }
         h.assertTrue(WFEntities.VOID_SKATE.get().create(h.getLevel(), EntitySpawnReason.COMMAND) != null, "entities construct");
+        h.succeed();
+    }
+
+    private static void stillwaterCauldron(GameTestHelper h) {
+        BlockPos rel = new BlockPos(1, 2, 1);
+        h.setBlock(rel, Blocks.CAULDRON);
+        BlockPos pos = h.absolutePos(rel);
+        ServerLevel level = h.getLevel();
+        ServerPlayer player = h.makeMockServerPlayerInLevel();
+        player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        var hand = net.minecraft.world.InteractionHand.MAIN_HAND;
+        ItemStack bucket = new ItemStack(WFItems.STILLWATER_BUCKET.get());
+        player.setItemInHand(hand, bucket);
+        net.minecraft.core.cauldron.CauldronInteractions.EMPTY.get(bucket).interact(level.getBlockState(pos), level, pos, player, hand, bucket);
+        var state = level.getBlockState(pos);
+        h.assertTrue(state.is(WFBlocks.STILLWATER_CAULDRON.get()) && state.getValue(net.minecraft.world.level.block.LayeredCauldronBlock.LEVEL) == 3,
+            "a Stillwater bucket fills an empty cauldron");
+        h.assertTrue(player.getItemInHand(hand).is(Items.BUCKET), "the bucket comes back empty");
+        ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
+        player.setItemInHand(hand, bottle);
+        dev.worldsfall.fluid.StillwaterCauldron.INTERACTIONS.get(bottle).interact(state, level, pos, player, hand, bottle);
+        h.assertTrue(player.getItemInHand(hand).is(WFItems.BOTTLE_OF_STILLWATER.get()), "a glass bottle draws a Bottle of Stillwater");
+        state = level.getBlockState(pos);
+        h.assertTrue(state.getValue(net.minecraft.world.level.block.LayeredCauldronBlock.LEVEL) == 2, "drawing lowers the level");
+        ItemStack back = player.getItemInHand(hand);
+        dev.worldsfall.fluid.StillwaterCauldron.INTERACTIONS.get(back).interact(state, level, pos, player, hand, back);
+        h.assertTrue(level.getBlockState(pos).getValue(net.minecraft.world.level.block.LayeredCauldronBlock.LEVEL) == 3
+            && player.getItemInHand(hand).is(Items.GLASS_BOTTLE), "pouring a bottle back raises the level");
+        h.succeed();
+    }
+
+    private static void wyrmShoulder(GameTestHelper h) {
+        ServerPlayer player = h.makeMockServerPlayerInLevel();
+        net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
+        tag.putString("id", WFEntities.WYRM.getId().toString());
+        player.setOnGround(true);
+        h.assertTrue(player.setEntityOnShoulder(tag), "a Wyrm can take the left shoulder");
+        dev.worldsfall.world.WFEvents.syncShoulders(player);
+        h.assertTrue(player.getData(dev.worldsfall.registry.WFAttachments.WYRM_SHOULDERS) == 1, "left-shoulder bit synced");
+        ServerPlayer other = h.makeMockServerPlayerInLevel();
+        dev.worldsfall.world.WFEvents.syncShoulders(other);
+        h.assertTrue(other.getData(dev.worldsfall.registry.WFAttachments.WYRM_SHOULDERS) == 0, "no Wyrm, no bits");
+        h.succeed();
+    }
+
+    private static void basinAndTrims(GameTestHelper h) {
+        double r = 12;
+        h.assertTrue(dev.worldsfall.world.gen.structure.StillwaterBasinPiece.inShape(0, 0, r), "heart contains its centre");
+        h.assertTrue(dev.worldsfall.world.gen.structure.StillwaterBasinPiece.inShape(r * 0.8, 0, r), "heart reaches its point toward the spill");
+        h.assertTrue(!dev.worldsfall.world.gen.structure.StillwaterBasinPiece.inShape(r * 0.8, r * 0.6, r), "but narrows beside the point");
+        h.assertTrue(dev.worldsfall.world.gen.structure.StillwaterBasinPiece.inShape(-r * 0.5, r * 0.4, r)
+            && dev.worldsfall.world.gen.structure.StillwaterBasinPiece.inShape(-r * 0.5, -r * 0.4, r), "two lobes behind");
+        h.assertTrue(!dev.worldsfall.world.gen.structure.StillwaterBasinPiece.inShape(-r * 0.55, 0, r), "with a cusp between them");
+        var access = h.getLevel().registryAccess();
+        for (String m : List.of("lumen", "still", "frill")) {
+            h.assertTrue(access.lookupOrThrow(Registries.TRIM_MATERIAL).get(ResourceKey.create(Registries.TRIM_MATERIAL,
+                Identifier.fromNamespaceAndPath("worldsfall", m))).isPresent(), "trim material " + m);
+        }
+        for (String p : List.of("spire", "drift", "undersong")) {
+            h.assertTrue(access.lookupOrThrow(Registries.TRIM_PATTERN).get(ResourceKey.create(Registries.TRIM_PATTERN,
+                Identifier.fromNamespaceAndPath("worldsfall", p))).isPresent(), "trim pattern " + p);
+        }
+        h.assertTrue(dev.worldsfall.world.VoidLensScan.wrecksNear(h.getLevel(), 0, 0).isEmpty(), "no Driftwrecks in the test world");
         h.succeed();
     }
 }

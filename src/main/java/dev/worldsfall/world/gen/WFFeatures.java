@@ -16,7 +16,6 @@ public final class WFFeatures {
     static {
         FEATURE_TYPES.register("chorus_grove", () -> ChorusGroveFeature.CODEC);
         FEATURE_TYPES.register("pale_loam_patch", () -> PaleLoamPatchFeature.CODEC);
-        FEATURE_TYPES.register("stillwater_basin", () -> StillwaterBasinFeature.CODEC);
         FEATURE_TYPES.register("underside_growth", () -> UndersideGrowthFeature.CODEC);
         FEATURE_TYPES.register("debris_field", () -> DebrisFieldFeature.CODEC);
         FEATURE_TYPES.register("skate_roost", () -> SkateRoostFeature.CODEC);

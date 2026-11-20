@@ -1,0 +1,7 @@
+{
+  "type": "worldsfall:stillwater_basin",
+  "biomes": "#worldsfall:has_structure/stillwater_basin",
+  "spawn_overrides": {},
+  "step": "lakes",
+  "terrain_adaptation": "none"
+}

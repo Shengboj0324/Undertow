@@ -27,7 +27,7 @@ def dist(lo=0, hi=None):
     return d
 
 def gen_features():
-    for f in ("chorus_grove", "pale_loam_patch", "stillwater_basin", "underside_growth", "debris_field", "skate_roost", "wild_shulker_colony",
+    for f in ("chorus_grove", "pale_loam_patch", "underside_growth", "debris_field", "skate_roost", "wild_shulker_colony",
               "echo_shrine", "chorus_pod_scatter"):
         feature(f)
     placed("chorus_grove", i("chorus_grove"), [rarity(4), SQUARE, heightmap(), BIOME])
@@ -35,7 +35,6 @@ def gen_features():
     placed("pale_loam_patch_sparse", i("pale_loam_patch"), [rarity(4), SQUARE, heightmap(), BIOME])
     placed("chorus_pod_scatter", i("chorus_pod_scatter"), [rarity(2), SQUARE, heightmap(), BIOME])
     placed("chorus_pod_scatter_dense", i("chorus_pod_scatter"), [count(1), SQUARE, heightmap(), BIOME])
-    placed("stillwater_basin", i("stillwater_basin"), [rarity(3), SQUARE, heightmap(), BIOME])
     placed("underside_growth", i("underside_growth"), [count(1), BIOME])
     placed("underside_growth_outer", i("underside_growth"), [rarity(2), dist(1024), BIOME])
     placed("debris_field", i("debris_field"), [rarity(6), SQUARE, height(20, 90), BIOME])
@@ -50,7 +49,7 @@ def mob(t, w, lo, hi):
 
 # Per-biome ambient light (entities and unlit blocks in the skylight-less End are lit by this alone, §18.2)
 AMBIENT = {
-    "chorus_reach": "#584a70", "stillwater_basins": "#404866", "fallen_spires": "#5a4668", "the_hoard": "#5a5450",
+    "chorus_reach": "#6c5c8a", "stillwater_basins": "#404866", "fallen_spires": "#5a4668", "the_hoard": "#5a5450",
     "the_underside": "#34505a", "the_drift": "#3e4a62", "fracture_ring": "#5a2638",
 }
 
@@ -92,7 +91,7 @@ def gen_biomes():
                         ("vegetal_decoration", i("chorus_grove")), ("top_layer_modification", i("chorus_pod_scatter_dense")),
                         ("underground_decoration", i("underside_growth_outer"))])
     biome("stillwater_basins", "#0B1024", "#21446B", [], i("music.hold_still"), None, None, {"monster": [ender]},
-          common_end + [("lakes", i("stillwater_basin")), ("underground_decoration", i("underside_growth_outer"))],
+          common_end + [("underground_decoration", i("underside_growth_outer"))],
           extra={"minecraft:visual/fog_end_distance": 256.0} if False else None)
     biome("fallen_spires", "#2A0F25", "#5A1F4A", [p("dust_fall", 0.006)], i("music.ladders_to_nowhere"), None, None, {"monster": [ender]},
           common_end + [("vegetal_decoration", "minecraft:chorus_plant"), ("underground_decoration", i("underside_growth_outer"))])
@@ -133,6 +132,13 @@ def gen_structures():
         write(f"{D}/worldgen/structure_set/{name}.json", {"placement": {"type": "minecraft:random_spread", "salt": salt, "separation": sep,
                                                                         "spacing": spacing, "spread_type": "triangular"},
                                                           "structures": [{"structure": i(name), "weight": 1}]})
+
+    # Stillwater Basins are a structure (one lake per island, spanning chunks), not a feature
+    write(f"{D}/worldgen/structure/stillwater_basin.json", {"type": i("stillwater_basin"), "biomes": f"#{NS}:has_structure/stillwater_basin",
+                                                         "spawn_overrides": {}, "step": "lakes", "terrain_adaptation": "none"})
+    write(f"{D}/worldgen/structure_set/stillwater_basin.json", {"placement": {"type": "minecraft:random_spread", "salt": 61722093,
+                                                                              "separation": 3, "spacing": 7, "spread_type": "linear"},
+                                                                "structures": [{"structure": i("stillwater_basin"), "weight": 1}]})
 
 def gen_dimensions():
     # The End keeps its terrain (minecraft:end noise) and dimension type; only the biome source gains our biomes (§20.4).

@@ -47,6 +47,9 @@ public final class Worldsfall {
         modBus.addListener(WFSetup::spawnPlacements);
         modBus.addListener(WFNetwork::register);
         modBus.addListener(WFSetup::gameTests);
+        modBus.addListener(dev.worldsfall.fluid.StillwaterCauldron::dispatchers);
+        modBus.addListener(dev.worldsfall.fluid.StillwaterCauldron::interactions);
+        NeoForge.EVENT_BUS.addListener(dev.worldsfall.fluid.StillwaterCauldron::bottleFromSource);
         NeoForge.EVENT_BUS.register(WFEvents.class);
 
         container.registerConfig(ModConfig.Type.SYNCED, WFConfig.SERVER_SPEC);

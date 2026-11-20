@@ -60,6 +60,7 @@ neoForge {
             systemProperty 'worldsfall.showcase', project.file('build/showcase').getAbsolutePath()
             systemProperty 'worldsfall.showcase.scenes', (project.findProperty('showcase.scenes') ?: '').toString()
             systemProperty 'worldsfall.showcase.video', (project.findProperty('showcase.video') ?: 'true').toString()
+            systemProperty 'worldsfall.debugLens', (project.findProperty('showcase.debugLens') ?: 'false').toString()
             programArguments.addAll '--width', '1920', '--height', '1080'
         }
 

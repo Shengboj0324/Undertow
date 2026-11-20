@@ -9,7 +9,7 @@
     },
     "minecraft:visual/fog_color": "#3A2448",
     "minecraft:visual/sky_color": "#4B2A7A",
-    "minecraft:visual/ambient_light_color": "#584a70",
+    "minecraft:visual/ambient_light_color": "#6c5c8a",
     "neoforge:custom_skybox": "worldsfall:end_sky",
     "minecraft:audio/background_music": {
       "default": {

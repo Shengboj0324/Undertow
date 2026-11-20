@@ -40,6 +40,8 @@ import net.neoforged.neoforge.client.event.SelectMusicEvent;
 import net.neoforged.neoforge.client.event.sound.PlaySoundEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.minecraft.world.level.block.state.BlockState;
+import dev.worldsfall.registry.WFBlocks;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.List;
@@ -212,22 +214,57 @@ public final class ClientEvents {
         }
     }
 
-    // ------------------------------------------------------------------ Stillwater muffling (§7.2): volume ×0.4 near a submerged player
+    // ------------------------------------------------------------------ muffling: Stillwater (§7.2, volume x0.4 near a submerged player)
+    // and Stillglass (§6.2, sound passing through Stillglass is muffled by 50%)
     @SubscribeEvent
     public static void sound(PlaySoundEvent event) {
         SoundInstance s = event.getSound();
         Minecraft mc = Minecraft.getInstance();
-        if (s == null || mc.player == null || !WFConfig.get(WFConfig.CLIENT.stillwaterSoundMuffle, true) || !StillwaterEffects.isEyeIn(mc.player)) {
+        if (s == null || mc.player == null || mc.level == null) {
             return;
         }
-        if (s.getSource() == SoundSource.MUSIC || s.getSource() == SoundSource.MASTER || s.isRelative()) {
+        if (s.getSource() == SoundSource.MUSIC || s.getSource() == SoundSource.MASTER || s.getSource() == SoundSource.UI || s.isRelative()) {
             return;
         }
-        double d = mc.player.position().distanceToSqr(s.getX(), s.getY(), s.getZ());
-        if (d < 16 * 16) {
-            event.setSound(new SimpleSoundInstance(s.getIdentifier(), s.getSource(), 0.4f, 0.8f, SoundInstance.createUnseededRandom(), false, 0,
+        Vec3 ear = mc.player.getEyePosition();
+        double d = ear.distanceToSqr(s.getX(), s.getY(), s.getZ());
+        float volume = 1.0f;
+        float pitch = 1.0f;
+        if (WFConfig.get(WFConfig.CLIENT.stillwaterSoundMuffle, true) && StillwaterEffects.isEyeIn(mc.player) && d < 16 * 16) {
+            volume = 0.4f;
+            pitch = 0.8f;
+        }
+        if (d > 1.0 && d < 32 * 32 && throughStillglass(mc, ear, new Vec3(s.getX(), s.getY(), s.getZ()))) {
+            volume *= 0.5f;
+            pitch *= 0.92f;
+        }
+        if (volume < 1.0f) {
+            event.setSound(new SimpleSoundInstance(s.getIdentifier(), s.getSource(), volume, pitch, SoundInstance.createUnseededRandom(), false, 0,
                 s.getAttenuation(), s.getX(), s.getY(), s.getZ(), false));
         }
+    }
+
+    /** True if the straight line from the listener to the sound passes through a Stillglass block or pane. */
+    static boolean throughStillglass(Minecraft mc, Vec3 from, Vec3 to) {
+        Vec3 step = to.subtract(from);
+        int n = (int) Math.ceil(step.length() * 2);
+        step = step.scale(1.0 / n);
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos last = null;
+        Vec3 p = from;
+        for (int i = 1; i < n; i++) {
+            p = p.add(step);
+            pos.set(p.x, p.y, p.z);
+            if (pos.equals(last)) {
+                continue;
+            }
+            last = pos.immutable();
+            BlockState st = mc.level.getBlockState(pos);
+            if (st.is(WFBlocks.STILLGLASS.get()) || st.is(WFBlocks.STILLGLASS_PANE.get())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // ------------------------------------------------------------------ music: The Unmade's three layers (§19.4)

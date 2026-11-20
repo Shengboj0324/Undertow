@@ -11,7 +11,7 @@ stillglass_pane weathered_purpur weathered_purpur_pillar cracked_purpur_pillar p
 undershale_bricks undershale_tiles ceiling_moss lumen_crystal lumen_cluster lumen_crystal_block voidroot glowbulb lumen_lamp driftstone
 polished_driftstone driftstone_bricks tide_gauge null_obsidian fracture_glass unmade_shard ash_stone hoard_cache decorative_hoard_cache
 keystone_socket spire_vault drift_cache sigil_pedestal egg_cradle gravity_anchor anchor_frame fracture_rift_frame fracture_rift still_throne
-tidewisp_jar stillwater""".split()
+tidewisp_jar stillwater stillwater_cauldron""".split()
 FAMS = ["stillstone", "polished_stillstone", "stillstone_brick", "weathered_purpur", "undershale", "polished_undershale", "undershale_brick",
         "undershale_tile", "driftstone", "polished_driftstone", "driftstone_brick"]
 WALLS = {f for f in FAMS if f != "weathered_purpur"}
@@ -88,6 +88,8 @@ ADV = {
  "warm_hands": ("Warm Hands", "Hatch the Dragon Egg"), "fully_grown": ("Fully Grown", "Raise a Drake"),
 }
 MESSAGES = {
+ "hud.worldsfall.void_lens.wreck": "Driftwreck · %s m",
+ "hud.worldsfall.void_lens.tide": "Tide · Y %s %s",
  "message.worldsfall.vault.sealed": "Sealed. Something here was taken apart.",
  "message.worldsfall.vault.claimed": "You have already claimed this.",
  "message.worldsfall.hoard.refused": "The Hoarders do not want that.",

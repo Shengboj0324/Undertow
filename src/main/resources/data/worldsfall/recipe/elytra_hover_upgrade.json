@@ -6,7 +6,13 @@
   "result": {
     "id": "minecraft:elytra",
     "components": {
-      "worldsfall:elytra_upgrade": "hover"
+      "worldsfall:elytra_upgrade": "hover",
+      "minecraft:equippable": {
+        "slot": "chest",
+        "asset_id": "worldsfall:elytra_hover",
+        "equip_sound": "minecraft:item.armor.equip_elytra",
+        "damage_on_hurt": false
+      }
     }
   }
 }

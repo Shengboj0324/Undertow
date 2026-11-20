@@ -81,6 +81,12 @@ public final class WFEvents {
             return;
         }
         StillwaterEffects.tick(entity);
+        if (entity instanceof ServerPlayer sp) {
+            VoidLensScan.tick(sp);
+            if (sp.tickCount % 5 == 0) {
+                syncShoulders(sp);
+            }
+        }
         if (entity instanceof LivingEntity living && (entity.tickCount + entity.getId()) % 5 == 0) {
             boolean relevant = level.dimension() == Level.END || level.dimension() == WFDimensions.THE_FRACTURE;
             if (relevant || GravityZones.hasModifier(living)) {
@@ -101,6 +107,18 @@ public final class WFEvents {
                 markGateways(sp);
             }
         }
+    }
+
+    /** Mirrors the vanilla shoulder slots into a synced attachment when a Wyrm sits there (§10.3). */
+    public static void syncShoulders(ServerPlayer sp) {
+        int bits = (isWyrm(sp.getShoulderEntityLeft()) ? 1 : 0) | (isWyrm(sp.getShoulderEntityRight()) ? 2 : 0);
+        if (sp.getData(WFAttachments.WYRM_SHOULDERS) != bits) {
+            sp.setData(WFAttachments.WYRM_SHOULDERS, bits);
+        }
+    }
+
+    private static boolean isWyrm(net.minecraft.nbt.CompoundTag tag) {
+        return !tag.isEmpty() && tag.getStringOr("id", "").equals(dev.worldsfall.registry.WFEntities.WYRM.getId().toString());
     }
 
     private static void markGateways(ServerPlayer sp) {

@@ -135,6 +135,9 @@ public final class CreatureRenderers {
             s.stateTicks = e.stateTicks() + partial;
             BlockPos a = e.anchor();
             s.threadLength = a.equals(BlockPos.ZERO) ? 0 : (float) (a.getY() - (s.y + s.boundingBoxHeight));
+            if (s.hidden) {
+                s.outlineColor = dev.worldsfall.client.hud.VoidLensOverlay.outlineFor(e, s.outlineColor); // Void Lens reveals the shimmer (§9.6)
+            }
         }
 
         /** Hidden Lurkers show only as a faint shimmer (§8.4). */
@@ -246,6 +249,7 @@ public final class CreatureRenderers {
             s.disguised = e.isDisguised();
             s.disguise = e.disguise();
             s.shimmer = e.shimmer();
+            s.outlineColor = dev.worldsfall.client.hud.VoidLensOverlay.outlineFor(e, s.outlineColor); // true outline through a Void Lens (§9.6)
             if (s.disguised && e.level() instanceof ClientLevel level) {
                 block.blockState = s.disguise;
                 block.blockPos = e.blockPosition();

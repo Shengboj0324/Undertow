@@ -45,6 +45,16 @@ public final class WorldsfallClient {
         dev.worldsfall.client.showcase.ShowcaseDirector.init();
         modBus.addListener(WFLayers::register);
         modBus.addListener(WorldsfallClient::renderers);
+        modBus.addListener(WorldsfallClient::playerLayers);
+        modBus.addListener((net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent e) -> e.registerAvatarEntityModifier(
+            new net.neoforged.neoforge.client.renderstate.AvatarRenderStateModifier() {
+                @Override
+                public <T extends net.minecraft.world.entity.Avatar & net.minecraft.client.entity.ClientAvatarEntity> void accept(T avatar,
+                        net.minecraft.client.renderer.entity.state.AvatarRenderState state) {
+                    state.setRenderData(dev.worldsfall.client.entity.WyrmShoulderLayer.KEY,
+                        avatar.getExistingDataOrNull(dev.worldsfall.registry.WFAttachments.WYRM_SHOULDERS));
+                }
+            }));
         modBus.addListener(WFPipelines::register);
         modBus.addListener(WFParticle::register);
         modBus.addListener(WFHud::register);
@@ -59,6 +69,19 @@ public final class WorldsfallClient {
         RiderInput.clientProvider = p -> p instanceof LocalPlayer lp ? lp.input.keyPresses : net.minecraft.world.entity.player.Input.EMPTY;
         ClientBridge.sunderingFx = SunderingFx::start;
         ClientBridge.echoTablet = WFHud::showTablet;
+        ClientBridge.voidLens = dev.worldsfall.client.hud.VoidLensOverlay::acceptWrecks;
+        NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent.AfterLevel e) -> dev.worldsfall.client.hud.VoidLensOverlay.captureCamera(e));
+        modBus.addListener((net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent e) ->
+            e.registerItem(dev.worldsfall.client.hud.VoidLensOverlay.itemExtensions(), dev.worldsfall.registry.WFItems.VOID_LENS.get()));
+    }
+
+    private static void playerLayers(net.neoforged.neoforge.client.event.EntityRenderersEvent.AddLayers e) {
+        for (var skin : e.getSkins()) {
+            var r = e.getPlayerRenderer(skin);
+            if (r != null) {
+                r.addLayer(new dev.worldsfall.client.entity.WyrmShoulderLayer(r, e.getEntityModels()));
+            }
+        }
     }
 
     private static void renderers(EntityRenderersEvent.RegisterRenderers e) {

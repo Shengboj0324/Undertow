@@ -14,10 +14,11 @@ public final class WFNetwork {
     private WFNetwork() {}
 
     public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar r = event.registrar("1");
+        PayloadRegistrar r = event.registrar("2");
         r.playToClient(TideSyncPayload.TYPE, TideSyncPayload.STREAM_CODEC, TideSyncPayload::handle);
         r.playToClient(SunderingFxPayload.TYPE, SunderingFxPayload.STREAM_CODEC, SunderingFxPayload::handle);
         r.playToClient(SunderingStatePayload.TYPE, SunderingStatePayload.STREAM_CODEC, SunderingStatePayload::handle);
+        r.playToClient(VoidLensPayload.TYPE, VoidLensPayload.STREAM_CODEC, VoidLensPayload::handle);
         r.playToClient(EchoTabletPayload.TYPE, EchoTabletPayload.STREAM_CODEC, EchoTabletPayload::handle);
         r.playToServer(SkateDismountPayload.TYPE, SkateDismountPayload.STREAM_CODEC, SkateDismountPayload::handle);
         r.playToServer(ElytraActionPayload.TYPE, ElytraActionPayload.STREAM_CODEC, ElytraActionPayload::handle);

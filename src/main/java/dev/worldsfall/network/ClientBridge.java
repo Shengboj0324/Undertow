@@ -9,6 +9,7 @@ import java.util.function.IntConsumer;
 public final class ClientBridge {
     public static volatile BiConsumer<BlockPos, Long> sunderingFx = (p, t) -> {};
     public static volatile IntConsumer echoTablet = i -> {};
+    public static volatile java.util.function.Consumer<java.util.List<net.minecraft.world.level.levelgen.structure.BoundingBox>> voidLens = b -> {};
 
     private ClientBridge() {}
 }

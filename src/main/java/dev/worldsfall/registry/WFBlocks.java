@@ -195,6 +195,11 @@ public final class WFBlocks {
         p -> new dev.worldsfall.fluid.StillwaterBlock(WFFluids.STILLWATER.get(), p),
         p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision().strength(100.0f).pushReaction(PushReaction.POPPED)
             .noLootTable().liquid().sound(SoundType.EMPTY).lightLevel(s -> 3));
+    /** Cauldron holding Stillwater (§7.5); drops a plain cauldron, has no item of its own. */
+    public static final DeferredBlock<net.minecraft.world.level.block.LayeredCauldronBlock> STILLWATER_CAULDRON = BLOCKS.registerBlock("stillwater_cauldron",
+        p -> new net.minecraft.world.level.block.LayeredCauldronBlock(net.minecraft.world.level.biome.Biome.Precipitation.NONE,
+            dev.worldsfall.fluid.StillwaterCauldron.INTERACTIONS, p),
+        p -> p.mapColor(MapColor.STONE).requiresCorrectToolForDrops().strength(2.0f).noOcclusion().lightLevel(s -> 3));
 
     // ================= building sets (§6.4)
     static {

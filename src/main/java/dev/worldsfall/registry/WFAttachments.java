@@ -23,6 +23,9 @@ public final class WFAttachments {
         () -> AttachmentType.<List<GravityWells.Well>>builder(() -> List.of()).serialize(GravityWells.Well.CODEC.listOf().fieldOf("wells"))
             .sync(net.minecraft.network.codec.ByteBufCodecs.fromCodecWithRegistries(GravityWells.Well.CODEC.listOf()))
             .build());
+    /** Which shoulders hold a Hatchling Wyrm (bit 0 left, bit 1 right), synced so every client can draw it (§10.3). */
+    public static final Supplier<AttachmentType<Integer>> WYRM_SHOULDERS = ATTACHMENTS.register("wyrm_shoulders",
+        () -> AttachmentType.builder(() -> 0).sync(net.minecraft.network.codec.ByteBufCodecs.VAR_INT).build());
     /** Player-placed block positions within 250 blocks of the End origin (Sundering safety, §5.4, §20.5). */
     public static final Supplier<AttachmentType<Set<Long>>> PLAYER_PLACED = ATTACHMENTS.register("player_placed",
         () -> AttachmentType.<Set<Long>>builder(() -> new HashSet<>())

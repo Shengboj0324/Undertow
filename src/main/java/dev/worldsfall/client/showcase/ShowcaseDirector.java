@@ -49,7 +49,7 @@ public final class ShowcaseDirector {
     private static final int SETTLE_MAX = 900;
     private static final int DECORATE_WAIT = 50;
 
-    private enum Phase { WAIT_TITLE, WAIT_WORLD, WARMUP, LOCATE, ARRIVE, DECORATE, SETTLE, STILLS, VIDEO, NEXT, DONE }
+    private enum Phase { WAIT_TITLE, WAIT_WORLD, WARMUP, LOCATE, ARRIVE, DECORATE, SETTLE, STILLS, VIDEO, NEXT, DRAIN, DONE }
 
     private static @Nullable ShowcaseDirector instance;
 
@@ -111,6 +111,7 @@ public final class ShowcaseDirector {
         mc.options.renderDistance().set(16);
         mc.options.simulationDistance().set(10);
         mc.options.fov().set(62);
+        mc.options.chatVisibility().set(net.minecraft.world.entity.player.ChatVisiblity.HIDDEN); // no advancement toasts in HUD shots
         try {
             String folder = FileUtil.findAvailableName(mc.getLevelSource().getBaseDir(), LEVEL_NAME, "");
             LevelSettings settings = new LevelSettings(folder, GameType.SPECTATOR, LevelSettings.DifficultySettings.DEFAULT, true,
@@ -130,6 +131,11 @@ public final class ShowcaseDirector {
         Minecraft mc = Minecraft.getInstance();
         switch (phase) {
             case WAIT_TITLE, DONE -> { }
+            case DRAIN -> {
+                if (pendingWrites.get() == 0 || ++ticks > 600) {
+                    finish(mc);
+                }
+            }
             case WAIT_WORLD -> {
                 if (mc.player != null && mc.level != null && mc.getSingleplayerServer() != null && mc.gui.screen() == null) {
                     if (!mc.gui.hud.isHidden()) {
@@ -214,6 +220,15 @@ public final class ShowcaseDirector {
                 }
             }
             case NEXT -> {
+                if (plan != null && plan.lens() && mc.player != null) {
+                    mc.options.keyUse.setDown(false);
+                    if (mc.gameMode != null) {
+                        mc.gameMode.releaseUsingItem(mc.player);
+                    }
+                    if (!mc.gui.hud.isHidden()) {
+                        mc.gui.hud.toggle();
+                    }
+                }
                 if (plan != null && plan.cleanup() != null) {
                     MinecraftServer server = server(mc);
                     Runnable cleanup = plan.cleanup();
@@ -229,7 +244,9 @@ public final class ShowcaseDirector {
         plan = null;
         Minecraft mc = Minecraft.getInstance();
         if (sceneIndex >= scenes.size()) {
-            finish(mc);
+            // screenshot read-backs complete asynchronously on later frames; wait for every one before shutting down
+            phase = Phase.DRAIN;
+            ticks = 0;
             return;
         }
         ShowcaseScenes.Scene s = scene();
@@ -272,6 +289,17 @@ public final class ShowcaseDirector {
         ShowcaseScenes.Plan p = plan;
         if (p == null || mc.player == null) {
             return;
+        }
+        if (p.lens() && phase != Phase.ARRIVE && phase != Phase.DECORATE) {
+            // seen through the Void Lens: HUD on (the lens overlay is a HUD layer) and the local player scoped
+            if (mc.gui.hud.isHidden()) {
+                mc.gui.hud.toggle();
+            }
+            // hold right-click the way a player would, so client and server both keep scoping
+            mc.options.keyUse.setDown(true);
+            if (!mc.player.isUsingItem() && mc.player.getMainHandItem().getItem() instanceof dev.worldsfall.item.VoidLensItem && mc.gameMode != null) {
+                mc.gameMode.useItem(mc.player, net.minecraft.world.InteractionHand.MAIN_HAND);
+            }
         }
         Vec3 cam = p.camera();
         Vec3 target = p.target();

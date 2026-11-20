@@ -43,6 +43,14 @@ public class BlueprintPiece extends StructurePiece {
         this.seed = tag.getLongOr("seed", 0L);
     }
 
+    public String generator() {
+        return generator;
+    }
+
+    public int variant() {
+        return variant;
+    }
+
     private Blueprint blueprint() {
         if (cached == null) {
             cached = Generators.build(generator, origin, variant, seed);

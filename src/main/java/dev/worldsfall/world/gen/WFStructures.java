@@ -20,6 +20,11 @@ public final class WFStructures {
     public static final DeferredHolder<StructurePieceType, StructurePieceType> BLUEPRINT_PIECE = PIECES.register("blueprint",
         () -> (StructurePieceType) BlueprintPiece::new);
 
+    public static final DeferredHolder<StructureType<?>, StructureType<dev.worldsfall.world.gen.structure.StillwaterBasinStructure>> STILLWATER_BASIN =
+        TYPES.register("stillwater_basin", () -> () -> dev.worldsfall.world.gen.structure.StillwaterBasinStructure.CODEC);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> STILLWATER_BASIN_PIECE = PIECES.register("stillwater_basin",
+        () -> (StructurePieceType) dev.worldsfall.world.gen.structure.StillwaterBasinPiece::new);
+
     private WFStructures() {}
 
     static void register(IEventBus bus) {

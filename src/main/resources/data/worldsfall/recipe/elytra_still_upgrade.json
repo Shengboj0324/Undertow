@@ -6,7 +6,13 @@
   "result": {
     "id": "minecraft:elytra",
     "components": {
-      "worldsfall:elytra_upgrade": "still"
+      "worldsfall:elytra_upgrade": "still",
+      "minecraft:equippable": {
+        "slot": "chest",
+        "asset_id": "worldsfall:elytra_still",
+        "equip_sound": "minecraft:item.armor.equip_elytra",
+        "damage_on_hurt": false
+      }
     }
   }
 }

@@ -25,6 +25,10 @@ left room or where the platform forced a different route. Section numbers refer 
 - **Vanilla End biomes get the mod sky and a violet ambient light through a biome modifier** (`worldsfall:end_sky`),
   not by editing the vanilla files. Vanilla's End ambient (#3F473F) is green-grey and muddies the §18.2 palette; the
   modifier sets #4E4868 only when a biome has no ambient of its own.
+- **Stillwater Basins are a structure, not a feature.** A feature may only touch the 3×3 chunks around the one being
+  decorated, which cut basins into several small pools. As a structure (`worldsfall:stillwater_basin`) the start re-centres
+  itself on the island from terrain heights, sizes the heart-shaped crater to 40–70% of the island top (§4.2), and runs
+  the Stillfall notch toward the nearest edge; the piece carves it chunk by chunk.
 - **Stillglass is crafted, not smelted.** The document lists Stillwater-to-glass smelting; a fluid block cannot be a
   furnace input, so Stillglass uses a crafting recipe from a Bottle of Stillwater and glass.
 - **"Wings, Revised" advancement uses an `impossible` trigger** awarded from code when the first elytra upgrade action
@@ -39,6 +43,9 @@ left room or where the platform forced a different route. Section numbers refer 
   away from the chunk being decorated clip silently at the edge (`GenUtil.get/set`). This removes the "unsafe terrain
   read" errors and keeps generation deterministic across thread scheduling.
 
+- **Stillwater cauldron** is a vanilla `LayeredCauldronBlock` with its own interaction dispatcher (`worldsfall:stillwater`),
+  registered through NeoForge's cauldron interaction events, so buckets, bottles and vanilla cauldron rules all work.
+
 ## Presentation
 
 - **Sky and tide are custom render pipelines** (`WFPipelines`) with GLSL shaders, registered through NeoForge's custom
@@ -48,5 +55,20 @@ left room or where the platform forced a different route. Section numbers refer 
   reaching the horizon (§5.1 "the picture") with no visible edge at render distance.
 - **Entity models are authored in Blender and exported to a small JSON format** (`art/SPEC_MODELS.md`) that is turned
   into vanilla `LayerDefinition`s at runtime, so artists can rebuild models without touching Java.
-- **Visual review is automated.** `ShowcaseDirector` (dev only, enabled by a JVM property) builds a fresh world, stages
+- **Elytra upgrades change the wings through the equipment asset.** The smithing recipe also rewrites the elytra's
+  `minecraft:equippable` component to `worldsfall:elytra_<upgrade>`, so the vanilla wings layer draws the upgrade texture;
+  no renderer replacement is needed and other elytra mods keep working.
+- **Armor trims use 26.3's paletted trim textures.** Patterns are greyscale in the vanilla `trim_base` ramp with a `palette`
+  `.mcmeta`, and the three materials ship 8-colour palettes. Worn armor shows every pattern/material combination. The
+  *item icons* of vanilla armor only list vanilla materials in their item model definitions; the mod does not override
+  vanilla item model files (that would conflict with other trim mods), so a trimmed armor icon shows the untrimmed icon
+  for the mod's three materials.
+- **Void Lens** outlines Echoes and hidden Lurkers with the vanilla entity-outline pass (teal), and draws Driftwreck boxes
+  and the tide line as a HUD layer projected with the frame's camera matrices. Driftwrecks come from the server (loaded
+  chunks within 128 blocks, refreshed once a second while scoped), so the client never needs structure data.
+- **A Wyrm on the shoulder** is stored in the vanilla shoulder slot like a parrot; a synced player attachment tells every
+  client which shoulder to draw it on.
+- **Stillglass muffling** is client-side: a sound whose straight line to the listener crosses Stillglass plays at half
+  volume (§6.2).
+ `ShowcaseDirector` (dev only, enabled by a JVM property) builds a fresh world, stages
   each §18.10 picture and captures stills and orbit sequences. It never registers in a normal game.

@@ -37,6 +37,7 @@ public final class WFHud {
 
     public static void register(RegisterGuiLayersEvent e) {
         e.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, id("screen_effects"), WFHud::screenEffects);
+        e.registerAbove(id("screen_effects"), id("void_lens"), VoidLensOverlay::render);
         e.registerAbove(VanillaGuiLayers.CROSSHAIR, id("skate_stamina"), WFHud::stamina);
         e.registerAbove(VanillaGuiLayers.HOTBAR, id("tide_indicator"), WFHud::tide);
         e.registerAbove(VanillaGuiLayers.TITLE, id("echo_tablet"), WFHud::tablet);
