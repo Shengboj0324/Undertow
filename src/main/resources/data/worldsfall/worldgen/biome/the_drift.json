@@ -1,0 +1,54 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "worldsfall:ambient.the_drift.loop",
+      "additions": {
+        "sound": "worldsfall:ambient.the_drift.additions",
+        "tick_chance": 0.0111
+      }
+    },
+    "minecraft:visual/fog_color": "#08121C",
+    "minecraft:visual/sky_color": "#0B1A2A",
+    "neoforge:custom_skybox": "worldsfall:end_sky",
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 24000,
+        "min_delay": 9000,
+        "sound": "worldsfall:music.below_the_bottom",
+        "replace_current_music": true
+      }
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "worldsfall:dust_fall"
+          },
+          "probability": 0.002
+        }
+      ],
+      "modifier": "append"
+    }
+  },
+  "carvers": [],
+  "downfall": 0.0,
+  "effects": {
+    "water_color": "#3f76e4"
+  },
+  "features": [
+    [
+      "minecraft:end_island_decorated"
+    ],
+    [],
+    [
+      "worldsfall:debris_field"
+    ],
+    [],
+    [
+      "worldsfall:skate_roost",
+      "worldsfall:echo_shrine"
+    ]
+  ],
+  "has_precipitation": false,
+  "temperature": 0.5
+}

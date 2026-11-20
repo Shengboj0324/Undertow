@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:weathered_purpur",
+  "result": {
+    "id": "worldsfall:weathered_purpur_slab",
+    "count": 2
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:null_obsidian"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.below_the_bottom.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.below_the_bottom.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:three_keys"
+}

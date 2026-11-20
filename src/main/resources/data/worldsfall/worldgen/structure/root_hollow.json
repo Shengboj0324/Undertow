@@ -1,0 +1,8 @@
+{
+  "type": "worldsfall:blueprint",
+  "generator": "root_hollow",
+  "biomes": "#worldsfall:has_structure/root_hollow",
+  "spawn_overrides": {},
+  "step": "underground_structures",
+  "terrain_adaptation": "none"
+}

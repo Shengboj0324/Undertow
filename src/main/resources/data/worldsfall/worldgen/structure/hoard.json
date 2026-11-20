@@ -1,0 +1,8 @@
+{
+  "type": "worldsfall:blueprint",
+  "generator": "hoard",
+  "biomes": "#worldsfall:has_structure/hoard",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "none"
+}

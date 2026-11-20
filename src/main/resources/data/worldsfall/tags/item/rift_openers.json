@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:spire_sigil",
+    "worldsfall:tide_sigil",
+    "worldsfall:under_sigil",
+    "worldsfall:rift_key"
+  ]
+}

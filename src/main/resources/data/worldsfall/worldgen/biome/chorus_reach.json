@@ -1,0 +1,93 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "worldsfall:ambient.chorus_reach.loop",
+      "additions": {
+        "sound": "worldsfall:ambient.chorus_reach.additions",
+        "tick_chance": 0.0111
+      }
+    },
+    "minecraft:visual/fog_color": "#3A2448",
+    "minecraft:visual/sky_color": "#4B2A7A",
+    "neoforge:custom_skybox": "worldsfall:end_sky",
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 24000,
+        "min_delay": 9000,
+        "sound": "worldsfall:music.pale_pasture",
+        "replace_current_music": true
+      }
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "worldsfall:pollen_mote"
+          },
+          "probability": 0.012
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "creature": [
+            {
+              "type": "worldsfall:chorus_grazer",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 3,
+                "max_inclusive": 6
+              },
+              "weight": 12
+            }
+          ],
+          "monster": [
+            {
+              "type": "minecraft:enderman",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 4
+              },
+              "weight": 10
+            }
+          ]
+        }
+      },
+      "modifier": "overlay"
+    }
+  },
+  "carvers": [],
+  "downfall": 0.0,
+  "effects": {
+    "water_color": "#3f76e4"
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:end_gateway_return"
+    ],
+    [],
+    [],
+    [
+      "worldsfall:underside_growth_outer"
+    ],
+    [],
+    [
+      "minecraft:chorus_plant",
+      "worldsfall:pale_loam_patch",
+      "worldsfall:chorus_grove"
+    ],
+    [
+      "worldsfall:chorus_pod_scatter_dense"
+    ]
+  ],
+  "has_precipitation": false,
+  "temperature": 0.5
+}

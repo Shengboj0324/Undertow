@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:driftstone",
+  "result": {
+    "id": "worldsfall:polished_driftstone"
+  }
+}

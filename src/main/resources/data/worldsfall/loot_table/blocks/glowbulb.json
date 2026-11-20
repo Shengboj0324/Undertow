@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:glowbulb",
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "worldsfall:glowbulb",
+            "state": {
+              "ripe": "true"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:blocks/glowbulb"
+}

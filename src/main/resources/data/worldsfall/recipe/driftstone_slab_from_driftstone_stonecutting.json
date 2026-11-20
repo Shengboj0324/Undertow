@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:driftstone",
+  "result": {
+    "id": "worldsfall:driftstone_slab",
+    "count": 2
+  }
+}

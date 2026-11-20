@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "worldsfall:block/undershale",
+    "top": "worldsfall:block/undershale",
+    "side": "worldsfall:block/undershale"
+  }
+}

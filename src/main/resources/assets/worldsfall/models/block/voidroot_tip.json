@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross_emissive",
+  "textures": {
+    "cross": "worldsfall:block/voidroot_tip",
+    "cross_emissive": "worldsfall:block/voidroot_tip_emissive"
+  }
+}

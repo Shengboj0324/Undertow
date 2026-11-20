@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross_emissive",
+  "textures": {
+    "cross": "worldsfall:block/unmade_shard",
+    "cross_emissive": "worldsfall:block/unmade_shard_emissive"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:spire_armor_trim_smithing_template",
+    "worldsfall:drift_armor_trim_smithing_template",
+    "worldsfall:undersong_armor_trim_smithing_template"
+  ]
+}

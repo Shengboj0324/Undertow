@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:undershale_bricks",
+  "result": {
+    "id": "worldsfall:undershale_brick_stairs"
+  }
+}

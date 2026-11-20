@@ -1,0 +1,13 @@
+{
+  "type": "worldsfall:the_fracture",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "worldsfall:fracture_ring",
+      "features": false,
+      "lakes": false,
+      "layers": [],
+      "structure_overrides": []
+    }
+  }
+}

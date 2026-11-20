@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "P": "minecraft:purpur_block",
+    "G": "worldsfall:stillglass",
+    "W": "worldsfall:bottle_of_stillwater",
+    "R": "minecraft:comparator"
+  },
+  "pattern": [
+    "PGP",
+    "PWP",
+    "PRP"
+  ],
+  "result": {
+    "id": "worldsfall:tide_gauge"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "criteria": {
+    "gale": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "worldsfall:elytra_gale_upgrade"
+      }
+    },
+    "still": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "worldsfall:elytra_still_upgrade"
+      }
+    },
+    "hover": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "worldsfall:elytra_hover_upgrade"
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:gale_upgrade_template"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.wings_revised.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.wings_revised.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "gale",
+      "still",
+      "hover"
+    ]
+  ],
+  "parent": "worldsfall:ladders_to_nowhere"
+}

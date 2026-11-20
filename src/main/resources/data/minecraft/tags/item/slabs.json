@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:stillstone_slab",
+    "worldsfall:polished_stillstone_slab",
+    "worldsfall:stillstone_brick_slab",
+    "worldsfall:weathered_purpur_slab",
+    "worldsfall:undershale_slab",
+    "worldsfall:polished_undershale_slab",
+    "worldsfall:undershale_brick_slab",
+    "worldsfall:undershale_tile_slab",
+    "worldsfall:driftstone_slab",
+    "worldsfall:polished_driftstone_slab",
+    "worldsfall:driftstone_brick_slab"
+  ]
+}

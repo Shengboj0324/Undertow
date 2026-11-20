@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "worldsfall:stillness_fragment",
+    "worldsfall:stillness_fragment",
+    "worldsfall:spire_sigil",
+    "worldsfall:tide_sigil",
+    "worldsfall:under_sigil"
+  ],
+  "result": {
+    "id": "worldsfall:rift_key"
+  }
+}

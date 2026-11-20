@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": "minecraft:leather",
+    "M": "worldsfall:skate_membrane",
+    "F": "worldsfall:grazer_frill",
+    "N": "minecraft:iron_nugget"
+  },
+  "pattern": [
+    "LLL",
+    "MFM",
+    "N N"
+  ],
+  "result": {
+    "id": "worldsfall:skate_harness"
+  }
+}

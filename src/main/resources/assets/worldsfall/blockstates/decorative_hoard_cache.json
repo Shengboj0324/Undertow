@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "worldsfall:block/decorative_hoard_cache"
+    },
+    "facing=east": {
+      "model": "worldsfall:block/decorative_hoard_cache",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "worldsfall:block/decorative_hoard_cache",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "worldsfall:block/decorative_hoard_cache",
+      "y": 270
+    }
+  }
+}

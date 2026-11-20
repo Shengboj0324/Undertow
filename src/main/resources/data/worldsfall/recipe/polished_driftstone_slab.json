@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "worldsfall:polished_driftstone"
+  },
+  "pattern": [
+    "SSS"
+  ],
+  "result": {
+    "id": "worldsfall:polished_driftstone_slab",
+    "count": 6
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "U": "worldsfall:undershale",
+    "L": "worldsfall:lumen_crystal_shard",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "UUU",
+    "ULU",
+    "URU"
+  ],
+  "result": {
+    "id": "worldsfall:lumen_lamp"
+  }
+}

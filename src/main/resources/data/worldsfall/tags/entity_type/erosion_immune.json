@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:the_unmade",
+    "worldsfall:shardling",
+    "worldsfall:tidewisp",
+    "worldsfall:void_skate",
+    "worldsfall:wyrm",
+    "minecraft:ender_dragon",
+    "minecraft:enderman",
+    "minecraft:endermite",
+    "minecraft:shulker"
+  ]
+}

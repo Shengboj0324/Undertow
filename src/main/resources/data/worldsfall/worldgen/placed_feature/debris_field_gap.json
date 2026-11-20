@@ -1,0 +1,29 @@
+{
+  "feature": "worldsfall:debris_field",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 40
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": 30
+        },
+        "max_inclusive": {
+          "absolute": 80
+        }
+      }
+    },
+    {
+      "type": "worldsfall:distance_from_origin",
+      "min": 260,
+      "max": 1000
+    }
+  ]
+}

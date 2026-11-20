@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "power=0": {
+      "model": "worldsfall:block/tide_gauge_level_0"
+    },
+    "power=1": {
+      "model": "worldsfall:block/tide_gauge_level_1"
+    },
+    "power=2": {
+      "model": "worldsfall:block/tide_gauge_level_2"
+    },
+    "power=3": {
+      "model": "worldsfall:block/tide_gauge_level_3"
+    },
+    "power=4": {
+      "model": "worldsfall:block/tide_gauge_level_4"
+    },
+    "power=5": {
+      "model": "worldsfall:block/tide_gauge_level_5"
+    },
+    "power=6": {
+      "model": "worldsfall:block/tide_gauge_level_6"
+    },
+    "power=7": {
+      "model": "worldsfall:block/tide_gauge_level_7"
+    },
+    "power=8": {
+      "model": "worldsfall:block/tide_gauge_level_8"
+    },
+    "power=9": {
+      "model": "worldsfall:block/tide_gauge_level_9"
+    },
+    "power=10": {
+      "model": "worldsfall:block/tide_gauge_level_10"
+    },
+    "power=11": {
+      "model": "worldsfall:block/tide_gauge_level_11"
+    },
+    "power=12": {
+      "model": "worldsfall:block/tide_gauge_level_12"
+    },
+    "power=13": {
+      "model": "worldsfall:block/tide_gauge_level_13"
+    },
+    "power=14": {
+      "model": "worldsfall:block/tide_gauge_level_14"
+    },
+    "power=15": {
+      "model": "worldsfall:block/tide_gauge_level_15"
+    }
+  }
+}

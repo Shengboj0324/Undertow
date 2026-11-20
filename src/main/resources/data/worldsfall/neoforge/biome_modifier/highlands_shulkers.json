@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "minecraft:end_highlands",
+  "features": [
+    "worldsfall:wild_shulker_colony"
+  ],
+  "step": "top_layer_modification"
+}

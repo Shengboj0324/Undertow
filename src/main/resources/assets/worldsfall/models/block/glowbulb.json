@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross_emissive",
+  "textures": {
+    "cross": "worldsfall:block/glowbulb",
+    "cross_emissive": "worldsfall:block/glowbulb_emissive"
+  }
+}

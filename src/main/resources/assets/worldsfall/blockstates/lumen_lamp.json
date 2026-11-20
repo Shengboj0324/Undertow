@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "worldsfall:block/lumen_lamp"
+    },
+    "lit=true": {
+      "model": "worldsfall:block/lumen_lamp_on"
+    }
+  }
+}

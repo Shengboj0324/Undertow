@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:heart_of_stillness"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.unmade.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.unmade.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:below_the_bottom"
+}

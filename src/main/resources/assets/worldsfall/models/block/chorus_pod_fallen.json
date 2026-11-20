@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pod": "worldsfall:block/chorus_pod_stage2",
+    "glow": "worldsfall:block/chorus_pod_stage2_emissive",
+    "particle": "worldsfall:block/chorus_pod_stage2"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        6,
+        12
+      ],
+      "faces": {
+        "down": {
+          "texture": "#pod"
+        },
+        "up": {
+          "texture": "#pod"
+        },
+        "north": {
+          "texture": "#pod"
+        },
+        "south": {
+          "texture": "#pod"
+        },
+        "west": {
+          "texture": "#pod"
+        },
+        "east": {
+          "texture": "#pod"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        6,
+        12
+      ],
+      "faces": {
+        "down": {
+          "texture": "#glow"
+        },
+        "up": {
+          "texture": "#glow"
+        },
+        "north": {
+          "texture": "#glow"
+        },
+        "south": {
+          "texture": "#glow"
+        },
+        "west": {
+          "texture": "#glow"
+        },
+        "east": {
+          "texture": "#glow"
+        }
+      },
+      "light_emission": 15
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "filled=false": {
+      "model": "worldsfall:block/still_throne_empty"
+    },
+    "filled=true": {
+      "model": "worldsfall:block/still_throne_filled"
+    }
+  }
+}

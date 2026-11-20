@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "worldsfall:tether_cast",
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "worldsfall:item/rift_tether_cast"
+    },
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "worldsfall:item/rift_tether"
+    }
+  }
+}

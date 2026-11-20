@@ -1,0 +1,29 @@
+{
+  "feature": "worldsfall:skate_roost",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 160
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": 50
+        },
+        "max_inclusive": {
+          "absolute": 70
+        }
+      }
+    },
+    {
+      "type": "worldsfall:distance_from_origin",
+      "min": 300,
+      "max": 980
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "worldsfall:ceiling_moss",
+              "condition": "minecraft:tool/can_silk_touch"
+            },
+            {
+              "type": "minecraft:item",
+              "name": "worldsfall:ceiling_moss",
+              "condition": "minecraft:tool/can_shear"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:blocks/ceiling_moss"
+}

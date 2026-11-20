@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "part=base": {
+      "model": "worldsfall:block/lumen_crystal_base"
+    },
+    "part=middle": {
+      "model": "worldsfall:block/lumen_crystal_middle"
+    },
+    "part=tip": {
+      "model": "worldsfall:block/lumen_crystal_tip"
+    }
+  }
+}

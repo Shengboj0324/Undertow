@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:lilac_tuft",
+          "condition": "minecraft:tool/can_shear"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:blocks/lilac_tuft"
+}

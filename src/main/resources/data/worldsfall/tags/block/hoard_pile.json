@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:grass_block",
+    "minecraft:dirt",
+    "minecraft:stone",
+    "minecraft:cobblestone",
+    "minecraft:sand",
+    "minecraft:oak_log",
+    "minecraft:birch_log",
+    "#minecraft:flowers",
+    "#minecraft:saplings",
+    "minecraft:coal_ore",
+    "minecraft:iron_ore",
+    "minecraft:copper_ore",
+    "minecraft:gold_ore",
+    "minecraft:lapis_ore"
+  ]
+}

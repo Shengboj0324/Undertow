@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:item/heart_of_stillness",
+    "layer1": {
+      "sprite": "worldsfall:item/heart_of_stillness_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

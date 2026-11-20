@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:null_obsidian",
+    "worldsfall:keystone_socket",
+    "worldsfall:spire_vault",
+    "worldsfall:drift_cache",
+    "worldsfall:sigil_pedestal",
+    "worldsfall:fracture_rift_frame",
+    "worldsfall:fracture_rift",
+    "worldsfall:still_throne",
+    "worldsfall:hoard_cache"
+  ]
+}

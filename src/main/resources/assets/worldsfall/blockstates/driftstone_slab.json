@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldsfall:block/driftstone_slab"
+    },
+    "type=top": {
+      "model": "worldsfall:block/driftstone_slab_top"
+    },
+    "type=double": {
+      "model": "worldsfall:block/driftstone"
+    }
+  }
+}

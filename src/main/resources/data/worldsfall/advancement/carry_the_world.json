@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:shulker_satchel"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.carry_the_world.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.carry_the_world.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:fair_trade"
+}

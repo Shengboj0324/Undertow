@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldsfall:block/undershale_slab"
+    },
+    "type=top": {
+      "model": "worldsfall:block/undershale_slab_top"
+    },
+    "type=double": {
+      "model": "worldsfall:block/undershale"
+    }
+  }
+}

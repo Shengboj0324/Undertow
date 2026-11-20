@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:hoard_cache"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.light_fingers.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.light_fingers.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:fair_trade"
+}

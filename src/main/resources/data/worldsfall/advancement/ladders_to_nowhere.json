@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:spire_key"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.ladders_to_nowhere.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.ladders_to_nowhere.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:root"
+}

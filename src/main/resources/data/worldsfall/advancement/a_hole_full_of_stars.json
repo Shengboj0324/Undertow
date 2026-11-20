@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:stillwater_bucket"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.a_hole_full_of_stars.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.a_hole_full_of_stars.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:root"
+}

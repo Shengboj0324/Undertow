@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:grazer_frill"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.pale_pasture.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.pale_pasture.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:root"
+}

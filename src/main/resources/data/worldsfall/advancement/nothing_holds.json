@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:fracture_rift_frame"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.nothing_holds.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.nothing_holds.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:root"
+}

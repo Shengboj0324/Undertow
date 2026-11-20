@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "worldsfall:weathered_purpur"
+  },
+  "pattern": [
+    "SSS"
+  ],
+  "result": {
+    "id": "worldsfall:weathered_purpur_slab",
+    "count": 6
+  }
+}

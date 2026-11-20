@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross_emissive",
+  "textures": {
+    "cross": "worldsfall:block/lumen_crystal_tip",
+    "cross_emissive": "worldsfall:block/lumen_crystal_tip_emissive"
+  }
+}

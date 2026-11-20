@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:dragon_breath",
+  "base": "worldsfall:cracked_void_anchor",
+  "addition": "worldsfall:glow_gland",
+  "result": {
+    "id": "worldsfall:void_anchor"
+  }
+}

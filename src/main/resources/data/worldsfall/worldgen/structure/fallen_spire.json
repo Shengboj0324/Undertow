@@ -1,0 +1,8 @@
+{
+  "type": "worldsfall:blueprint",
+  "generator": "fallen_spire",
+  "biomes": "#worldsfall:has_structure/fallen_spire",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "none"
+}

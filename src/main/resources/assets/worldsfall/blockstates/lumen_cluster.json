@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "worldsfall:block/lumen_cluster",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "worldsfall:block/lumen_cluster",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "worldsfall:block/lumen_cluster",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "worldsfall:block/lumen_cluster",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "worldsfall:block/lumen_cluster"
+    },
+    "facing=west": {
+      "model": "worldsfall:block/lumen_cluster",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

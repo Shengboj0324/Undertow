@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:item/glow_gland",
+    "layer1": {
+      "sprite": "worldsfall:item/glow_gland_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

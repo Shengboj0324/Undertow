@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:still_throne"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.calm_waters.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.calm_waters.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:unmade"
+}

@@ -1,0 +1,41 @@
+{
+  "criteria": {
+    "all": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "worldsfall:spire_sigil"
+          },
+          {
+            "items": "worldsfall:tide_sigil"
+          },
+          {
+            "items": "worldsfall:under_sigil"
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:tide_sigil"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.three_keys.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.three_keys.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "all"
+    ]
+  ],
+  "parent": "worldsfall:the_tide_remembers"
+}

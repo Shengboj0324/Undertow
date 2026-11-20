@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "minecraft:purpur_pillar",
+    "O": "worldsfall:null_obsidian",
+    "H": "worldsfall:stillness_fragment"
+  },
+  "pattern": [
+    "POP",
+    "OHO",
+    "POP"
+  ],
+  "result": {
+    "id": "worldsfall:gravity_anchor"
+  }
+}

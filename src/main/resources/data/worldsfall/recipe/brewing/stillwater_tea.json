@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "worldsfall:bottle_of_stillwater"
+  },
+  "reagent": {
+    "item": "worldsfall:lilac_tuft"
+  },
+  "output": {
+    "id": "worldsfall:stillwater_tea"
+  }
+}

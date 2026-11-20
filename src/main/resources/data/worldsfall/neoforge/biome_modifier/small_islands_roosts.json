@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "minecraft:small_end_islands",
+    "minecraft:end_barrens"
+  ],
+  "features": [
+    "worldsfall:debris_field",
+    "worldsfall:skate_roost"
+  ],
+  "step": "surface_structures"
+}

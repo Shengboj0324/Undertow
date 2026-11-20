@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "minecraft:shulker_shell",
+    "L": "minecraft:leather",
+    "C": "minecraft:chest"
+  },
+  "pattern": [
+    " S ",
+    "LCL",
+    "LLL"
+  ],
+  "result": {
+    "id": "worldsfall:shulker_satchel"
+  }
+}

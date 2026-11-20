@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "worldsfall:bottled_tidewisp"
+  },
+  "pattern": [
+    "B"
+  ],
+  "result": {
+    "id": "worldsfall:bottled_tidewisp"
+  }
+}

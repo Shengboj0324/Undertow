@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:polished_undershale",
+  "result": {
+    "id": "worldsfall:polished_undershale_wall"
+  }
+}

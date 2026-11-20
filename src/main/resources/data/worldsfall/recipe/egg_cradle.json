@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": "worldsfall:lumen_lamp",
+    "B": "minecraft:end_stone_bricks",
+    "O": "minecraft:obsidian"
+  },
+  "pattern": [
+    "LBL",
+    "BOB",
+    "LBL"
+  ],
+  "result": {
+    "id": "worldsfall:egg_cradle"
+  }
+}

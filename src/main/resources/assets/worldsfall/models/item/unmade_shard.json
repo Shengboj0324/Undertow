@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:block/unmade_shard",
+    "layer1": {
+      "sprite": "worldsfall:block/unmade_shard_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

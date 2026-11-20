@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:stillglass",
+    "worldsfall:stillglass_pane",
+    "worldsfall:fracture_glass",
+    "worldsfall:null_obsidian",
+    "worldsfall:rimglass"
+  ]
+}

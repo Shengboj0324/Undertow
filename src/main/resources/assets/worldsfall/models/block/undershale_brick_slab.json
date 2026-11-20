@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "worldsfall:block/undershale_bricks",
+    "top": "worldsfall:block/undershale_bricks",
+    "side": "worldsfall:block/undershale_bricks"
+  }
+}

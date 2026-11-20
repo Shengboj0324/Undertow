@@ -1,0 +1,51 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "worldsfall:ambient.the_hoard.loop",
+      "additions": {
+        "sound": "worldsfall:ambient.the_hoard.additions",
+        "tick_chance": 0.0111
+      }
+    },
+    "minecraft:visual/fog_color": "#1A2420",
+    "minecraft:visual/sky_color": "#2B3A33",
+    "neoforge:custom_skybox": "worldsfall:end_sky",
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "monster": [
+            {
+              "type": "minecraft:enderman",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 2
+              },
+              "weight": 4
+            }
+          ]
+        }
+      },
+      "modifier": "overlay"
+    }
+  },
+  "carvers": [],
+  "downfall": 0.0,
+  "effects": {
+    "water_color": "#3f76e4"
+  },
+  "features": [
+    [
+      "minecraft:end_island_decorated"
+    ],
+    [],
+    [],
+    [],
+    [
+      "worldsfall:echo_shrine"
+    ]
+  ],
+  "has_precipitation": false,
+  "temperature": 0.5
+}

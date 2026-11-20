@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:item/spire_key",
+    "layer1": {
+      "sprite": "worldsfall:item/spire_key_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

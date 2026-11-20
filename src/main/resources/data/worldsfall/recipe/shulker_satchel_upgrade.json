@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:shulker_shell",
+  "base": "worldsfall:shulker_satchel",
+  "addition": "minecraft:shulker_shell",
+  "result": {
+    "id": "worldsfall:shulker_satchel",
+    "components": {
+      "worldsfall:satchel_size": 18
+    }
+  }
+}

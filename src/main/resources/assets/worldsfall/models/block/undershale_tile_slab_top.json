@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "worldsfall:block/undershale_tiles",
+    "top": "worldsfall:block/undershale_tiles",
+    "side": "worldsfall:block/undershale_tiles"
+  }
+}

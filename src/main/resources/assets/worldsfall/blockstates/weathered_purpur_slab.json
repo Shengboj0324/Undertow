@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldsfall:block/weathered_purpur_slab"
+    },
+    "type=top": {
+      "model": "worldsfall:block/weathered_purpur_slab_top"
+    },
+    "type=double": {
+      "model": "worldsfall:block/weathered_purpur"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "worldsfall:block/polished_driftstone",
+    "top": "worldsfall:block/polished_driftstone",
+    "side": "worldsfall:block/polished_driftstone"
+  }
+}

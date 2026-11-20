@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:driftstone_bricks",
+  "result": {
+    "id": "worldsfall:driftstone_brick_wall"
+  }
+}

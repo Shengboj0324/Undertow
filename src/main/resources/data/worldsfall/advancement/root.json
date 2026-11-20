@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "entered_end": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "minecraft:the_end"
+      }
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:lumen_crystal"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.root.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.root.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "worldsfall:gui/advancements/backgrounds/worldsfall"
+  },
+  "requirements": [
+    [
+      "entered_end"
+    ]
+  ]
+}

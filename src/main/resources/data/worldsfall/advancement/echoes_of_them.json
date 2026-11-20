@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:echo_tablet"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.echoes_of_them.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.echoes_of_them.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:ladders_to_nowhere"
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:block/lumen_cluster",
+    "layer1": {
+      "sprite": "worldsfall:block/lumen_cluster_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

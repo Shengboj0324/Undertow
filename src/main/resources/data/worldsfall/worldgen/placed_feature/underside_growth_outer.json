@@ -1,0 +1,16 @@
+{
+  "feature": "worldsfall:underside_growth",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 2
+    },
+    {
+      "type": "worldsfall:distance_from_origin",
+      "min": 1024
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

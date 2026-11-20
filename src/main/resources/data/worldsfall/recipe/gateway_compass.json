@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": "worldsfall:echo_dust",
+    "C": "minecraft:compass"
+  },
+  "pattern": [
+    " D ",
+    "DCD",
+    " D "
+  ],
+  "result": {
+    "id": "worldsfall:gateway_compass"
+  }
+}

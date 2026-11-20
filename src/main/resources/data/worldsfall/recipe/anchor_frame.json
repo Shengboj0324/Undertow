@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "minecraft:purpur_slab",
+    "S": "worldsfall:stillness_fragment"
+  },
+  "pattern": [
+    "P P",
+    " S ",
+    "P P"
+  ],
+  "result": {
+    "id": "worldsfall:anchor_frame",
+    "count": 8
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "worldsfall:item/hover_upgrade_template"
+  }
+}

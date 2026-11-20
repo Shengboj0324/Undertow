@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:lumen_cluster"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.underneath.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.underneath.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:nothing_holds"
+}

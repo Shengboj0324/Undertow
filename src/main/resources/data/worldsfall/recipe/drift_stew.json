@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:bowl",
+    "worldsfall:roasted_chorus_pod",
+    "worldsfall:cooked_grazer_flank",
+    "worldsfall:glowbulb"
+  ],
+  "result": {
+    "id": "worldsfall:drift_stew"
+  }
+}

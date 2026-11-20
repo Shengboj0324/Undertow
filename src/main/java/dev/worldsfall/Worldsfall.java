@@ -39,6 +39,7 @@ public final class Worldsfall {
         WFMenus.MENUS.register(modBus);
         WFTabs.TABS.register(modBus);
         WFWorldgen.register(modBus);
+        dev.worldsfall.data.WFDataTypes.register(modBus);
         dev.worldsfall.gametest.WFTestFunctions.FUNCTIONS.register(modBus);
 
         modBus.addListener(WFSetup::attributes);

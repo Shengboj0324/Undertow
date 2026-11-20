@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:stillstone_bricks",
+  "result": {
+    "id": "worldsfall:stillstone_brick_wall"
+  }
+}

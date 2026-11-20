@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "worldsfall:block/pale_loam_top",
+    "side": "worldsfall:block/pale_loam_side",
+    "bottom": "minecraft:block/end_stone"
+  }
+}

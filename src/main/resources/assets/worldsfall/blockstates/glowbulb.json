@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "ripe=true": {
+      "model": "worldsfall:block/glowbulb"
+    },
+    "ripe=false": {
+      "model": "worldsfall:block/glowbulb_picked"
+    }
+  }
+}

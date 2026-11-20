@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": "minecraft:end_stone",
+    "G": "minecraft:grass_block",
+    "C": "minecraft:chest"
+  },
+  "pattern": [
+    "EGE",
+    "ECE",
+    "EEE"
+  ],
+  "result": {
+    "id": "worldsfall:decorative_hoard_cache"
+  }
+}

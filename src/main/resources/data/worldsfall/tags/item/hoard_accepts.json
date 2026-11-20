@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#worldsfall:hoard_value_1",
+    "#worldsfall:hoard_value_2",
+    "#worldsfall:hoard_value_4",
+    "#worldsfall:hoard_value_6",
+    "#worldsfall:hoard_value_10"
+  ]
+}

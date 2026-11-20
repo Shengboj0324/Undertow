@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "worldsfall:undershale"
+  },
+  "pattern": [
+    "SSS"
+  ],
+  "result": {
+    "id": "worldsfall:undershale_slab",
+    "count": 6
+  }
+}

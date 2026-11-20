@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 71203911,
+    "separation": 18,
+    "spacing": 38,
+    "spread_type": "triangular"
+  },
+  "structures": [
+    {
+      "structure": "worldsfall:fallen_spire",
+      "weight": 1
+    }
+  ]
+}

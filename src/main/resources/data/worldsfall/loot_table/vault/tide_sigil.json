@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:tide_sigil"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:echo_tablet",
+          "weight": 1,
+          "modifier": [
+            {
+              "type": "worldsfall:random_tablet"
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 1.0
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:vault/tide_sigil"
+}

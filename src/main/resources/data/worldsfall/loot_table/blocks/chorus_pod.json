@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:chorus_pod",
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "worldsfall:chorus_pod",
+            "state": {
+              "age": "2"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:blocks/chorus_pod"
+}

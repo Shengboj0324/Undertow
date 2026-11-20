@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:skate_harness"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.across_the_gap.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.across_the_gap.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:patience_of_the_void"
+}

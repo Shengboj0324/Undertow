@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld_rod",
+  "textures": {
+    "layer0": "worldsfall:item/rift_tether_cast"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "worldsfall:block/lumen_crystal_base"
+  }
+}

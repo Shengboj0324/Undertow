@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:item/bottled_tidewisp",
+    "layer1": {
+      "sprite": "worldsfall:item/bottled_tidewisp_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

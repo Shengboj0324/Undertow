@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:undershale",
+  "result": {
+    "id": "worldsfall:undershale_slab",
+    "count": 2
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:item/void_anchor",
+    "layer1": {
+      "sprite": "worldsfall:item/void_anchor_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

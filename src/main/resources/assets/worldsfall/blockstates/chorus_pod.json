@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "age=0,facing=north,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage0"
+    },
+    "age=0,facing=north,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen"
+    },
+    "age=1,facing=north,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage1"
+    },
+    "age=1,facing=north,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen"
+    },
+    "age=2,facing=north,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage2"
+    },
+    "age=2,facing=north,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen"
+    },
+    "age=0,facing=east,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage0",
+      "y": 90
+    },
+    "age=0,facing=east,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 90
+    },
+    "age=1,facing=east,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage1",
+      "y": 90
+    },
+    "age=1,facing=east,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 90
+    },
+    "age=2,facing=east,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage2",
+      "y": 90
+    },
+    "age=2,facing=east,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 90
+    },
+    "age=0,facing=south,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage0",
+      "y": 180
+    },
+    "age=0,facing=south,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 180
+    },
+    "age=1,facing=south,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage1",
+      "y": 180
+    },
+    "age=1,facing=south,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 180
+    },
+    "age=2,facing=south,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage2",
+      "y": 180
+    },
+    "age=2,facing=south,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 180
+    },
+    "age=0,facing=west,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage0",
+      "y": 270
+    },
+    "age=0,facing=west,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 270
+    },
+    "age=1,facing=west,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage1",
+      "y": 270
+    },
+    "age=1,facing=west,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 270
+    },
+    "age=2,facing=west,fallen=false": {
+      "model": "worldsfall:block/chorus_pod_stage2",
+      "y": 270
+    },
+    "age=2,facing=west,fallen=true": {
+      "model": "worldsfall:block/chorus_pod_fallen",
+      "y": 270
+    }
+  }
+}

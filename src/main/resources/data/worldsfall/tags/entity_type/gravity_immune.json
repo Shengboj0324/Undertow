@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:the_unmade",
+    "worldsfall:tether_pylon",
+    "worldsfall:flying_block",
+    "worldsfall:void_capsule",
+    "worldsfall:void_skate",
+    "worldsfall:tidewisp",
+    "worldsfall:shardling"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 40517781,
+    "separation": 6,
+    "spacing": 14,
+    "spread_type": "triangular"
+  },
+  "structures": [
+    {
+      "structure": "worldsfall:root_hollow",
+      "weight": 1
+    }
+  ]
+}

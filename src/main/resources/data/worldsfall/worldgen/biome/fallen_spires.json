@@ -1,0 +1,77 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "worldsfall:ambient.fallen_spires.loop",
+      "additions": {
+        "sound": "worldsfall:ambient.fallen_spires.additions",
+        "tick_chance": 0.0111
+      }
+    },
+    "minecraft:visual/fog_color": "#2A0F25",
+    "minecraft:visual/sky_color": "#5A1F4A",
+    "neoforge:custom_skybox": "worldsfall:end_sky",
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 24000,
+        "min_delay": 9000,
+        "sound": "worldsfall:music.ladders_to_nowhere",
+        "replace_current_music": true
+      }
+    },
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "worldsfall:dust_fall"
+          },
+          "probability": 0.006
+        }
+      ],
+      "modifier": "append"
+    },
+    "minecraft:gameplay/natural_mob_spawns": {
+      "argument": {
+        "spawn_costs": {},
+        "spawns_by_category": {
+          "monster": [
+            {
+              "type": "minecraft:enderman",
+              "count": {
+                "type": "minecraft:uniform",
+                "min_inclusive": 1,
+                "max_inclusive": 4
+              },
+              "weight": 10
+            }
+          ]
+        }
+      },
+      "modifier": "overlay"
+    }
+  },
+  "carvers": [],
+  "downfall": 0.0,
+  "effects": {
+    "water_color": "#3f76e4"
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:end_gateway_return"
+    ],
+    [],
+    [],
+    [
+      "worldsfall:underside_growth_outer"
+    ],
+    [],
+    [
+      "minecraft:chorus_plant"
+    ]
+  ],
+  "has_precipitation": false,
+  "temperature": 0.5
+}

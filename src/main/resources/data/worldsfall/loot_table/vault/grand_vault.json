@@ -1,0 +1,122 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:spire_sigil"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:hover_upgrade_template",
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:elytra",
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.08
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ender_pearl",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.8
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:echo_tablet",
+          "weight": 1,
+          "modifier": [
+            {
+              "type": "worldsfall:random_tablet"
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "worldsfall:gale_upgrade_template",
+              "condition": {
+                "type": "minecraft:random_chance",
+                "chance": 0.5
+              }
+            },
+            {
+              "type": "minecraft:item",
+              "name": "worldsfall:still_upgrade_template"
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.25
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:spire_armor_trim_smithing_template",
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.2
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:vault/grand_vault"
+}

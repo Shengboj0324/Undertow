@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "worldsfall:still_upgrade_template",
+  "base": "minecraft:elytra",
+  "addition": "worldsfall:mirror_shard_fragment",
+  "result": {
+    "id": "minecraft:elytra",
+    "components": {
+      "worldsfall:elytra_upgrade": "still"
+    }
+  }
+}

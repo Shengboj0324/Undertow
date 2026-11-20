@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:echo_tablet",
+          "weight": 1,
+          "modifier": [
+            {
+              "type": "worldsfall:random_tablet"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:vault/echo_shrine"
+}

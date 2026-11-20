@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "worldsfall:echo_dust",
+  "base": "minecraft:spyglass",
+  "addition": "worldsfall:lurker_lens",
+  "result": {
+    "id": "worldsfall:void_lens"
+  }
+}

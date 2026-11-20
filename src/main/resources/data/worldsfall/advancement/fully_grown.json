@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:slumbering_egg"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.fully_grown.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.fully_grown.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:warm_hands"
+}

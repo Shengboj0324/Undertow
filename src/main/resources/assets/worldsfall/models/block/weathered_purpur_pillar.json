@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "worldsfall:block/weathered_purpur_pillar",
+    "end": "worldsfall:block/weathered_purpur_pillar_top"
+  }
+}

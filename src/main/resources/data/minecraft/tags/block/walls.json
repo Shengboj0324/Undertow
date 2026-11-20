@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:stillstone_wall",
+    "worldsfall:polished_stillstone_wall",
+    "worldsfall:stillstone_brick_wall",
+    "worldsfall:undershale_wall",
+    "worldsfall:polished_undershale_wall",
+    "worldsfall:undershale_brick_wall",
+    "worldsfall:undershale_tile_wall",
+    "worldsfall:driftstone_wall",
+    "worldsfall:polished_driftstone_wall",
+    "worldsfall:driftstone_brick_wall"
+  ]
+}

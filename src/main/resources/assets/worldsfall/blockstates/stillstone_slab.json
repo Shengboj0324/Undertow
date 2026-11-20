@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldsfall:block/stillstone_slab"
+    },
+    "type=top": {
+      "model": "worldsfall:block/stillstone_slab_top"
+    },
+    "type=double": {
+      "model": "worldsfall:block/stillstone"
+    }
+  }
+}

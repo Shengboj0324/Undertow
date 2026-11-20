@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 95511023,
+    "separation": 8,
+    "spacing": 19,
+    "spread_type": "triangular"
+  },
+  "structures": [
+    {
+      "structure": "worldsfall:driftwreck",
+      "weight": 1
+    }
+  ]
+}

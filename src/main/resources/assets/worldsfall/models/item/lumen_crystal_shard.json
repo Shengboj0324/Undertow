@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:item/lumen_crystal_shard",
+    "layer1": {
+      "sprite": "worldsfall:item/lumen_crystal_shard_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

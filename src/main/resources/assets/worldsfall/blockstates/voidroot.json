@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "part=base": {
+      "model": "worldsfall:block/voidroot_base"
+    },
+    "part=middle": {
+      "model": "worldsfall:block/voidroot_middle"
+    },
+    "part=tip": {
+      "model": "worldsfall:block/voidroot_tip"
+    }
+  }
+}

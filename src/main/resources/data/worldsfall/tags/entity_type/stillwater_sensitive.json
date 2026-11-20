@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:enderman",
+    "worldsfall:hoarder",
+    "worldsfall:spire_warden",
+    "worldsfall:echo"
+  ]
+}

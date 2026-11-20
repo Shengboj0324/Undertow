@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:stillstone_stairs",
+    "worldsfall:polished_stillstone_stairs",
+    "worldsfall:stillstone_brick_stairs",
+    "worldsfall:weathered_purpur_stairs",
+    "worldsfall:undershale_stairs",
+    "worldsfall:polished_undershale_stairs",
+    "worldsfall:undershale_brick_stairs",
+    "worldsfall:undershale_tile_stairs",
+    "worldsfall:driftstone_stairs",
+    "worldsfall:polished_driftstone_stairs",
+    "worldsfall:driftstone_brick_stairs"
+  ]
+}

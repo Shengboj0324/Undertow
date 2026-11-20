@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "worldsfall:block/purpur_rubble",
+    "top": "worldsfall:block/purpur_rubble",
+    "side": "worldsfall:block/purpur_rubble"
+  }
+}
