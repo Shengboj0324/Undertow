@@ -138,17 +138,23 @@ def gateway_compass():
         st.torus('rim', loc=(0, 0, 0), R=6.4, r=1.05, rot=(90, 0, 0), maj=28, minr=8)
         # needle: 4-point star with the north point elongated, rotated 22.5 deg per frame (clockwise)
         ang = -math.radians(22.5 * i)
-        star = [(0, 5.3), (0.95, 0.95), (2.6, 0), (0.95, -0.95), (0, -2.6), (-0.95, -0.95), (-2.6, 0), (-0.95, 0.95)]
-        verts = [(x * math.cos(ang) - z * math.sin(ang), -0.3, x * math.sin(ang) + z * math.cos(ang)) for x, z in star]
-        st.mesh('needle', verts + [(0, -0.3, 0)], [(8, k, (k + 1) % 8) for k in range(8)])
+        star = [(0, 5.2), (1.25, 1.25), (2.3, 0), (1.25, -1.25), (0, -2.3), (-1.25, -1.25), (-2.3, 0), (-1.25, 1.25)]
+        ox, oz = 0.5, -0.5  # needle pivot on a pixel centre so thin arms stay crisp
+        verts = [(x * math.cos(ang) - z * math.sin(ang) + ox, -0.3, x * math.sin(ang) + z * math.cos(ang) + oz)
+                 for x, z in star]
+        st.mesh('needle', verts + [(ox, -0.3, oz)], [(8, k, (k + 1) % 8) for k in range(8)])
         tx, tz = verts[0][0], verts[0][2]
-        st.sphere('tip', loc=(tx * 0.82, -0.5, tz * 0.82), r=0.7, seg=8)
         # the tiny dark diamond (miniature gateway) at the top
         st.mesh('gate', [(0, -1.4, 7.9), (1.1, -1.4, 6.8), (0, -1.4, 5.7), (-1.1, -1.4, 6.8)], [(0, 1, 2, 3)])
-        spr, em = finish(st, 'compass_%02d' % i, cover=0.4)
-        # keep the diamond crisp: force it as a 3-px dark diamond with a faint violet glint
-        for x, y in [(8, 1), (7, 2), (8, 2), (9, 2), (8, 3)]:
-            pass
+        spr, em = finish(st, 'compass_%02d' % i, cover=0.4, outline=False)
+        # glowing tip: the two needle pixels furthest along the pointing direction turn white
+        nd = col_mask(spr, ['#FF7AD9', '#FFB3EC'], 2)
+        ys, xs = np.nonzero(nd)
+        dx, dy = math.sin(-ang), -math.cos(-ang)
+        proj = (xs - 8) * dx + (ys - 8) * dy
+        for k in np.argsort(-proj)[:2]:
+            spr[ys[k], xs[k], :3] = pix.hx('#FFFFFF')
+        spr = pix.outline(spr, darken=0.42)
         out('gateway_compass_%02d' % i, spr)
 
 
@@ -302,10 +308,12 @@ def heart_of_stillness():
     st.mat('ring', T(['#6E86B8', '#B9D3FF'], cuts=[-1, 0.2]))
     st.mat('core', T(['#FFFFFF'], emissive=True))
     st.sphere('s', r=5.6, seg=24)
-    st.torus('ring', R=7.0, r=0.45, rot=(78, 0, -18), maj=32, minr=6)
     st.sphere('core', loc=(-0.6, -5.0, 0.6), r=1.9, seg=12)
     spr, em = finish(st, 'heart', cover=0.42)
     halo = col_mask(spr, [PALEP[3]], 2) & disc(16, 7.5, 7.5, 3.3)
+    for x, y in [(1, 4), (14, 11), (2, 12)]:  # faint 'ringing' glints around the orb
+        spr[y, x, :3] = pix.hx('#B9D3FF')
+        spr[y, x, 3] = 255
     spr[halo, :3] = pix.hx('#E8F0FF')
     em |= halo
     out('heart_of_stillness', spr, em, emissive=True)
@@ -851,7 +859,7 @@ def templates():
 # ================================================================================================ spawn eggs
 EGGS = {
     'void_skate': (['#141A36', '#21446B', '#2A2560', '#3A5A88'], ['#1E9E93', '#3AE0D0', '#3AE0D0', '#B8FFF7'], 0.30),
-    'chorus_grazer': (['#8C6EA0', '#B493C4', '#C9AED6', '#D9C6E6'], ['#5E3F6E', '#8A5C8E', '#D8B6FF', '#EBD8FF'], 0.28),
+    'chorus_grazer': (['#8C6EA0', '#B493C4', '#C9AED6', '#D9C6E6'], ['#4E3460', '#6E4A82', '#8A5C9E', '#A87BC0'], 0.28),
     'underside_lurker': (['#08070C', '#14111C', '#1E1A26', '#2E2838'], ['#A3196E', '#FF3FB4', '#FF3FB4', '#FF7AD9'], 0.18),
     'hoarder': (['#060608', '#101014', '#1A1A20', '#2A2A32'], ['#3E7A2A', '#6FBF4A', '#8A5F3C', '#A07A4A'], 0.26),
     'spire_warden': (['#060608', '#101014', '#1C1A22', '#2A2632'], ['#6E4A7E', '#8D649D', '#A87BB6', '#C9A6D4'], 0.32),
@@ -870,7 +878,7 @@ def spawn_eggs():
         pat = lambda g, seed=seed: g.voronoi(g.add(g.objco(), (seed, seed * 0.37, 0)) if False else g.objco(),
                                              float(seed), 0.42, 'F1', dims='4D')
         st.mat('egg', T(base, cuts=[-1, -0.35, 0.15, 0.6], pattern=lambda g, s=seed: g.sub(1.0, g.voronoi(
-            g.objco(), float(s), 0.24, 'F1', dims='4D')), pattern_cut=1.0 - (cut + 0.16), palette2=spots))
+            g.objco(), float(s), 0.24, 'F1', dims='4D')), pattern_cut=1.0 - (cut + 0.22), palette2=spots))
         st.lathe('egg', egg_profile(18, 13.4, 5.4), seg=20)
         spr, em = finish(st, 'egg_' + k, cover=0.42, outline=False)
         # creature motifs (hand-placed, where the creature has a signature feature)

@@ -27,16 +27,35 @@ public final class WFNetwork {
         return TideSyncPayload.of(TideData.get(server).state(), WFConfig.SERVER.tideCycle(), WFConfig.get(WFConfig.SERVER.tidesEnabled, true));
     }
 
+    /** Sends only to players whose connection negotiated the payload (vanilla clients / mock players are skipped). */
+    public static void send(ServerPlayer player, net.minecraft.network.protocol.common.custom.CustomPacketPayload payload) {
+        if (player.connection != null && player.connection.hasChannel(payload)) {
+            PacketDistributor.sendToPlayer(player, payload);
+        }
+    }
+
+    public static void sendToAll(MinecraftServer server, net.minecraft.network.protocol.common.custom.CustomPacketPayload payload) {
+        for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+            send(p, payload);
+        }
+    }
+
+    public static void sendToDimension(net.minecraft.server.level.ServerLevel level, net.minecraft.network.protocol.common.custom.CustomPacketPayload payload) {
+        for (ServerPlayer p : level.players()) {
+            send(p, payload);
+        }
+    }
+
     public static void syncTidesToAll(MinecraftServer server) {
-        PacketDistributor.sendToAllPlayers(tidePayload(server));
+        sendToAll(server, tidePayload(server));
     }
 
     public static void syncPlayer(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, tidePayload(player.level().getServer()),
-            new SunderingStatePayload(SunderingData.get(player.level().getServer()).done()));
+        send(player, tidePayload(player.level().getServer()));
+        send(player, new SunderingStatePayload(SunderingData.get(player.level().getServer()).done()));
     }
 
     public static void syncSundering(MinecraftServer server) {
-        PacketDistributor.sendToAllPlayers(new SunderingStatePayload(SunderingData.get(server).done()));
+        sendToAll(server, new SunderingStatePayload(SunderingData.get(server).done()));
     }
 }

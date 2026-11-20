@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /** Echo Tablet (§2.3): right-click to read one line, shown as glyphs resolving into text. Twelve unique fragments. */
 public class EchoTabletItem extends Item {
@@ -44,7 +43,7 @@ public class EchoTabletItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         if (player instanceof ServerPlayer sp) {
             int idx = index(stack);
-            PacketDistributor.sendToPlayer(sp, new EchoTabletPayload(idx));
+            dev.worldsfall.network.WFNetwork.send(sp, new EchoTabletPayload(idx));
             level.playSound(null, sp.blockPosition(), WFSounds.ITEM_ECHO_TABLET_READ.get(), SoundSource.PLAYERS, 0.8f, 1.0f);
             Progress.readTablet(sp, idx);
         }

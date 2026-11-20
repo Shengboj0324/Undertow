@@ -218,6 +218,8 @@ public final class WFTests {
 
     private static void voidAnchor(GameTestHelper h) {
         ServerPlayer player = h.makeMockServerPlayerInLevel();
+        BlockPos at = h.absolutePos(new BlockPos(2, 3, 2));
+        player.teleportTo(h.getLevel(), at.getX() + 0.5, at.getY(), at.getZ() + 0.5, java.util.Set.of(), 0, 0, true);
         player.getInventory().setItem(0, new ItemStack(WFItems.VOID_ANCHOR.get()));
         player.getInventory().setItem(1, new ItemStack(Items.DIAMOND, 7));
         player.getInventory().setItem(2, new ItemStack(Items.ENDER_PEARL, 3));
@@ -275,7 +277,10 @@ public final class WFTests {
         h.assertTrue(cradle.placeDragonEgg() && cradle.stage() == EggCradleBlockEntity.Stage.ATTUNING, "egg placed, attuning");
         cradle.debugSetProgress(EggCradleBlockEntity.ATTUNE_TICKS);
         h.runAfterDelay(3, () -> {
-            h.assertTrue(cradle.stage() == EggCradleBlockEntity.Stage.NOURISHING, "posts lit, egg hungry");
+            EggCradleBlockEntity live = (EggCradleBlockEntity) h.getBlockEntity(pos, EggCradleBlockEntity.class);
+            h.assertTrue(live == cradle, "same block entity instance");
+            h.assertTrue(cradle.stage() == EggCradleBlockEntity.Stage.NOURISHING, "posts lit, egg hungry (stage " + cradle.stage() + ", progress "
+                + cradle.progress() + ")");
             for (int i = 0; i < EggCradleBlockEntity.GLANDS_REQUIRED; i++) {
                 cradle.debugSkipCooldown();
                 cradle.feed(player);

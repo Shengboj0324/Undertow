@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * The Sundering (§5.4): a one-time world event after the first dragon death. ~20 s: rumble → magenta cracks
@@ -140,7 +139,7 @@ public final class Sundering {
             this.top = top;
             this.layout = UndercroftBuilder.layout(top);
             level.playSound(null, BlockPos.ZERO.atY(64), WFSounds.EVENT_SUNDERING_RUMBLE.get(), SoundSource.AMBIENT, 6.0f, 1.0f);
-            PacketDistributor.sendToPlayersInDimension(level, new SunderingFxPayload(top, level.getGameTime()));
+            WFNetwork.sendToDimension(level, new SunderingFxPayload(top, level.getGameTime()));
         }
 
         /** Returns true when the visual sequence has handed off to the block queue. */
