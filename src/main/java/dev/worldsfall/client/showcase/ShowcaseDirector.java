@@ -225,6 +225,14 @@ public final class ShowcaseDirector {
                     if (mc.gameMode != null) {
                         mc.gameMode.releaseUsingItem(mc.player);
                     }
+                    MinecraftServer srv = server(mc);
+                    java.util.UUID id = mc.player.getUUID();
+                    srv.execute(() -> {
+                        ServerPlayer sp = srv.getPlayerList().getPlayer(id);
+                        if (sp != null) {
+                            sp.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
+                        }
+                    });
                     if (!mc.gui.hud.isHidden()) {
                         mc.gui.hud.toggle();
                     }

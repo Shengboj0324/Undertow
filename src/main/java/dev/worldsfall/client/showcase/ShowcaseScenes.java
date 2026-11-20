@@ -163,8 +163,8 @@ public final class ShowcaseScenes {
                 }
                 return new Vec3[] {center.add(-4.4, 3.7, -3.6), center.add(0.5, 2.6, 0.5)};
             }).orbit(220, 140)),
-            new Scene("wardrobe", c -> studioScene(c, new BlockPos(-760, 110, -760), true, ShowcaseScenes::wardrobe)
-                .stills(List.of(new Vec3(-759.5 - 1.6, 112.5, -759.5 + 3.3))).orbit(200, 70)),
+            new Scene("wardrobe", c -> studioScene(c, new BlockPos(760, 110, -760), true, ShowcaseScenes::wardrobe)
+                .stills(List.of(new Vec3(760.5 - 1.6, 112.5, -759.5 + 3.3))).orbit(200, 70)),
             new Scene("creatures", c -> creatureLineup(c)),
             new Scene("void_lens", ShowcaseScenes::voidLensScene),
             new Scene("egg_cradle_wyrm", c -> studioScene(c, new BlockPos(760, 110, 0), true, (l, center) -> {

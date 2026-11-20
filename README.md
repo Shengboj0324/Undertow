@@ -7,7 +7,7 @@
 <p align="center">
 An End expansion for <b>Minecraft: Java Edition 26.3</b> on <b>NeoForge</b>.<br>
 <a href="https://github.com/Shengboj0324/Undertow/releases/latest"><b>Download</b></a> ·
-<a href="https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/worldsfall_showcase_1.1.2.mp4"><b>Watch the 2-minute tour (1080p)</b></a> ·
+<a href="https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/worldsfall_showcase_1.1.3.mp4"><b>Watch the 2-minute tour (1080p)</b></a> ·
 <a href="#videos">All videos</a>
 </p>
 
@@ -51,7 +51,7 @@ Everything on this page was captured in the game, with default settings and no s
 | Java | **25** (the official launcher already includes it) |
 
 1. Install NeoForge 26.3 for your launcher profile.
-2. Download `worldsfall-1.1.2.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
+2. Download `worldsfall-1.1.3.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
 3. Put it in the profile's `mods` folder and start the game.
 
 **Your existing worlds work.** The dragon fight, End Cities, Shulkers, Endermen and elytra are untouched. New content
@@ -330,12 +330,12 @@ Every clip was recorded in the game by an automated camera tour. Click a scene t
 
 | | | |
 |---|---|---|
-| [▶ **Full tour** (2:17)](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/worldsfall_showcase_1.1.2.mp4) | [▶ Chorus Reach](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_chorus_reach.mp4) | [▶ Stillwater Basins](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_stillwater_basins.mp4) |
-| [▶ Fallen Spires](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_fallen_spires.mp4) | [▶ The Hoard](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_the_hoard.mp4) | [▶ The Underside](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_the_underside.mp4) |
-| [▶ The Drift at high tide](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_the_drift.mp4) | [▶ Void Skate](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_void_skate.mp4) | [▶ Trims, wings and a shoulder Wyrm](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_wardrobe.mp4) |
-| [▶ Creatures](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_creatures.mp4) | [▶ Through the Void Lens](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_void_lens.mp4) | [▶ Egg Cradle and Wyrm](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_egg_cradle_wyrm.mp4) |
-| [▶ Gravity Anchor](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_gravity_anchor.mp4) | [▶ The items](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_items.mp4) | [▶ The Unmade](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_the_unmade.mp4) |
-| [▶ The Sundering](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.2/clip_sundering.mp4) | | |
+| [▶ **Full tour** (2:17)](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/worldsfall_showcase_1.1.3.mp4) | [▶ Chorus Reach](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_chorus_reach.mp4) | [▶ Stillwater Basins](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_stillwater_basins.mp4) |
+| [▶ Fallen Spires](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_fallen_spires.mp4) | [▶ The Hoard](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_the_hoard.mp4) | [▶ The Underside](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_the_underside.mp4) |
+| [▶ The Drift at high tide](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_the_drift.mp4) | [▶ Void Skate](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_void_skate.mp4) | [▶ Trims, wings and a shoulder Wyrm](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_wardrobe.mp4) |
+| [▶ Creatures](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_creatures.mp4) | [▶ Through the Void Lens](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_void_lens.mp4) | [▶ Egg Cradle and Wyrm](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_egg_cradle_wyrm.mp4) |
+| [▶ Gravity Anchor](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_gravity_anchor.mp4) | [▶ The items](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_items.mp4) | [▶ The Unmade](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_the_unmade.mp4) |
+| [▶ The Sundering](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_sundering.mp4) | | |
 
 <p align="center">
 <img src="docs/media/gravity_anchor.webp" width="440" alt="A Gravity Anchor's stable field">

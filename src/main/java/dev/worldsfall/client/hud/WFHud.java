@@ -56,6 +56,9 @@ public final class WFHud {
     private static float staminaAlpha;
 
     private static void stamina(GuiGraphicsExtractor g, DeltaTracker dt) {
+        if (Minecraft.getInstance().gui.hud.isHidden()) {
+            return; // F1 hides the mod HUD like the vanilla one
+        }
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer p = mc.player;
         if (p == null || !(p.getVehicle() instanceof VoidSkate skate)) {
@@ -83,6 +86,9 @@ public final class WFHud {
 
     // ------------------------------------------------------------------ tide indicator
     private static void tide(GuiGraphicsExtractor g, DeltaTracker dt) {
+        if (Minecraft.getInstance().gui.hud.isHidden()) {
+            return; // F1 hides the mod HUD like the vanilla one
+        }
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer p = mc.player;
         if (p == null || mc.level == null || !Tides.appliesTo(mc.level)) {
@@ -115,6 +121,9 @@ public final class WFHud {
 
     // ------------------------------------------------------------------ Echo Tablet line: glyphs resolve into letters over 1 s, fade after 6 s
     private static void tablet(GuiGraphicsExtractor g, DeltaTracker dt) {
+        if (Minecraft.getInstance().gui.hud.isHidden()) {
+            return; // F1 hides the mod HUD like the vanilla one
+        }
         if (tabletStart < 0) {
             return;
         }

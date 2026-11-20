@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.3
+
+- **Fixed:** the mod's HUD elements (tide indicator, Skate stamina arc, Echo Tablet text) stayed on screen when the HUD
+  was hidden with F1. They now hide with the rest of the HUD.
+- README rewritten for players: a gameplay guide with looping in-game previews of every scene and links to full-HD clips.
+- Showcase: the wardrobe scene had its own studio spot taken by the item wall; they no longer overlap. Tour re-recorded.
+
 ## 1.1.2
 
 - **Smithing template icons redrawn in the vanilla convention**: a tilted, worn stone tablet with visible thickness, lit
