@@ -380,11 +380,12 @@ class Stage:
     def cube(self, mat, loc=(0, 0, 0), size=(1, 1, 1), rot=(0, 0, 0), bevel=0.0):
         bpy.ops.mesh.primitive_cube_add(size=1)
         o = bpy.context.active_object
+        o.data.transform(Matrix.Diagonal((size[0], size[1], size[2], 1.0)))  # bake size into the mesh
         if bevel:
             md = o.modifiers.new('bv', 'BEVEL')
             md.width = bevel
             md.segments = 1
-        return self._finish(o, mat, loc, rot, size, False)
+        return self._finish(o, mat, loc, rot, (1, 1, 1), False)
 
     def cyl(self, mat, loc=(0, 0, 0), r=0.5, h=1.0, rot=(0, 0, 0), verts=16, smooth=True, scale=(1, 1, 1)):
         bpy.ops.mesh.primitive_cylinder_add(vertices=verts, radius=r, depth=h)

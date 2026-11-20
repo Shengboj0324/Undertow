@@ -203,3 +203,50 @@ def edge_of(mask):
 
 def rgba_from(idx, palette, alpha=255):
     return pix.render_index(idx, palette, alpha)
+
+
+# ============================================================================================ faceted crystals
+def spike_layer(x0, y0, x1, y1, w0, w1=None, tip=0.35, size=16, ss=4):
+    """Rasterise one faceted crystal (base (x0,y0) -> tip (x1,y1), half-width w0 at base, w1 before the tip
+    taper, last `tip` fraction tapers to a point). Supersampled; returns (coverage (H,W), facet (H,W) in
+    {0 lit-left, 1 front, 2 shaded-right}, s along axis 0..1)."""
+    w1 = w0 if w1 is None else w1
+    n = size * ss
+    yy, xx = (np.mgrid[0:n, 0:n] + 0.5) / ss
+    ax = np.array([x1 - x0, y1 - y0], float)
+    L = np.hypot(*ax)
+    ax /= L
+    nx = np.array([-ax[1], ax[0]])
+    if nx[0] < 0:
+        nx = -nx  # +across = screen-right
+    dx, dy = xx - x0, yy - y0
+    s = (dx * ax[0] + dy * ax[1]) / L
+    a = dx * nx[0] + dy * nx[1]
+    hw = np.where(s < 1 - tip, w0 + (w1 - w0) * s / max(1e-6, 1 - tip), w1 * np.clip((1 - s) / tip, 0, 1))
+    inside = (s >= 0) & (s <= 1) & (np.abs(a) <= hw + 1e-6)
+    r = np.where(hw > 0, a / np.maximum(hw, 1e-6), 0)
+    facet = np.where(r < -0.30, 0, np.where(r > 0.36, 2, 1))
+    cov = inside.reshape(size, ss, size, ss).mean((1, 3))
+    # facet per pixel: majority among inside samples
+    fs = np.where(inside, facet, -1).reshape(size, ss, size, ss).transpose(0, 2, 1, 3).reshape(size, size, -1)
+    fac = np.argmax(np.stack([(fs == j).sum(-1) for j in (0, 1, 2)], -1), -1)
+    sm = np.where(inside, s, np.nan).reshape(size, ss, size, ss)
+    with np.errstate(all='ignore'):
+        sv = np.nanmean(sm, axis=(1, 3))
+    return cov, fac, np.nan_to_num(sv)
+
+
+def spikes(defs, size=16, cover=0.4):
+    """Layer several spikes (later = in front). Returns (mask, facet, s, id) maps."""
+    mask = np.zeros((size, size), bool)
+    facet = np.zeros((size, size), int)
+    sval = np.zeros((size, size))
+    sid = -np.ones((size, size), int)
+    for i, d in enumerate(defs):
+        cov, fac, s = spike_layer(*d, size=size)
+        m = cov >= cover
+        mask |= m
+        facet = np.where(m, fac, facet)
+        sval = np.where(m, s, sval)
+        sid = np.where(m, i, sid)
+    return mask, facet, sval, sid

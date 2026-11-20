@@ -240,8 +240,8 @@ class Skin:
         self.emit[ys[~k], xs[~k]] = 0
         return k
 
-    def outline_edge(self, cube, faces=("top", "bottom")):
-        """Mask of kept texels on the given faces of `cube` that border a cut texel (or the region border)."""
+    def outline_edge(self, cube, faces=("top", "bottom"), borders=False):
+        """Mask of kept texels on the given faces of `cube` that border a cut texel (and, if borders, the region edge)."""
         m = self.mask(cube=cube, face=faces)
         kept = m & (self.alpha > 0)
         H, W = kept.shape
@@ -250,7 +250,10 @@ class Skin:
             sh = np.zeros_like(kept)
             ys = slice(max(dy, 0), H + min(dy, 0)); yd = slice(max(-dy, 0), H + min(-dy, 0))
             xs = slice(max(dx, 0), W + min(dx, 0)); xd = slice(max(-dx, 0), W + min(-dx, 0))
-            sh[yd, xd] = kept[ys, xs] & (self.t_face[ys, xs] == self.t_face[yd, xd]) & (self.t_cube[ys, xs] == self.t_cube[yd, xd])
+            same = np.zeros_like(kept)
+            same[yd, xd] = (self.t_face[ys, xs] == self.t_face[yd, xd]) & (self.t_cube[ys, xs] == self.t_cube[yd, xd])
+            sh[yd, xd] = kept[ys, xs]
+            sh = (sh & same) | (~same & (not borders))
             edge |= kept & ~sh
         return edge
 

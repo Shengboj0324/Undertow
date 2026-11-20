@@ -20,6 +20,7 @@ public final class WFNetwork {
         r.playToClient(SunderingStatePayload.TYPE, SunderingStatePayload.STREAM_CODEC, SunderingStatePayload::handle);
         r.playToClient(EchoTabletPayload.TYPE, EchoTabletPayload.STREAM_CODEC, EchoTabletPayload::handle);
         r.playToServer(SkateDismountPayload.TYPE, SkateDismountPayload.STREAM_CODEC, SkateDismountPayload::handle);
+        r.playToServer(ElytraActionPayload.TYPE, ElytraActionPayload.STREAM_CODEC, ElytraActionPayload::handle);
     }
 
     public static TideSyncPayload tidePayload(MinecraftServer server) {
