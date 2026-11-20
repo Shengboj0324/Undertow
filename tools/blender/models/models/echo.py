@@ -42,8 +42,8 @@ def paint(sk, m):
     g, r = sk.Gmin, sk.R
     # static: broken runs of bright and near-black texels along the edges (alpha 170-200)
     narrow = sk.t_fw <= 2
-    thr_b = np.where(narrow, np.quantile(g[edge], 0.12), np.quantile(g[edge], 0.4))
-    thr_d = np.where(narrow, np.quantile(r[edge], 0.12), np.quantile(r[edge], 0.3))
+    thr_b = np.where(narrow, np.quantile(g[edge], 0.06), np.quantile(g[edge], 0.35))
+    thr_d = np.where(narrow, np.quantile(r[edge], 0.08), np.quantile(r[edge], 0.25))
     bright = edge & (g < thr_b)
     dark = edge & ~bright & (r < thr_d)
     sk.set(bright, "#cfcbe2", alpha=195)

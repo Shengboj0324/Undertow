@@ -570,3 +570,5 @@ def save_blend(path):
     except Exception:
         pass
     bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(path), compress=True, relative_remap=True)
+    if os.path.exists(os.path.abspath(path) + "1"):  # no .blend1 backups next to the authoring files
+        os.remove(os.path.abspath(path) + "1")

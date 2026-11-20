@@ -47,7 +47,7 @@
     },
     {
       "name": "left_wing", "parent": "body",
-      "pivot": [3, -2.5, -1], "rotation": [0, -20, -58],
+      "pivot": [3, -2.5, -1], "rotation": [0, -20, -48],
       "cubes": [
         {"origin": [0, 0, -1], "size": [4, 0, 4], "uv": [12, 17], "inflate": 0, "mirror": false}
       ]
@@ -61,7 +61,7 @@
     },
     {
       "name": "right_wing", "parent": "body",
-      "pivot": [-3, -2.5, -1], "rotation": [0, 20, 58],
+      "pivot": [-3, -2.5, -1], "rotation": [0, 20, 48],
       "cubes": [
         {"origin": [-4, 0, -1], "size": [4, 0, 4], "uv": [12, 17], "inflate": 0, "mirror": true}
       ]

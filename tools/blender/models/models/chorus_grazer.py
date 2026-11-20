@@ -46,7 +46,7 @@ def build():
         dict(path="chorus_grazer/chorus_grazer", paint=lambda sk: paint(sk, m, False), emissive=True),
         dict(path="chorus_grazer/chorus_grazer_sheared", paint=lambda sk: paint(sk, m, True), emissive=True),
     ], preview=dict(az=-42, el=16, lens=85, margin=0.84, extra=[dict(suffix="_sheared", texture=1)]),
-        emit_strength=2.5)
+        emit_strength=1.6)
 
 
 def mats():
@@ -96,7 +96,7 @@ def paint(sk, m, sheared):
     if not sheared:
         for c in tips:
             sk.set(sk.mask(cube=c), "#d8b6ff", emit="#d8b6ff", emit_alpha=200)
-            sk.set(sk.mask(cube=c, face="top"), "#f1d6ff", emit="#f1d6ff", emit_alpha=230)
+            sk.set(sk.mask(cube=c, face="top"), "#e4c8ff", emit="#d8b6ff", emit_alpha=200)
         for c in plates:
             h = c.size[1]
             sk.set(sk.mask(cube=c, face=["front", "back", "right", "left"], cond=lambda t: t.cy < 1), "#cdb6f6",
