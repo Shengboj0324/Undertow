@@ -34,7 +34,6 @@ def col_mask(img, cols, tol=4):
 def finish(st, name, res=64, cover=0.42, outline=True, darken=0.42, fix=None):
     img = st.render(res, name.replace('/', '_'))
     spr = bk.downsample_sprite(img, 16, cover)
-    spr = pix.despeckle_rgba(spr) if hasattr(pix, 'despeckle_rgba') else spr
     if fix:
         spr = fix(spr)
     em_cols = []
@@ -131,29 +130,27 @@ def gateway_compass():
         st = stage(view=(0, 0))
         st.mat('rim', T(['#3B2458', '#5E3A8A', '#8A5CC0', '#B48BE6'], cuts=[-1, -0.2, 0.3, 0.7]))
         st.mat('dial', T(['#0A0812', '#120E20', '#1B1530'], cuts=[-1, 0.2, 0.75]))
-        st.mat('needle', T(['#FF7AD9', '#FFB3EC'], cuts=[-1, 0.55]))
-        st.mat('tip', T(['#FFFFFF'], emissive=True))
         st.mat('gate', T(['#06040C'], emissive=True))
         st.cyl('dial', loc=(0, 0.6, 0), r=6.4, h=1.0, rot=(90, 0, 0), verts=24)
         st.torus('rim', loc=(0, 0, 0), R=6.4, r=1.05, rot=(90, 0, 0), maj=28, minr=8)
-        # needle: 4-point star with the north point elongated, rotated 22.5 deg per frame (clockwise)
-        ang = -math.radians(22.5 * i)
-        star = [(0, 5.3), (0.8, 0.8), (2.7, 0), (0.8, -0.8), (0, -2.7), (-0.8, -0.8), (-2.7, 0), (-0.8, 0.8)]
-        ox, oz = 0.5, -0.5  # needle pivot on a pixel centre so thin arms stay crisp
-        verts = [(x * math.cos(ang) - z * math.sin(ang) + ox, -0.3, x * math.sin(ang) + z * math.cos(ang) + oz)
-                 for x, z in star]
-        st.mesh('needle', verts + [(ox, -0.3, oz)], [(8, k, (k + 1) % 8) for k in range(8)])
-        tx, tz = verts[0][0], verts[0][2]
-        # the tiny dark diamond (miniature gateway) at the top
-        st.mesh('gate', [(0, -1.4, 7.9), (1.1, -1.4, 6.8), (0, -1.4, 5.7), (-1.1, -1.4, 6.8)], [(0, 1, 2, 3)])
+        # needle: 4-point star with the north point elongated, rotated 22.5 deg per frame (clockwise).
+        # Dial, rim and gateway diamond are rendered in Blender; the needle's 1-px arms do not survive the
+        # coverage downsample at diagonal angles, so it is rasterised as pixel lines from the rotated star.
+        ang = math.radians(22.5 * i)
         spr, em = finish(st, 'compass_%02d' % i, cover=0.4, outline=False)
-        # glowing tip: the two needle pixels furthest along the pointing direction turn white
-        nd = col_mask(spr, ['#FF7AD9', '#FFB3EC'], 2)
-        ys, xs = np.nonzero(nd)
-        dx, dy = math.sin(-ang), -math.cos(-ang)
-        proj = (xs - 8) * dx + (ys - 8) * dy
-        for k in np.argsort(-proj)[:2]:
-            spr[ys[k], xs[k], :3] = pix.hx('#FFFFFF')
+        cx, cy = 8, 8
+        arms = [(0.0, 5.3), (90.0, 2.4), (180.0, 2.4), (270.0, 2.4)]
+        for k, (off, L) in enumerate(arms):
+            a = ang + math.radians(off)
+            ex, ey = cx + math.sin(a) * L, cy - math.cos(a) * L
+            pts = line_pts(cx, cy, int(round(ex)), int(round(ey)))
+            for j, (x, y) in enumerate(pts):
+                c = '#FF7AD9'
+                if k == 0:
+                    c = '#FFFFFF' if j == len(pts) - 1 else '#FFB3EC' if j >= len(pts) - 3 else '#FF7AD9'
+                spr[y, x, :3] = pix.hx(c)
+                spr[y, x, 3] = 255
+        spr[cy, cx, :3] = pix.hx('#FFB3EC')
         spr = pix.outline(spr, darken=0.42)
         out('gateway_compass_%02d' % i, spr)
 

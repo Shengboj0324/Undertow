@@ -1,6 +1,5 @@
 """Shared recipe helpers: Blender field graphs (tileable) + numpy pixel-art layout tools, and the output registry."""
 import os
-import json
 import math
 import numpy as np
 

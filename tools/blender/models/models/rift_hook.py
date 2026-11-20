@@ -24,7 +24,7 @@ def build():
     m.pack()
     return dict(model=m, mats={
         "metal": Mat(["#6c707c", "#9a9eaa", "#c4c8d2", "#e6e8ee"], base=2, feature=2.0, lo=0.15, hi=0.15),
-        "pearl": Mat(["#1f7a68", "#2a8f7a", "#3fbf9f", "#7fe8c8", "#c8fff0"], base=2, feature=2.0, lo=0.15, hi=0.2,
+        "pearl": Mat(["#1d6e52", "#2a8f6c", "#3fbf8c", "#7fe8b8", "#c8ffe6"], base=2, feature=2.0, lo=0.15, hi=0.2,
                      rim=False, shade={"top": 1, "bottom": -1}),
     }, textures=[dict(path="rift_hook/rift_hook", paint=lambda sk: paint(sk, m), emissive=True)],
         preview=dict(az=-30, el=22, lens=85, margin=0.55), emit_strength=3.0)
@@ -32,9 +32,9 @@ def build():
 
 def paint(sk, m):
     pearl = m["pearl"].cubes[0]
-    sk.glow(sk.mask(cube=pearl), "#3fbf9f", 170)
+    sk.glow(sk.mask(cube=pearl), "#3fbf8c", 170)
     hi = sk.mask(cube=pearl, face=["front", "left", "top"], cond=lambda t: (t.fx == 1) & (t.fy == 1))
-    sk.set(hi, "#e8fff8", emit="#c8fff0")
+    sk.set(hi, "#e8fff4", emit="#c8ffe6")
     cup = m["claw"].cubes[0]
     sk.set(sk.mask(cube=cup, face=["front", "back", "left", "right"], cond=lambda t: t.fy == 1), "#6c707c")
     tip = [c for c in m["prong_0"].cubes if c.tag == "tip"][0]

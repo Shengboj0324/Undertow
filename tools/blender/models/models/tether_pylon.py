@@ -11,9 +11,9 @@ def build():
     c.cube((-3, -18, -3), (6, 18, 6), mat="crystal", tag="main")
     c.cube((-2, -24, -2), (4, 6, 4), mat="crystal", tag="upper")
     c.cube((-1, -28, -1), (2, 4, 2), mat="crystal", tag="tip")
-    for name, piv, rot, size, tip in (("crystal_a", (-2.5, 0, 1), (8, 25, 28), (4, 12, 4), (2, 4, 2)),
-                                      ("crystal_b", (2.5, 0, -1), (-12, -30, -26), (4, 10, 4), (2, 3, 2)),
-                                      ("crystal_c", (0.5, 0, 2.5), (30, 70, 0), (3, 8, 3), (1, 3, 1))):
+    for name, piv, rot, size, tip in (("crystal_a", (-2.5, 0, 1), (-6, 25, -30), (4, 13, 4), (2, 4, 2)),
+                                      ("crystal_b", (2.5, 0, -1), (10, -30, 26), (4, 10, 4), (2, 3, 2)),
+                                      ("crystal_c", (0.5, 0, 2.5), (-34, 40, 0), (3, 8, 3), (1, 3, 1))):
         p = m.part(name, "crystal", piv, rot)
         w, h, d = size
         p.cube((-w / 2, -h, -d / 2), size, mat="crystal", tag="side")
@@ -31,7 +31,7 @@ def paint(sk, m):
     # glow from within: the crystal bodies emit softly, facet highlights and tips burn brighter
     for c in allc:
         mk = sk.mask(cube=c)
-        sk.glow(mk, "#ff3fb4", 110)
+        sk.glow(mk, "#ff3fb4", 70)
         h = c.size[1]
         sk.shift(sk.mask(cube=c, face=["front", "back", "left", "right"], cond=lambda t, h=h: t.fy >= t.fh - 2), -1)
         if c.tag == "tip":
