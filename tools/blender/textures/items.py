@@ -138,7 +138,7 @@ def gateway_compass():
         st.torus('rim', loc=(0, 0, 0), R=6.4, r=1.05, rot=(90, 0, 0), maj=28, minr=8)
         # needle: 4-point star with the north point elongated, rotated 22.5 deg per frame (clockwise)
         ang = -math.radians(22.5 * i)
-        star = [(0, 5.2), (1.25, 1.25), (2.3, 0), (1.25, -1.25), (0, -2.3), (-1.25, -1.25), (-2.3, 0), (-1.25, 1.25)]
+        star = [(0, 5.3), (0.8, 0.8), (2.7, 0), (0.8, -0.8), (0, -2.7), (-0.8, -0.8), (-2.7, 0), (-0.8, 0.8)]
         ox, oz = 0.5, -0.5  # needle pivot on a pixel centre so thin arms stay crisp
         verts = [(x * math.cos(ang) - z * math.sin(ang) + ox, -0.3, x * math.sin(ang) + z * math.cos(ang) + oz)
                  for x, z in star]

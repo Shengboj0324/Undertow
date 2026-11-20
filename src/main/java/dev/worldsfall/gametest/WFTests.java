@@ -118,7 +118,7 @@ public final class WFTests {
     private static void hoardBarter(GameTestHelper h) {
         BlockPos pos = new BlockPos(1, 2, 1);
         h.setBlock(pos, WFBlocks.HOARD_CACHE.get());
-        HoardCacheBlockEntity cache = (HoardCacheBlockEntity) h.getBlockEntity(pos, HoardCacheBlockEntity.class);
+        HoardCacheBlockEntity cache = h.getBlockEntity(pos, HoardCacheBlockEntity.class);
         ServerPlayer player = h.makeMockServerPlayerInLevel();
         ItemStack grass = new ItemStack(Items.GRASS_BLOCK, 32);
         HoardCacheBlockEntity.InsertResult r = cache.insert(h.getLevel(), player, grass);
@@ -143,7 +143,7 @@ public final class WFTests {
     private static void vaultClaims(GameTestHelper h) {
         BlockPos pos = new BlockPos(1, 2, 1);
         h.setBlock(pos, WFBlocks.SPIRE_VAULT.get());
-        PerPlayerLootBlockEntity vault = (PerPlayerLootBlockEntity) h.getBlockEntity(pos, PerPlayerLootBlockEntity.class);
+        PerPlayerLootBlockEntity vault = h.getBlockEntity(pos, PerPlayerLootBlockEntity.class);
         ServerPlayer a = h.makeMockServerPlayerInLevel();
         vault.configure(vault.lootTable(), true);
         h.assertTrue(vault.claim(a).isEmpty() && !vault.hasClaimed(a.getUUID()), "a sealed vault gives nothing");
@@ -161,7 +161,7 @@ public final class WFTests {
         h.setBlock(new BlockPos(3, 2, 1), Blocks.DIRT);
         BlockPos vaultPos = new BlockPos(1, 2, 3);
         h.setBlock(vaultPos, WFBlocks.SPIRE_VAULT.get());
-        PerPlayerLootBlockEntity vault = (PerPlayerLootBlockEntity) h.getBlockEntity(vaultPos, PerPlayerLootBlockEntity.class);
+        PerPlayerLootBlockEntity vault = h.getBlockEntity(vaultPos, PerPlayerLootBlockEntity.class);
         vault.configure(vault.lootTable(), true);
         ReassemblyPlan plan = new ReassemblyPlan(List.of(new ReassemblyPlan.Target(a, Blocks.PURPUR_BLOCK.defaultBlockState()),
             new ReassemblyPlan.Target(b, Blocks.PURPUR_BLOCK.defaultBlockState()), new ReassemblyPlan.Target(occupied, Blocks.PURPUR_BLOCK.defaultBlockState())),
@@ -272,12 +272,12 @@ public final class WFTests {
     private static void eggCradle(GameTestHelper h) {
         BlockPos pos = new BlockPos(1, 2, 1);
         h.setBlock(pos, WFBlocks.EGG_CRADLE.get());
-        EggCradleBlockEntity cradle = (EggCradleBlockEntity) h.getBlockEntity(pos, EggCradleBlockEntity.class);
+        EggCradleBlockEntity cradle = h.getBlockEntity(pos, EggCradleBlockEntity.class);
         ServerPlayer player = h.makeMockServerPlayerInLevel();
         h.assertTrue(cradle.placeDragonEgg() && cradle.stage() == EggCradleBlockEntity.Stage.ATTUNING, "egg placed, attuning");
         cradle.debugSetProgress(EggCradleBlockEntity.ATTUNE_TICKS);
         h.runAfterDelay(3, () -> {
-            EggCradleBlockEntity live = (EggCradleBlockEntity) h.getBlockEntity(pos, EggCradleBlockEntity.class);
+            EggCradleBlockEntity live = h.getBlockEntity(pos, EggCradleBlockEntity.class);
             h.assertTrue(live == cradle, "same block entity instance");
             h.assertTrue(cradle.stage() == EggCradleBlockEntity.Stage.NOURISHING, "posts lit, egg hungry (stage " + cradle.stage() + ", progress "
                 + cradle.progress() + ")");

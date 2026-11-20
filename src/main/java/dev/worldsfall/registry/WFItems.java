@@ -115,7 +115,7 @@ public final class WFItems {
     }
 
     public static List<Item> spawnEggs() {
-        return SPAWN_EGGS.stream().map(d -> (Item) d.get()).toList();
+        return SPAWN_EGGS.stream().map(DeferredItem::get).map(Item.class::cast).toList();
     }
 
     static ResourceKey<TrimMaterial> trim(String name) {

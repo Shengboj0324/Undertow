@@ -112,7 +112,7 @@ public final class ClientWorldState {
             return 0;
         }
         float partial = mc.getDeltaTracker().getGameTimeDeltaPartialTick(false);
-        return (float) ((mc.level.getGameTime() % 72000L) + partial) / 20f;
+        return ((mc.level.getGameTime() % 72000L) + partial) / 20f;
     }
 
     public Vector3f nebulaTint() { return new Vector3f(nebula); }
