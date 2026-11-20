@@ -440,11 +440,15 @@ def pale_base(seed):
 def still_throne():
     side = pale_base(221)
     box_frame(side, PALE[5], PALE[0])
-    for x in (4, 7, 10):  # carved fluting
-        side[3:13, x, :3] = PALE[1]
-        side[3:13, x + 1, :3] = PALE[4]
+    panel = (XX >= 2) & (XX <= 13) & (YY >= 3) & (YY <= 12)
+    side[panel, :3] = PALE[3]
+    side[panel & ((XX + YY * 3) % 7 == 0), :3] = PALE[2]
+    for x in (4, 8, 12):  # carved fluting: shadowed groove with a lit right lip
+        side[3:13, x - 1, :3] = PALE[1]
+        side[3:13, x, :3] = PALE[4]
     side[2, 2:14, :3] = PALE[1]
     side[13, 2:14, :3] = PALE[5]
+    side[3, 2:14, :3] = PALE[2]
     if want('block/still_throne_side'):
         save('block/still_throne_side', side)
     top = pale_base(222)

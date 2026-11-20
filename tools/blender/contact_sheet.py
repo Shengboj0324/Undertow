@@ -116,8 +116,43 @@ def anim_sheet(files, out, S=6):
     print('wrote', out, img.size)
 
 
+def compare(out, S=4):
+    """'Sits next to vanilla' check: a wall of 2x2-block patches mixing vanilla end stone / purpur / deepslate /
+    obsidian with our stones and building blocks, all at the same scale, on top a grass-row-like strip."""
+    rows = [
+        ['V:end_stone', 'pale_loam_side', 'V:end_stone_bricks', 'ash_stone', 'V:end_stone', 'still_throne_side', 'V:end_stone'],
+        ['V:purpur_block', 'weathered_purpur', 'V:purpur_pillar', 'weathered_purpur_pillar', 'cracked_purpur_pillar', 'purpur_rubble', 'V:purpur_block'],
+        ['V:deepslate', 'undershale', 'polished_undershale', 'undershale_bricks', 'undershale_tiles', 'driftstone', 'V:deepslate_bricks'],
+        ['V:obsidian', 'stillstone', 'polished_stillstone', 'stillstone_bricks', 'chiseled_stillstone', 'null_obsidian', 'V:crying_obsidian'],
+        ['V:amethyst_block', 'lumen_crystal_block', 'lumen_lamp', 'lumen_lamp_on', 'driftstone_bricks', 'polished_driftstone', 'V:tinted_glass'],
+    ]
+    tiles = []
+    for r in rows:
+        rr = []
+        for n in r:
+            p = os.path.join(VAN, 'block', n[2:] + '.png') if n.startswith('V:') else os.path.join(TEX, 'block', n + '.png')
+            if n == 'V:purpur_pillar':
+                p = os.path.join(VAN, 'block', 'purpur_pillar_side.png')
+            im = Image.open(p).convert('RGBA').crop((0, 0, 16, 16))
+            rr.append(im)
+        tiles.append(rr)
+    B = 16 * S
+    img = Image.new('RGBA', (len(rows[0]) * 2 * B, len(rows) * 2 * B), (0, 0, 0, 255))
+    for j, r in enumerate(tiles):
+        for i, im in enumerate(r):
+            big = im.resize((B, B), Image.NEAREST)
+            for a in range(2):
+                for b in range(2):
+                    img.alpha_composite(big, ((2 * i + a) * B, (2 * j + b) * B))
+    img.save(out)
+    print('wrote', out, img.size)
+
+
 if __name__ == '__main__':
     folder = sys.argv[1]
+    if folder == 'compare':
+        compare(os.path.join(ROOT, 'art/previews/textures_vanilla_compare.png'))
+        sys.exit(0)
     out = sys.argv[2] if len(sys.argv) > 2 and not sys.argv[2].startswith('--') else \
         os.path.join(ROOT, 'art/previews/textures_%s.png' % folder.replace('/', '_'))
     flt = None

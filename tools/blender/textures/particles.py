@@ -115,7 +115,7 @@ def mist_frames(cols, seed, scale=(1.0, 0.9, 0.75, 0.6)):
     for i, sc in enumerate(scale):
         a = bk.bake_down(f_puff, S, 4, t=i * 0.35, seed=seed)
         f = a[..., 0] * (1.15 if i == 0 else 1.0)
-        m = blob(4, 4, 3.9 * sc)
+        m = blob(4, 4, 3.5 * sc)
         cuts = [0.18, 0.28, 0.38]
         idx = np.searchsorted(cuts, f)  # 0 = transparent
         idx = np.where(m, idx, 0)

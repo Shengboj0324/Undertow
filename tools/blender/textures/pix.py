@@ -370,3 +370,35 @@ def write_mcmeta(path, frametime, interpolate=True):
     with open(path, 'w') as f:
         f.write('{\n  "animation": {\n    "frametime": %d,\n    "interpolate": %s\n  }\n}\n'
                 % (frametime, 'true' if interpolate else 'false'))
+
+
+def limit_colors(rgba, n):
+    """Palette discipline: greedily merge the colour pair with the lowest (usage x perceptual distance) cost
+    until at most n opaque colours remain. Alpha is kept per pixel."""
+    a = np.asarray(rgba).copy()
+    m = a[..., 3] > 0
+    if not m.any():
+        return a
+    cols, inv, cnt = np.unique(a[m][:, :3], axis=0, return_inverse=True, return_counts=True)
+    cols = cols.astype(np.float64)
+    cnt = cnt.astype(np.float64)
+    alive = list(range(len(cols)))
+    target = np.arange(len(cols))
+    w = np.array([0.30, 0.59, 0.11]) ** 0.5
+    while len(alive) > n:
+        best = None
+        for i in alive:
+            for j in alive:
+                if i == j:
+                    continue
+                d = np.sqrt((((cols[i] - cols[j]) * w) ** 2).sum())
+                cost = cnt[i] * d  # moving i into j
+                if best is None or cost < best[0]:
+                    best = (cost, i, j)
+        _, i, j = best
+        target[target == i] = j
+        cnt[j] += cnt[i]
+        alive.remove(i)
+    new = cols[target[inv.ravel()]]
+    a[m, :3] = np.round(new).astype(np.uint8)
+    return a

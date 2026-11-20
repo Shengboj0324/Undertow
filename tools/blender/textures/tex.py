@@ -20,9 +20,26 @@ def want(rel):
     return any(rel == o or rel.startswith(o) for o in ONLY)
 
 
+BLOCK_MAX = 8      # spec: 4-8 colours per block texture
+ITEM_MAX = 10      # spec asks 3-6 for items; vanilla items use 8-17 - we cap at 10 and report
+
+
+def color_limit(rel, rgba):
+    if rel.endswith('_emissive'):
+        return None
+    if rel.startswith('block/') and rgba.shape[0] == rgba.shape[1]:
+        return BLOCK_MAX
+    if rel.startswith('item/'):
+        return ITEM_MAX
+    return None
+
+
 def save(rel, rgba, frametime=None, interpolate=True):
     """rel like 'block/stillstone' (no extension)."""
     p = os.path.join(OUT, rel + '.png')
+    lim = color_limit(rel, rgba)
+    if lim:
+        rgba = pix.limit_colors(rgba, lim)
     pix.save_png(p, rgba)
     if frametime is not None:
         pix.write_mcmeta(p + '.mcmeta', frametime, interpolate)

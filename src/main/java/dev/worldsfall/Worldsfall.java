@@ -43,6 +43,7 @@ public final class Worldsfall {
         dev.worldsfall.gametest.WFTestFunctions.FUNCTIONS.register(modBus);
 
         modBus.addListener(WFSetup::attributes);
+        modBus.addListener(WFSetup::commonSetup);
         modBus.addListener(WFSetup::spawnPlacements);
         modBus.addListener(WFNetwork::register);
         modBus.addListener(WFSetup::gameTests);

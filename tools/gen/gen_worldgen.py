@@ -113,7 +113,7 @@ def gen_modifiers():
     write(f"{mod}/outer_underside.json", {"type": "neoforge:add_features", "biomes": ["minecraft:end_highlands", "minecraft:end_midlands"],
                                           "features": [i("underside_growth_outer")], "step": "underground_decoration"})
     write(f"{mod}/midlands_grazers.json", {"type": "neoforge:add_spawns", "biomes": "minecraft:end_midlands",
-                                           "spawners": {"type": i("chorus_grazer"), "weight": 2, "minCount": 1, "maxCount": 2}})
+                                           "spawners": [mob(i("chorus_grazer"), 2, 1, 2)]})
 
 def gen_structures():
     for name, step, biomes, spacing, sep, salt in (

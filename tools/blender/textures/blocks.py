@@ -80,18 +80,25 @@ def pale_loam():
     fe = F(f_cluster, fx=4.0, seed=21, vmix=0.5)
     eidx = stone(fe, 5, [0.06, 0.18, 0.30, 0.30, 0.16], emb=1.0) + 1
     side = R(eidx, END)
-    dn = F(f_noise, ss=2, fx=5.0, seed=22, det=1.0)[0]  # one periodic row -> per-column drape depth
-    depth = 2 + np.round((dn - dn.min()) / (np.ptp(dn) + 1e-9) * 1.6).astype(int)  # 2..3 px
-    drip = F(f_noise, ss=2, fx=7.0, seed=23, det=1.0)[1]
+    dn = F(f_noise, ss=2, fx=4.0, seed=22, det=1.0)[0]  # one periodic row -> per-column drape depth
+    depth = np.where(dn > np.median(dn), 3, 2)
+    drip = F(f_noise, ss=2, fx=3.0, seed=23, det=1.0)[1]
+    order = np.argsort(-drip)
+    used = set()
+    for x in order[:6]:  # a few longer drips, 1-2 px wide, never adjacent to each other
+        if x in used or (x - 1) % 16 in used or (x + 1) % 16 in used:
+            continue
+        depth[x] += 2 if len(used) < 2 else 1
+        used.add(x)
+    depth[0], depth[15] = 2, 2  # same depth at the wrap so neighbouring blocks connect
     for x in range(16):
         d = depth[x]
-        if drip[x] > np.quantile(drip, 0.8):
-            d += 1 + int(drip[x] > np.quantile(drip, 0.93))  # occasional longer drips
         for y in range(d):
             side[y, x] = img[y, x]
             if y == d - 1:
                 side[y, x, :3] = MOSS[0] if y > 1 else MOSS[1]
-        side[d, x, :3] = END[0] if d <= 3 else pix.hx('#635C40')  # shadow under the moss lip
+        if d >= 3:
+            side[d, x, :3] = END[0]  # soft shadow only under the longer drips
     # break any 1px-wide drips: ensure drips are at least 1 neighbour-continuous (they are columns, fine)
     if want('block/pale_loam_side'):
         save('block/pale_loam_side', side)
@@ -228,7 +235,7 @@ def stillstone_family():
         for x, ch in enumerate(r):
             X, Y = x + 1, y + 2
             if ch == '#':
-                img[Y, X, :3] = pix.hx('#5A6FB0')
+                img[Y, X, :3] = pix.hx('#3A4A7A')
             elif ch == 'o':
                 img[Y, X, :3] = STAR[0]
             elif ch == '*':

@@ -56,7 +56,7 @@ def convert(o):
 SELF_DROP = """pale_loam stillstone polished_stillstone stillstone_bricks chiseled_stillstone weathered_purpur weathered_purpur_pillar
 cracked_purpur_pillar purpur_rubble spire_lantern undershale polished_undershale undershale_bricks undershale_tiles lumen_crystal_block
 lumen_lamp driftstone polished_driftstone driftstone_bricks tide_gauge null_obsidian ash_stone decorative_hoard_cache egg_cradle
-gravity_anchor anchor_frame tidewisp_jar""".split()
+gravity_anchor anchor_frame""".split()
 FAMILIES = {"stillstone": True, "polished_stillstone": True, "stillstone_brick": True, "weathered_purpur": False, "undershale": True,
             "polished_undershale": True, "undershale_brick": True, "undershale_tile": True, "driftstone": True, "polished_driftstone": True,
             "driftstone_brick": True}
@@ -79,6 +79,7 @@ def silk(name, fallback=None):
 def gen_block_loot():
     for n in SELF_DROP:
         drop_self(n)
+    drop_self("tidewisp_jar", "bottled_tidewisp")
     for base, wall in FAMILIES.items():
         slab = f"{base}_slab"
         block_loot(slab, [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": i(slab), "functions": [
@@ -439,11 +440,6 @@ def gen_advancements():
         criteria = {"done": {"trigger": "minecraft:impossible"}}
         if aid == "root":
             criteria = {"entered_end": {"trigger": "minecraft:changed_dimension", "conditions": {"to": "minecraft:the_end"}}}
-        if aid == "wings_revised":
-            criteria["crafted"] = {"trigger": "minecraft:recipe_crafted", "conditions": {"recipe_id": i("elytra_gale_upgrade")}}
-            criteria = {"gale": {"trigger": "minecraft:recipe_crafted", "conditions": {"recipe_id": i("elytra_gale_upgrade")}},
-                        "still": {"trigger": "minecraft:recipe_crafted", "conditions": {"recipe_id": i("elytra_still_upgrade")}},
-                        "hover": {"trigger": "minecraft:recipe_crafted", "conditions": {"recipe_id": i("elytra_hover_upgrade")}}}
         if aid == "three_keys":
             criteria = {"all": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": i("spire_sigil")},
                          {"items": i("tide_sigil")}, {"items": i("under_sigil")}]}}}
@@ -452,7 +448,7 @@ def gen_advancements():
                    "show_toast": aid != "root", "announce_to_chat": aid != "root", "hidden": hidden}
         if aid == "root":
             display["background"] = "worldsfall:gui/advancements/backgrounds/worldsfall"
-        adv = {"criteria": criteria, "display": display, "requirements": [[k] for k in criteria] if aid != "wings_revised" else [list(criteria)]}
+        adv = {"criteria": criteria, "display": display, "requirements": [[k] for k in criteria]}
         if parent:
             adv["parent"] = i(parent)
         write(f"{D}/advancement/{aid}.json", adv)

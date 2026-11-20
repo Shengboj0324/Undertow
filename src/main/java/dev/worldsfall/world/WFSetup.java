@@ -39,6 +39,19 @@ public final class WFSetup {
             (type, level, reason, pos, random) -> true, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
+    /** Stillwater meeting water or lava turns them to Stillstone (§7.3). */
+    public static void commonSetup(net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent e) {
+        e.enqueueWork(() -> {
+            var still = dev.worldsfall.registry.WFFluids.STILLWATER_TYPE.get();
+            net.neoforged.neoforge.fluids.FluidInteractionRegistry.addInteraction(net.neoforged.neoforge.common.NeoForgeMod.WATER_TYPE.value(),
+                new net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation(still,
+                    dev.worldsfall.registry.WFBlocks.STILLSTONE.get().defaultBlockState()));
+            net.neoforged.neoforge.fluids.FluidInteractionRegistry.addInteraction(net.neoforged.neoforge.common.NeoForgeMod.LAVA_TYPE.value(),
+                new net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation(still,
+                    dev.worldsfall.registry.WFBlocks.STILLSTONE.get().defaultBlockState()));
+        });
+    }
+
     public static void gameTests(RegisterGameTestsEvent e) {
         dev.worldsfall.gametest.WFGameTests.register(e);
     }

@@ -116,6 +116,16 @@ public class EggCradleBlockEntity extends WFBlockEntity {
         return stage == Stage.VIGIL ? FeedResult.COMPLETE : FeedResult.FED;
     }
 
+    /** Test hook: forget the last feeding time so the next gland is accepted immediately. */
+    public void debugSkipCooldown() {
+        lastFeed = Long.MIN_VALUE / 2;
+    }
+
+    /** Test hook: jump the current stage's progress. */
+    public void debugSetProgress(int value) {
+        progress = value;
+    }
+
     public long ticksUntilNextFeed() {
         if (level == null || glands == 0) {
             return 0;

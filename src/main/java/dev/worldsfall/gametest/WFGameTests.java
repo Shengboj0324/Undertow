@@ -28,8 +28,9 @@ public final class WFGameTests {
             Identifier id = Identifier.fromNamespaceAndPath(Worldsfall.MODID, e.getKey());
             ResourceKey<Consumer<GameTestHelper>> fn = ResourceKey.create(Registries.TEST_FUNCTION, id);
             WFTestFunctions.put(fn, e.getValue());
-            event.registerTest(id, new FunctionGameTestInstance(fn, new TestData<>(env, Identifier.withDefaultNamespace("empty"),
-                WFTests.maxTicks(e.getKey()), 1, true)));
+            var dim = WFTests.endDimension(e.getKey()) ? net.minecraft.world.level.Level.END : net.minecraft.world.level.Level.OVERWORLD;
+            event.registerTest(id, new FunctionGameTestInstance(fn, new TestData<>(env, dim, Identifier.withDefaultNamespace("empty"),
+                WFTests.maxTicks(e.getKey()), 1, true, net.minecraft.world.level.block.Rotation.NONE, false, 1, 1, false, 2)));
         }
     }
 }
