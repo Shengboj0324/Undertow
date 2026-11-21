@@ -337,7 +337,7 @@ def gen_tags():
     tag("block", "minecraft", "mineable/pickaxe", [i(n) for n in stone_like + fam] + [i("stillwater_cauldron")]
         + [i(n) for n in expansion.pickaxe_blocks()])
     tag("block", "minecraft", "cauldrons", [i("stillwater_cauldron")])
-    tag("block", "minecraft", "mineable/axe", [i("voidroot")])
+    tag("block", "minecraft", "mineable/axe", [i("voidroot")] + [i(n) for n in expansion.axe_blocks()])
     tag("block", "minecraft", "mineable/hoe", [i("ceiling_moss"), i("lilac_tuft")])
     tag("block", "minecraft", "needs_diamond_tool", [i("null_obsidian")])
     tag("block", "minecraft", "needs_iron_tool", [i("egg_cradle"), i("gravity_anchor")])

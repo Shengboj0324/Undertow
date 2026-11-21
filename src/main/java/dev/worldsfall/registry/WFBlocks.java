@@ -211,6 +211,13 @@ public final class WFBlocks {
     public static final DeferredBlock<dev.worldsfall.gap.RoostPostBlock> ROOST_POST = item(BLOCKS.registerBlock("roost_post",
         dev.worldsfall.gap.RoostPostBlock::new, p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(1.5f, 6.0f).noOcclusion()));
 
+    // ================= Expansion 1.4: cities and navigation
+    public static final DeferredBlock<dev.worldsfall.nav.DriftHelmBlock> DRIFT_HELM = item(BLOCKS.registerBlock("drift_helm",
+        dev.worldsfall.nav.DriftHelmBlock::new, p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(2.0f, 6.0f).sound(SoundType.WOOD)
+            .noOcclusion().lightLevel(s -> s.getValue(dev.worldsfall.nav.DriftHelmBlock.MOORED) ? 7 : 0)));
+    public static final DeferredBlock<dev.worldsfall.nav.ShipsBellBlock> SHIPS_BELL = item(BLOCKS.registerBlock("ships_bell",
+        dev.worldsfall.nav.ShipsBellBlock::new, p -> p.mapColor(MapColor.GOLD).strength(3.0f, 6.0f).sound(SoundType.ANVIL).noOcclusion()));
+
     public static final DeferredBlock<LiquidBlock> STILLWATER = BLOCKS.registerBlock("stillwater",
         p -> new dev.worldsfall.fluid.StillwaterBlock(WFFluids.STILLWATER.get(), p),
         p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision().strength(100.0f).pushReaction(PushReaction.POPPED)

@@ -54,5 +54,9 @@ public final class WFEntities {
         dev.worldsfall.warden.ElderWarden::new, MobCategory.MONSTER, b -> b.sized(16.0f, 8.0f).passengerAttachments(3.0f).fireImmune()
             .clientTrackingRange(16).noLootTable());
 
+    // ================= Expansion 1.4: cities and navigation
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.city.ShulkerArchivist>> SHULKER_ARCHIVIST = ENTITIES.registerEntityType(
+        "shulker_archivist", dev.worldsfall.city.ShulkerArchivist::new, MobCategory.CREATURE, b -> b.sized(1.0f, 1.0f).fireImmune().clientTrackingRange(10));
+
     private WFEntities() {}
 }

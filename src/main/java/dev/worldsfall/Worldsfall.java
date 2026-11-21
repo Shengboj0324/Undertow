@@ -36,6 +36,7 @@ public final class Worldsfall {
         WFEffects.EFFECTS.register(modBus);
         WFEffects.POTIONS.register(modBus);
         WFParticles.PARTICLES.register(modBus);
+        dev.worldsfall.registry.WFMapDecorations.TYPES.register(modBus);
         WFAttachments.ATTACHMENTS.register(modBus);
         WFMenus.MENUS.register(modBus);
         WFTabs.TABS.register(modBus);
@@ -53,6 +54,7 @@ public final class Worldsfall {
         NeoForge.EVENT_BUS.addListener(dev.worldsfall.fluid.StillwaterCauldron::bottleFromSource);
         NeoForge.EVENT_BUS.register(WFEvents.class);
         NeoForge.EVENT_BUS.register(dev.worldsfall.warden.WardenEvents.class);
+        NeoForge.EVENT_BUS.register(dev.worldsfall.city.CityEvents.class);
 
         container.registerConfig(ModConfig.Type.SYNCED, WFConfig.SERVER_SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, WFConfig.CLIENT_SPEC);

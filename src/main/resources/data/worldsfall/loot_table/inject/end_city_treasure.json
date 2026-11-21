@@ -1,0 +1,88 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:echo_tablet",
+          "weight": 1,
+          "modifier": [
+            {
+              "type": "worldsfall:random_tablet"
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:spire_armor_trim_smithing_template",
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.12
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "items": "#worldsfall:pact_glyphs_craftable",
+          "expand": true,
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:causeway_keystone",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 1
+              }
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.15
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:city_chart",
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.1
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:inject/end_city_treasure"
+}

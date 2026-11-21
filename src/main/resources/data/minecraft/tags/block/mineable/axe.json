@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "worldsfall:voidroot"
+    "worldsfall:voidroot",
+    "worldsfall:drift_helm"
   ]
 }

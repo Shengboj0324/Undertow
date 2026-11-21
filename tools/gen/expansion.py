@@ -18,6 +18,7 @@ ITEM_SPRITES = (
     [f"pact_glyph_{p}" for p in PACTS] + [f"pact_crystal_{p}" for p in PACTS]
     + ["stillness_crystal", "dragon_scale", "wyrm_barding", "tuning_fork", "warden_banner_pattern", "wardenborn_seal", "music_disc_warden"]
     + ["causeway_keystone"]
+    + ["city_chart"]
 )
 EMISSIVE_ITEM_SPRITES = []
 
@@ -25,7 +26,7 @@ EMISSIVE_ITEM_SPRITES = []
 ITEM_NAMES = {f"pact_glyph_{p}": f"Pact Glyph of {PACT_NAMES[p]}" for p in PACTS}
 ITEM_NAMES.update({f"pact_crystal_{p}": f"Pact Crystal of {PACT_NAMES[p]}" for p in PACTS})
 ITEM_NAMES.update({"music_disc_warden": "Music Disc", "warden_banner_pattern": "Banner Pattern"})
-BLOCK_NAMES = {"wardens_lantern": "Warden's Lantern", "causeway_socket": "Causeway Socket", "causeway_lantern": "Causeway Lantern",
+BLOCK_NAMES = {"drift_helm": "Drift Helm", "ships_bell": "Ship's Bell", "wardens_lantern": "Warden's Lantern", "causeway_socket": "Causeway Socket", "causeway_lantern": "Causeway Lantern",
                "causeway_plaque": "Causeway Plaque", "drift_buoy": "Drift Buoy", "roost_post": "Roost Post"}
 
 # (id, parent, icon, frame, hidden)
@@ -39,6 +40,10 @@ ADVANCEMENTS = [
     ("elder_passage", "warden_released", "gateway_compass", "goal", False),
     ("the_long_walk", "across_the_gap", "causeway_keystone", "challenge", False),
     ("the_pillars_remember", "nothing_holds", "pact_glyph_depths", "goal", False),
+    ("the_archivist", "echoes_of_them", "city_chart", "task", False),
+    ("attuned", "root", "tuning_fork", "task", False),
+    ("lattice_jump", "attuned", "minecraft:ender_pearl", "goal", False),
+    ("moored", "attuned", "drift_helm", "goal", False),
 ]
 
 LANG = {
@@ -93,6 +98,35 @@ LANG = {
     "message.worldsfall.buoy.open_air": "A Drift Buoy needs open air: nothing within three blocks.",
     "message.worldsfall.pillars.read": "Pillar %s of %s: \"%s\"",
     "message.worldsfall.pillars.out_of_order": "\"%s\" — the words must be read in order, around the ring.",
+    # 1.4 cities and navigation
+    "entity.worldsfall.shulker_archivist": "Shulker Archivist",
+    "item.worldsfall.shulker_archivist_spawn_egg": "Shulker Archivist Spawn Egg",
+    "effect.worldsfall.sinking": "Sinking",
+    "item.worldsfall.empty_void_chart": "Empty Void Chart",
+    "item.worldsfall.void_chart": "Void Chart",
+    "item.worldsfall.star_chart": "Star Chart",
+    "message.worldsfall.archivist.waits": "The Archivist stays closed. It opens for an Echo Tablet.",
+    "message.worldsfall.chart.only_end": "A Void Chart can only be drawn in the End.",
+    "message.worldsfall.chart.no_cities": "There are no more End Cities near enough to chart.",
+    "message.worldsfall.lattice.full": "The Lattice already holds %s nodes.",
+    "message.worldsfall.lattice.attuned": "Attuned: %s (%s of %s nodes). Sneak into it to travel.",
+    "message.worldsfall.lattice.learned": "Lattice node learned: %s",
+    "message.worldsfall.lattice.gone": "%s no longer stands.",
+    "message.worldsfall.lattice.covered": "%s is under the tide.",
+    "message.worldsfall.lattice.no_pearl": "A Lattice jump costs one ender pearl.",
+    "message.worldsfall.mooring.not_a_ship": "A Drift Helm only steers a true End Ship.",
+    "message.worldsfall.mooring.already": "This ship is already a Mooring: %s.",
+    "message.worldsfall.mooring.restored": "The ship answers the helm. %s joins the Gateway Lattice.",
+    "message.worldsfall.mooring.bell_unmoored": "The bell rings, but no Mooring carries the sound.",
+    "message.worldsfall.mooring.bell_called": "The bell carries across the void: %s companions come aboard.",
+    "message.worldsfall.mooring.bell_nobody": "The bell carries across the void, but none of your companions are within 256 blocks.",
+    "gui.worldsfall.lattice.title": "Gateway Lattice",
+    "gui.worldsfall.lattice.empty": "You have not attuned or visited any other node yet. Use a Tuning Fork on a gateway, or restore an End Ship.",
+    "gui.worldsfall.lattice.covered": "under the tide",
+    "gui.worldsfall.lattice.at": "%s, %s, %s",
+    "gui.worldsfall.lattice.skate": "A Skate is perched here",
+    "gui.worldsfall.lattice.no_skate": "No Skate seen here",
+    "gui.worldsfall.lattice.cost": "One ender pearl per jump",
     "message.worldsfall.pillars.phrase": "\"Where the Warden falls, follow it down through the dark.\" A glyph forms in your hand.",
 }
 _WORDS = ["Where", "the", "Warden", "falls,", "follow", "it", "down", "through", "the", "dark."]
@@ -118,6 +152,11 @@ DESC = {
     "causeway_keystone": ("Set in a Causeway Socket to rebuild the missing span of the Pilgrim's Causeway.", "Cheaper than a Spire Key; the road wants to be walked."),
     "drift_buoy": ("Use in open air to set a floating lantern. Skates perch on it. It pops if the tide reaches it.", None),
     "roost_post": ("Tamed Skates perched on it recover stamina twice as fast.", None),
+    "tuning_fork": ("Strike an End Gateway to attune it to the Gateway Lattice. Sneak into an attuned gateway to travel.", None),
+    "empty_void_chart": ("Use in the End to start a chart of the islands around you.", "Contours every five blocks; the tide in teal."),
+    "city_chart": ("Use in the End to unroll a chart of the three nearest End Cities you have not been shown.", None),
+    "drift_helm": ("Set on an End Ship's deck to make it a Mooring on the Gateway Lattice.", None),
+    "ships_bell": ("Rung on a Mooring, it calls your tamed Skates and Drakes aboard from up to 256 blocks away.", None),
 }
 for _p in PACTS:
     DESC[f"pact_crystal_{_p}"] = ("Place on the exit portal (one of the four respawn crystals) to bind the next dragon to this pact.", None)
@@ -132,6 +171,10 @@ ADV_TEXT = {
     "elder_passage": ("Warden's Passage", "Ride the Elder Warden to a gateway"),
     "the_long_walk": ("The Long Walk", "Restore the last span of the Pilgrim's Causeway"),
     "the_pillars_remember": ("The Pillars Remember", "Read the ten pillar glyphs in order through a Void Lens"),
+    "the_archivist": ("Overdue", "Show an Echo Tablet to a Shulker Archivist"),
+    "attuned": ("Perfect Pitch", "Attune an End Gateway with a Tuning Fork"),
+    "lattice_jump": ("Shortcut Through Nothing", "Travel through the Gateway Lattice"),
+    "moored": ("All Hands", "Turn an End Ship into a Mooring with a Drift Helm"),
 }
 
 # -------------------------------------------------------------------------------------------------- assets
@@ -142,6 +185,7 @@ def assets(g):
         g.item_sprite(n, [f"{NS}:item/{n}", f"{NS}:item/{n}_emissive"], emissive_layers=(1,))
     lantern(g, "wardens_lantern")
     gap_assets(g)
+    nav_assets(g)
     # elytra looks: upgrade × Dragon Scale overlay
     for up in ("", "gale", "still", "hover", "tempest"):
         for scaled in (False, True):
@@ -217,6 +261,39 @@ def gap_assets(g):
     g.item_def("roost_post", rp)
 
 
+def nav_assets(g):
+    import expansion_icons
+    expansion_icons.build()
+    g.item_sprite("empty_void_chart", [f"{NS}:item/void_chart"])
+    g.item_sprite("void_chart_filled", [f"{NS}:item/void_chart_filled"])
+    g.item_sprite("star_chart", [f"{NS}:item/star_chart"])
+    g.item_sprite("shulker_archivist_spawn_egg", [f"{NS}:item/shulker_archivist_spawn_egg"])
+    # a filled chart picks its sprite by kind
+    write(f"{g.ITEMS}/void_chart.json", {"model": {"type": "minecraft:select", "property": "minecraft:component", "component": f"{NS}:chart_kind",
+                                                   "cases": [{"when": "city", "model": {"type": "minecraft:model", "model": f"{NS}:item/city_chart"}},
+                                                             {"when": "star", "model": {"type": "minecraft:model", "model": f"{NS}:item/star_chart"}}],
+                                                   "fallback": {"type": "minecraft:model", "model": f"{NS}:item/void_chart_filled"}}})
+    for n in ("void_chart_filled", "star_chart"):  # models only; they are not items of their own
+        if os.path.exists(f"{g.ITEMS}/{n}.json"):
+            os.remove(f"{g.ITEMS}/{n}.json")
+    side = {"down": "#post", "up": "#post", "north": "#post", "south": "#post", "west": "#post", "east": "#post"}
+    # Drift Helm: a driftstone post carrying a ship's wheel (the wheel texture on both faces of a thin plate)
+    helm = g.custom("drift_helm", {"post": g.b("driftstone"), "wheel": g.b("drift_helm"), "particle": g.b("drift_helm")},
+                    [g.box((6, 0, 6), (10, 9, 10), side),
+                     g.box((1, 6, 7), (15, 16, 9), {"north": "#wheel", "south": "#wheel", "up": "#post", "down": "#post", "west": "#post", "east": "#post"})],
+                    ao=False)
+    write(f"{g.BS}/drift_helm.json", {"variants": g.horizontal_variants({"moored=false": helm, "moored=true": helm})})
+    g.item_def("drift_helm", helm)
+    # Ship's Bell: a bronze bell hung in a driftstone frame
+    bell_faces = {f: "#bell" for f in ("down", "up", "north", "south", "west", "east")}
+    bell = g.custom("ships_bell", {"post": g.b("driftstone"), "bell": g.b("ships_bell"), "particle": g.b("ships_bell")},
+                    [g.box((2, 0, 2), (14, 2, 14), side), g.box((2, 2, 7), (4, 16, 9), side), g.box((12, 2, 7), (14, 16, 9), side),
+                     g.box((4, 14, 7), (12, 16, 9), side), g.box((5, 6, 5), (11, 13, 11), bell_faces), g.box((4, 4, 4), (12, 6, 12), bell_faces),
+                     g.box((7, 13, 7), (9, 14, 9), bell_faces)], ao=False)
+    write(f"{g.BS}/ships_bell.json", {"variants": g.horizontal_variants({"ringing=false": bell, "ringing=true": bell})})
+    g.item_def("ships_bell", bell)
+
+
 def lantern(g, name):
     tmpl = vanilla_json("assets/minecraft/models/block/template_lantern.json")
     tmplh = vanilla_json("assets/minecraft/models/block/template_hanging_lantern.json")
@@ -257,6 +334,7 @@ def data(d):
     write(f"{D}/jukebox_song/warden.json", {"comparator_output": 14, "description": {"translate": "jukebox_song.worldsfall.warden"},
                                             "length_in_seconds": 150.0, "sound_event": d.i("music_disc.warden")})
     gap_data(d)
+    nav_data(d)
     d.tag("worldgen/structure", NS, "lore", [d.i("fallen_spire"), d.i("sunken_archive")] if os.path.exists(
         os.path.join(D, "worldgen/structure/sunken_archive.json")) else [d.i("fallen_spire")])
 
@@ -291,13 +369,42 @@ def gap_data(d):
                                                             "features": [d.i("debris_field_belt")], "step": "surface_structures"})
 
 
+def nav_data(d):
+    D = d.D
+    d.shapeless("empty_void_chart", ["minecraft:paper", "minecraft:paper", d.i("echo_dust")], d.i("empty_void_chart"))
+    d.shaped("drift_helm", [" M ", "DCD", " D "], {"M": d.i("skate_membrane"), "D": d.i("driftstone"), "C": "minecraft:compass"}, d.i("drift_helm"),
+             category="building")
+    d.shaped("ships_bell", [" D ", "GPG", "G G"], {"D": d.i("driftstone"), "G": "minecraft:gold_ingot", "P": d.i("weathered_purpur")},
+             d.i("ships_bell"), category="building")
+    # End City chests point onward (global loot modifier; no vanilla file replaced)
+    d.chest("inject/end_city_treasure", [
+        d.chance(0.35, d.tablet_entry()),
+        d.chance(0.12, {"type": "minecraft:item", "name": d.i("spire_armor_trim_smithing_template")}),
+        d.chance(0.2, {"type": "minecraft:tag", "items": f"#{NS}:pact_glyphs_craftable", "expand": True}),
+        d.chance(0.15, d.count(d.i("causeway_keystone"), 1, 1)),
+        d.chance(0.1, {"type": "minecraft:item", "name": d.i("city_chart")}),
+    ])
+    d.tag("item", NS, "pact_glyphs_craftable", [d.i(f"pact_glyph_{p}") for p in PACTS if p != "depths"])
+    write(f"{D}/loot_modifiers/end_city_onward.json", {"type": "neoforge:add_table",
+                                                      "condition": {"type": "neoforge:loot_table_id", "loot_table_id": "minecraft:chests/end_city_treasure"},
+                                                      "table": d.i("inject/end_city_treasure")})
+    write(f"{D}/loot_table/entities/shulker_archivist.json", {"type": "minecraft:entity", "pools": [
+        {"rolls": 1, "entries": [{"type": "minecraft:item", "name": d.i("echo_dust"),
+                                  "functions": [{"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 1, "max": 3}}]}]}],
+        "random_sequence": d.i("entities/shulker_archivist")})
+
+
 def block_loot(d):
-    for n in ("wardens_lantern", "causeway_lantern", "causeway_plaque", "drift_buoy", "roost_post"):
+    for n in ("wardens_lantern", "causeway_lantern", "causeway_plaque", "drift_buoy", "roost_post", "drift_helm", "ships_bell"):
         d.drop_self(n)
 
 
+def axe_blocks():
+    return ["drift_helm"]
+
+
 def pickaxe_blocks():
-    return ["wardens_lantern", "causeway_lantern", "causeway_plaque", "roost_post"]
+    return ["wardens_lantern", "causeway_lantern", "causeway_plaque", "roost_post", "ships_bell"]
 
 
 def advancement_criteria(aid, i):

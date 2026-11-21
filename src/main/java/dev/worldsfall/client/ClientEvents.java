@@ -71,6 +71,9 @@ public final class ClientEvents {
         skateControls(mc, p, in);
         elytraUpgrades(p, in);
         fracturePhysics(mc, p);
+        if (p.hasEffect(dev.worldsfall.registry.WFEffects.SINKING) && !p.getAbilities().flying) {
+            dev.worldsfall.effect.SinkingEffect.pull(p);
+        }
         ambient(mc, p);
         lastSneak = in.shift();
         lastJump = in.jump();

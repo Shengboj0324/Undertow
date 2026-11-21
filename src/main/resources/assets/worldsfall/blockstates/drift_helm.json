@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,moored=false": {
+      "model": "worldsfall:block/drift_helm"
+    },
+    "facing=north,moored=true": {
+      "model": "worldsfall:block/drift_helm"
+    },
+    "facing=east,moored=false": {
+      "model": "worldsfall:block/drift_helm",
+      "y": 90
+    },
+    "facing=east,moored=true": {
+      "model": "worldsfall:block/drift_helm",
+      "y": 90
+    },
+    "facing=south,moored=false": {
+      "model": "worldsfall:block/drift_helm",
+      "y": 180
+    },
+    "facing=south,moored=true": {
+      "model": "worldsfall:block/drift_helm",
+      "y": 180
+    },
+    "facing=west,moored=false": {
+      "model": "worldsfall:block/drift_helm",
+      "y": 270
+    },
+    "facing=west,moored=true": {
+      "model": "worldsfall:block/drift_helm",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "worldsfall:pact_glyph_tide",
+    "worldsfall:pact_glyph_shards",
+    "worldsfall:pact_glyph_echoes",
+    "worldsfall:pact_glyph_hoard",
+    "worldsfall:pact_glyph_memory",
+    "worldsfall:pact_glyph_stillness",
+    "worldsfall:pact_glyph_lone"
+  ]
+}

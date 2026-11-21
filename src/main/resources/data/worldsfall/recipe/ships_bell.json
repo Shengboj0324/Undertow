@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "D": "worldsfall:driftstone",
+    "G": "minecraft:gold_ingot",
+    "P": "worldsfall:weathered_purpur"
+  },
+  "pattern": [
+    " D ",
+    "GPG",
+    "G G"
+  ],
+  "result": {
+    "id": "worldsfall:ships_bell"
+  }
+}

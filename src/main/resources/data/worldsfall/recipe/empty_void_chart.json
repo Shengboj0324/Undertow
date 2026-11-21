@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "minecraft:paper",
+    "worldsfall:echo_dust"
+  ],
+  "result": {
+    "id": "worldsfall:empty_void_chart"
+  }
+}

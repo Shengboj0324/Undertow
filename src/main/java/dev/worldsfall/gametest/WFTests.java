@@ -57,7 +57,7 @@ public final class WFTests {
     private WFTests() {}
 
     /** 24 from 1.0 plus the expansion's (1.2 → 2.0). */
-    static final int EXPECTED_ADVANCEMENTS = 33;
+    static final int EXPECTED_ADVANCEMENTS = 37;
 
     static void collect(Map<String, Consumer<GameTestHelper>> out) {
         out.put("tide_cycle_math", WFTests::tideCycleMath);
@@ -92,6 +92,12 @@ public final class WFTests {
         out.put("causeway_plan_shape", WFTests::causewayPlan);
         out.put("drift_buoy_needs_open_air", WFTests::buoyOpenAir);
         out.put("pillar_glyphs_ring_in_order", WFTests::pillarGlyphs);
+        // expansion 1.4: cities and navigation
+        out.put("lattice_nodes_and_knowledge", WFTests::latticeNodes);
+        out.put("archivist_offers_and_peace", WFTests::archivistOffers);
+        out.put("sinking_pulls_down", WFTests::sinkingPull);
+        out.put("void_chart_exact_centre_and_palette", WFTests::voidChart);
+        out.put("end_city_loot_points_onward", WFTests::cityLoot);
     }
 
     static int maxTicks(String name) {
@@ -551,6 +557,97 @@ public final class WFTests {
             h.assertTrue(ang > prev, "glyphs run around the ring in order");
             prev = ang;
         }
+        h.succeed();
+    }
+
+    private static void latticeNodes(GameTestHelper h) {
+        var data = new dev.worldsfall.nav.LatticeData();
+        BlockPos a = new BlockPos(100, 75, 0), b = new BlockPos(-96, 75, 12);
+        java.util.UUID p = java.util.UUID.randomUUID(), q = java.util.UUID.randomUUID();
+        h.assertTrue(data.add(new dev.worldsfall.nav.LatticeData.Node(a, dev.worldsfall.nav.LatticeData.GATEWAY, "A")), "a node is added");
+        h.assertTrue(!data.add(new dev.worldsfall.nav.LatticeData.Node(a, dev.worldsfall.nav.LatticeData.GATEWAY, "A")), "no duplicate nodes");
+        data.add(new dev.worldsfall.nav.LatticeData.Node(b, dev.worldsfall.nav.LatticeData.MOORING, "B"));
+        h.assertTrue(!data.learn(p, new BlockPos(1, 2, 3)), "unknown positions cannot be learned");
+        data.learn(p, a);
+        data.learn(p, b);
+        data.learn(q, b);
+        h.assertTrue(data.knownBy(p).size() == 2 && data.knownBy(q).size() == 1, "each player only travels to the nodes they know");
+        data.remove(b);
+        h.assertTrue(data.size() == 1 && data.knownBy(q).isEmpty() && !data.knows(p, b), "a removed node is forgotten by everyone");
+        h.assertTrue(dev.worldsfall.nav.Lattice.nameFor(a, 0).equals(dev.worldsfall.nav.Lattice.nameFor(a, 0))
+            && dev.worldsfall.nav.Lattice.nameFor(b, 1).endsWith("Mooring"), "names are stable; moorings are named as such");
+        h.succeed();
+    }
+
+    private static void archivistOffers(GameTestHelper h) {
+        ServerPlayer player = h.makeMockServerPlayerInLevel();
+        var archivist = WFEntities.SHULKER_ARCHIVIST.get().create(h.getLevel(), EntitySpawnReason.COMMAND);
+        h.assertTrue(archivist != null, "the archivist constructs");
+        BlockPos at = h.absolutePos(new BlockPos(1, 2, 1));
+        archivist.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0, 0);
+        h.getLevel().addFreshEntity(archivist);
+        h.assertTrue(archivist.targetSelector.getAvailableGoals().isEmpty(), "an Archivist never picks a target");
+        h.assertTrue(dev.worldsfall.city.ShulkerArchivist.missingTablet(Set.of(1, 2, 3)) == 4
+            && dev.worldsfall.city.ShulkerArchivist.missingTablet(new HashSet<>(java.util.stream.IntStream.rangeClosed(1, 12).boxed().toList())) == 0,
+            "the missing tablet is the lowest unread one");
+        var offers = archivist.offersFor(player);
+        h.assertTrue(offers.size() == 4, "chart, shell, glyph and missing tablet: " + offers.size());
+        h.assertTrue(offers.getFirst().getResult().is(WFItems.CITY_CHART.get()) && offers.getFirst().getCostA().is(WFItems.ECHO_TABLET.get()),
+            "an Echo Tablet buys a City Chart");
+        h.assertTrue(offers.get(2).getResult().getItem() != WFItems.PACT_GLYPH_DEPTHS.get(), "the Pact of Depths is never traded");
+        h.assertTrue(WFEntities.SHULKER_ARCHIVIST.get().isAllowedInPeaceful(), "Archivists stay in Peaceful");
+        archivist.discard();
+        h.succeed();
+    }
+
+    private static void sinkingPull(GameTestHelper h) {
+        Cow cow = h.spawn(net.minecraft.world.entity.EntityTypes.COW, new BlockPos(1, 8, 1));
+        cow.setDeltaMovement(0, 0.4, 0);
+        cow.setOnGround(false);
+        dev.worldsfall.effect.SinkingEffect.pull(cow);
+        h.assertTrue(cow.getDeltaMovement().y <= -dev.worldsfall.effect.SinkingEffect.PULL + 1e-6, "sinking pulls an airborne mob down");
+        h.assertTrue(dev.worldsfall.effect.SinkingEffect.BULLET_TICKS * dev.worldsfall.effect.SinkingEffect.PULL >= 4.0,
+            "a Sinking Bullet pulls about four blocks");
+        cow.addEffect(new net.minecraft.world.effect.MobEffectInstance(dev.worldsfall.registry.WFEffects.STEADINESS, 100));
+        cow.addEffect(new net.minecraft.world.effect.MobEffectInstance(dev.worldsfall.registry.WFEffects.SINKING, 20));
+        h.assertTrue(!cow.hasEffect(dev.worldsfall.registry.WFEffects.SINKING), "Steadiness counters Sinking");
+        cow.discard();
+        h.succeed();
+    }
+
+    private static void voidChart(GameTestHelper h) {
+        ServerLevel level = h.getLevel();
+        ItemStack chart = dev.worldsfall.nav.Charts.create(level, 1237, -411, 2, false, "void");
+        var data = net.minecraft.world.item.MapItem.getSavedData(chart, level);
+        h.assertTrue(data != null && data.centerX == 1237 && data.centerZ == -411 && data.scale == 2, "a chart is centred exactly where it was drawn");
+        h.assertTrue(chart.getItem() instanceof dev.worldsfall.nav.VoidChartItem && "void".equals(dev.worldsfall.nav.VoidChartItem.kind(chart)),
+            "a filled Void Chart");
+        byte v = dev.worldsfall.nav.Charts.colour(level, 3, 5, level.getMinY(), null, level.getMinY());
+        h.assertTrue(v == net.minecraft.world.level.material.MapColor.COLOR_BLACK.getPackedId(net.minecraft.world.level.material.MapColor.Brightness.LOW)
+            || v == net.minecraft.world.level.material.MapColor.COLOR_PURPLE.getPackedId(net.minecraft.world.level.material.MapColor.Brightness.HIGH)
+            || v == net.minecraft.world.level.material.MapColor.COLOR_BLUE.getPackedId(net.minecraft.world.level.material.MapColor.Brightness.LOW),
+            "the void is a dark star field");
+        byte contour = dev.worldsfall.nav.Charts.colour(level, 0, 0, 70, Blocks.END_STONE.defaultBlockState(), 64);
+        byte flat = dev.worldsfall.nav.Charts.colour(level, 0, 0, 70, Blocks.END_STONE.defaultBlockState(), 70);
+        h.assertTrue(contour != flat, "a height band change draws a contour line");
+        h.succeed();
+    }
+
+    private static void cityLoot(GameTestHelper h) {
+        var server = h.getLevel().getServer();
+        var table = server.reloadableRegistries().getLootTable(net.minecraft.world.level.storage.loot.BuiltInLootTables.END_CITY_TREASURE);
+        var params = new net.minecraft.world.level.storage.loot.LootParams.Builder(h.getLevel())
+            .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, net.minecraft.world.phys.Vec3.ZERO)
+            .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.CHEST);
+        int ours = 0;
+        for (int k = 0; k < 120; k++) {
+            for (ItemStack stack : table.getRandomItems(params)) {
+                if (net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace().equals("worldsfall")) {
+                    ours++;
+                }
+            }
+        }
+        h.assertTrue(ours > 0, "End City chests gain Worldsfall loot through the global loot modifier");
         h.succeed();
     }
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "M": "worldsfall:skate_membrane",
+    "D": "worldsfall:driftstone",
+    "C": "minecraft:compass"
+  },
+  "pattern": [
+    " M ",
+    "DCD",
+    " D "
+  ],
+  "result": {
+    "id": "worldsfall:drift_helm"
+  }
+}

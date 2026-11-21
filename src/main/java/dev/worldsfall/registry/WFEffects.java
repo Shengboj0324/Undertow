@@ -18,6 +18,7 @@ public final class WFEffects {
     public static final DeferredHolder<MobEffect, MobEffect> VOID_EROSION = EFFECTS.register("void_erosion", VoidErosionEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> STEADINESS = EFFECTS.register("steadiness",
         () -> new SimpleEffect(MobEffectCategory.BENEFICIAL, 0x8FB0FF));
+    public static final DeferredHolder<MobEffect, MobEffect> SINKING = EFFECTS.register("sinking", dev.worldsfall.effect.SinkingEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> TIDESIGHT = EFFECTS.register("tidesight",
         () -> new SimpleEffect(MobEffectCategory.BENEFICIAL, 0x2FC9BB));
 

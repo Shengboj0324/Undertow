@@ -15,6 +15,7 @@ public final class ExpansionClient {
         modBus.addListener(ExpansionClient::layers);
         modBus.addListener(ExpansionClient::renderers);
         ClientBridge.wardenFx = WardenClient::handle;
+        ClientBridge.latticeMenu = LatticeScreen::open;
     }
 
     private static void layers(EntityRenderersEvent.RegisterLayerDefinitions e) {
@@ -26,5 +27,6 @@ public final class ExpansionClient {
         e.registerEntityRenderer(EntityTypes.ENDER_DRAGON, WardenRenderers.DragonRenderer::new);
         e.registerEntityRenderer(WFEntities.ELDER_WARDEN.get(), WardenRenderers.DragonRenderer::new);
         e.registerEntityRenderer(WFEntities.LUMEN_HEART.get(), WardenRenderers.LumenHeartRenderer::new);
+        e.registerEntityRenderer(WFEntities.SHULKER_ARCHIVIST.get(), ArchivistRenderer::new);
     }
 }

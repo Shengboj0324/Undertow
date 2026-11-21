@@ -260,7 +260,8 @@ public final class WFEvents {
 
     @SubscribeEvent
     public static void effectApplicable(MobEffectEvent.Applicable event) {
-        if (event.getEffectInstance().getEffect().is(MobEffects.LEVITATION.unwrapKey().orElseThrow())
+        var effect = event.getEffectInstance().getEffect();
+        if ((effect.is(MobEffects.LEVITATION.unwrapKey().orElseThrow()) || effect.is(WFEffects.SINKING.getKey()))
             && event.getEntity().hasEffect(WFEffects.STEADINESS)) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }

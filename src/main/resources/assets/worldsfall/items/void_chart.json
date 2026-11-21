@@ -1,0 +1,27 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "worldsfall:chart_kind",
+    "cases": [
+      {
+        "when": "city",
+        "model": {
+          "type": "minecraft:model",
+          "model": "worldsfall:item/city_chart"
+        }
+      },
+      {
+        "when": "star",
+        "model": {
+          "type": "minecraft:model",
+          "model": "worldsfall:item/star_chart"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "worldsfall:item/void_chart_filled"
+    }
+  }
+}

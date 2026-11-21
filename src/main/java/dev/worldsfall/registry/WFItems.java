@@ -128,8 +128,17 @@ public final class WFItems {
     public static final DeferredItem<dev.worldsfall.gap.DriftBuoyItem> DRIFT_BUOY = reg("drift_buoy",
         p -> new dev.worldsfall.gap.DriftBuoyItem(WFBlocks.DRIFT_BUOY.get(), p), p -> p.useBlockDescriptionPrefix());
 
+    // ================= Expansion 1.4: cities and navigation
+    public static final DeferredItem<dev.worldsfall.nav.BlankChartItem> EMPTY_VOID_CHART = reg("empty_void_chart",
+        p -> new dev.worldsfall.nav.BlankChartItem(p, false), UnaryOperator.identity());
+    public static final DeferredItem<dev.worldsfall.nav.VoidChartItem> VOID_CHART = reg("void_chart", dev.worldsfall.nav.VoidChartItem::new,
+        UnaryOperator.identity());
+    public static final DeferredItem<dev.worldsfall.nav.BlankChartItem> CITY_CHART = reg("city_chart",
+        p -> new dev.worldsfall.nav.BlankChartItem(p, true), p -> p.rarity(Rarity.UNCOMMON));
+
     private static final List<DeferredItem<Item>> SPAWN_EGGS = new ArrayList<>();
     public static final DeferredItem<Item> VOID_SKATE_SPAWN_EGG = egg("void_skate", WFEntities.VOID_SKATE);
+    public static final DeferredItem<Item> SHULKER_ARCHIVIST_SPAWN_EGG = egg("shulker_archivist", WFEntities.SHULKER_ARCHIVIST);
     public static final DeferredItem<Item> CHORUS_GRAZER_SPAWN_EGG = egg("chorus_grazer", WFEntities.CHORUS_GRAZER);
     public static final DeferredItem<Item> UNDERSIDE_LURKER_SPAWN_EGG = egg("underside_lurker", WFEntities.UNDERSIDE_LURKER);
     public static final DeferredItem<Item> HOARDER_SPAWN_EGG = egg("hoarder", WFEntities.HOARDER);
@@ -155,6 +164,20 @@ public final class WFItems {
 
     static ResourceKey<TrimMaterial> trim(String name) {
         return ResourceKey.create(Registries.TRIM_MATERIAL, Identifier.fromNamespaceAndPath(Worldsfall.MODID, name));
+    }
+
+    /** The Pact Glyph item for a pact. */
+    public static Item glyph(dev.worldsfall.warden.Pact pact) {
+        return switch (pact) {
+            case TIDE -> PACT_GLYPH_TIDE.get();
+            case SHARDS -> PACT_GLYPH_SHARDS.get();
+            case ECHOES -> PACT_GLYPH_ECHOES.get();
+            case HOARD -> PACT_GLYPH_HOARD.get();
+            case MEMORY -> PACT_GLYPH_MEMORY.get();
+            case STILLNESS -> PACT_GLYPH_STILLNESS.get();
+            case LONE -> PACT_GLYPH_LONE.get();
+            case DEPTHS -> PACT_GLYPH_DEPTHS.get();
+        };
     }
 
     private static DeferredItem<dev.worldsfall.warden.WardenCrystalItem> pactCrystal(dev.worldsfall.warden.Pact pact) {
