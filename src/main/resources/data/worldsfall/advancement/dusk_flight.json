@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:skate_harness"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.dusk_flight.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.dusk_flight.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:patience_of_the_void"
+}

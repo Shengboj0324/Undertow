@@ -218,6 +218,31 @@ public final class WFBlocks {
     public static final DeferredBlock<dev.worldsfall.nav.ShipsBellBlock> SHIPS_BELL = item(BLOCKS.registerBlock("ships_bell",
         dev.worldsfall.nav.ShipsBellBlock::new, p -> p.mapColor(MapColor.GOLD).strength(3.0f, 6.0f).sound(SoundType.ANVIL).noOcclusion()));
 
+    // ================= Expansion 1.5: living systems
+    public static final DeferredBlock<dev.worldsfall.life.LanternMothJarBlock> LANTERN_MOTH_JAR = BLOCKS.registerBlock("lantern_moth_jar",
+        dev.worldsfall.life.LanternMothJarBlock::new, p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(0.3f).sound(SoundType.GLASS).noOcclusion()
+            .lightLevel(s -> 12).pushReaction(PushReaction.POPPED));
+    public static final DeferredBlock<dev.worldsfall.life.TideBellBlock> TIDE_BELL = item(BLOCKS.registerBlock("tide_bell",
+        dev.worldsfall.life.TideBellBlock::new, p -> p.mapColor(MapColor.COLOR_CYAN).strength(2.0f, 6.0f).sound(SoundType.ANVIL).noOcclusion()));
+    public static final DeferredBlock<dev.worldsfall.life.WyrmRoostBlock> WYRM_ROOST = item(BLOCKS.registerBlock("wyrm_roost",
+        dev.worldsfall.life.WyrmRoostBlock::new, p -> p.mapColor(MapColor.COLOR_PURPLE).strength(0.8f).sound(SoundType.AZALEA).noOcclusion()));
+    public static final DeferredBlock<dev.worldsfall.life.GravityPlateBlock> GRAVITY_PLATE = item(BLOCKS.registerBlock("gravity_plate",
+        dev.worldsfall.life.GravityPlateBlock::new, p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(1.5f, 6.0f).sound(SoundType.STONE).noOcclusion()
+            .lightLevel(s -> s.getValue(dev.worldsfall.life.GravityPlateBlock.POWERED) ? 9 : 3).pushReaction(PushReaction.POPPED)));
+    public static final DeferredBlock<dev.worldsfall.life.CourierCacheBlock> COURIER_CACHE = item(BLOCKS.registerBlock("courier_cache",
+        dev.worldsfall.life.CourierCacheBlock::new, p -> p.mapColor(MapColor.SAND).strength(2.5f, 6.0f).sound(SoundType.STONE).lightLevel(s -> 5)));
+    public static final DeferredBlock<dev.worldsfall.life.StarfallShardBlock> STARFALL_SHARD = item(BLOCKS.registerBlock("starfall_shard",
+        dev.worldsfall.life.StarfallShardBlock::new, p -> p.mapColor(MapColor.GOLD).strength(1.5f).sound(SoundType.AMETHYST_CLUSTER).noOcclusion()
+            .lightLevel(s -> 12).pushReaction(PushReaction.POPPED)));
+    public static final DeferredBlock<dev.worldsfall.life.TidewrackBlock> TIDEWRACK = item(BLOCKS.registerBlock("tidewrack",
+        dev.worldsfall.life.TidewrackBlock::new, p -> p.mapColor(MapColor.COLOR_CYAN).strength(0.6f).sound(SoundType.GRAVEL).noOcclusion()));
+    public static final DeferredBlock<Block> ANCHOR_FRAME_LAMP = item(BLOCKS.registerSimpleBlock("anchor_frame_lamp",
+        p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(1.5f, 6.0f).sound(SoundType.METAL).lightLevel(s -> 13)));
+    public static final DeferredBlock<SlabBlock> ANCHOR_FRAME_SLAB = item(BLOCKS.registerBlock("anchor_frame_slab", SlabBlock::new,
+        p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(1.5f, 6.0f).sound(SoundType.METAL)));
+    public static final DeferredBlock<StairBlock> ANCHOR_FRAME_STAIRS = item(BLOCKS.registerBlock("anchor_frame_stairs",
+        p -> new StairBlock(ANCHOR_FRAME_LAMP.get().defaultBlockState(), p), p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(1.5f, 6.0f).sound(SoundType.METAL)));
+
     public static final DeferredBlock<LiquidBlock> STILLWATER = BLOCKS.registerBlock("stillwater",
         p -> new dev.worldsfall.fluid.StillwaterBlock(WFFluids.STILLWATER.get(), p),
         p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision().strength(100.0f).pushReaction(PushReaction.POPPED)

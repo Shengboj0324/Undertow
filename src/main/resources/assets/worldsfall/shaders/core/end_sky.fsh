@@ -7,7 +7,8 @@
 // distant debris silhouettes near the horizon, and the tide's teal glow from below.
 // ColorModulator.rgb = nebula tint (blended per biome), ColorModulator.a = nebula strength.
 // TextureMat[0] = (time seconds, tide glow 0..1, calmed 0..1, underside haze 0..1)
-// TextureMat[1].xyz = camera position (for slight parallax of the near star layer)
+// TextureMat[1].xyz = camera position (for slight parallax of the near star layer), TextureMat[1].w = star brightness
+//   (1 normally; dims toward 0 during an Eclipse of Stillness)
 
 layout(location = 0) in vec3 skyDir;
 layout(location = 0) out vec4 fragColor;
@@ -51,7 +52,7 @@ void main() {
     s += wf_stars(par, 60.0, 0.955, t * 0.7) * 1.25;
     float starFade = smoothstep(-0.25, 0.05, h);
     vec3 starCol = mix(vec3(0.80, 0.94, 0.99), vec3(1.0), wf_hash13(floor(d * 120.0)));
-    col += starCol * s * starFade * (1.0 - glow * 0.35);
+    col += starCol * s * starFade * (1.0 - glow * 0.35) * TextureMat[1].w;
 
     // 4. distant islands: hazy floating masses ringing the horizon -- flat chorus-bumped tops, tapering
     //    rocky undersides, a rim of nebula light on top and atmospheric fade with distance

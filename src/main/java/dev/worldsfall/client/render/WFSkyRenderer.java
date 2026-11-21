@@ -78,10 +78,10 @@ public final class WFSkyRenderer implements CustomSkyboxRenderer {
         } else {
             pipeline = WFPipelines.END_SKY;
             Vector3f tint = st.nebulaTint();
-            colorMod = new Vector4f(tint.x, tint.y, tint.z, st.nebulaStrength());
+            colorMod = new Vector4f(tint.x, tint.y, tint.z, st.nebulaStrength() * (0.35f + 0.65f * st.starBrightness()));
             tex.m00(st.timeSeconds()).m01(st.tideGlow()).m02(st.calmed()).m03(st.underHaze());
             Vector3f cam = st.cameraPos();
-            tex.m10(cam.x).m11(cam.y).m12(cam.z);
+            tex.m10(cam.x).m11(cam.y).m12(cam.z).m13(st.starBrightness());
         }
         RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
         GpuBuffer indexBuffer = indices.getBuffer(36);

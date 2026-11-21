@@ -212,7 +212,9 @@ def gen_chests():
               ({"type": "minecraft:item", "name": i("skate_membrane")}, 8), ({"type": "minecraft:item", "name": i("glow_gland")}, 5),
               (tablet_entry(), 4), ({"type": "minecraft:item", "name": i("gateway_compass")}, 3),
               ({"type": "minecraft:item", "name": i("spire_key")}, 1), ({"type": "minecraft:empty"}, 7)]
-    chest("barter/hoard", [{"rolls": 1, "entries": [dict(e, weight=w) for e, w in barter]}])
+    # standing with Hoarders is the roll's luck (expansion 1.5): junk and "nothing" fade, rare finds grow
+    quality = {25: -3, 7: -2, 15: 1, 10: 1, 5: 1, 4: 2, 3: 2, 1: 1}
+    chest("barter/hoard", [{"rolls": 1, "entries": [dict(e, weight=w, quality=quality.get(w, 0)) for e, w in barter]}])
 
 # --------------------------------------------------------------------------- recipes
 def shaped(name, pattern, key, result, n=1, category="misc"):

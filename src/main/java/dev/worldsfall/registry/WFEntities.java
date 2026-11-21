@@ -58,5 +58,9 @@ public final class WFEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.city.ShulkerArchivist>> SHULKER_ARCHIVIST = ENTITIES.registerEntityType(
         "shulker_archivist", dev.worldsfall.city.ShulkerArchivist::new, MobCategory.CREATURE, b -> b.sized(1.0f, 1.0f).fireImmune().clientTrackingRange(10));
 
+    // ================= Expansion 1.5: living systems
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.life.LanternMoth>> LANTERN_MOTH = ENTITIES.registerEntityType("lantern_moth",
+        dev.worldsfall.life.LanternMoth::new, MobCategory.AMBIENT, b -> b.sized(0.4f, 0.3f).eyeHeight(0.15f).clientTrackingRange(8).noLootTable());
+
     private WFEntities() {}
 }

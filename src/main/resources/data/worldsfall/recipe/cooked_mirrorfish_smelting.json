@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 0.35,
+  "ingredient": "worldsfall:mirrorfish",
+  "result": {
+    "id": "worldsfall:cooked_mirrorfish"
+  }
+}

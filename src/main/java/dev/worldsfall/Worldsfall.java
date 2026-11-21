@@ -55,6 +55,7 @@ public final class Worldsfall {
         NeoForge.EVENT_BUS.register(WFEvents.class);
         NeoForge.EVENT_BUS.register(dev.worldsfall.warden.WardenEvents.class);
         NeoForge.EVENT_BUS.register(dev.worldsfall.city.CityEvents.class);
+        NeoForge.EVENT_BUS.register(dev.worldsfall.life.LifeEvents.class);
 
         container.registerConfig(ModConfig.Type.SYNCED, WFConfig.SERVER_SPEC);
         container.registerConfig(ModConfig.Type.CLIENT, WFConfig.CLIENT_SPEC);

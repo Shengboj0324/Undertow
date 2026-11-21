@@ -19,6 +19,7 @@ ITEM_SPRITES = (
     + ["stillness_crystal", "dragon_scale", "wyrm_barding", "tuning_fork", "warden_banner_pattern", "wardenborn_seal", "music_disc_warden"]
     + ["causeway_keystone"]
     + ["city_chart"]
+    + ["mirrorfish", "cooked_mirrorfish", "driftsilt", "eclipse_dust", "courier_token"]
 )
 EMISSIVE_ITEM_SPRITES = []
 
@@ -26,7 +27,10 @@ EMISSIVE_ITEM_SPRITES = []
 ITEM_NAMES = {f"pact_glyph_{p}": f"Pact Glyph of {PACT_NAMES[p]}" for p in PACTS}
 ITEM_NAMES.update({f"pact_crystal_{p}": f"Pact Crystal of {PACT_NAMES[p]}" for p in PACTS})
 ITEM_NAMES.update({"music_disc_warden": "Music Disc", "warden_banner_pattern": "Banner Pattern"})
-BLOCK_NAMES = {"drift_helm": "Drift Helm", "ships_bell": "Ship's Bell", "wardens_lantern": "Warden's Lantern", "causeway_socket": "Causeway Socket", "causeway_lantern": "Causeway Lantern",
+BLOCK_NAMES = {"tide_bell": "Tide Bell", "wyrm_roost": "Wyrm Roost", "gravity_plate": "Gravity Plate", "courier_cache": "Courier Cache",
+               "starfall_shard": "Starfall Shard", "tidewrack": "Tidewrack", "lantern_moth_jar": "Lantern Moth Jar",
+               "anchor_frame_lamp": "Anchor Frame Lamp", "anchor_frame_slab": "Anchor Frame Slab", "anchor_frame_stairs": "Anchor Frame Stairs",
+               "drift_helm": "Drift Helm", "ships_bell": "Ship's Bell", "wardens_lantern": "Warden's Lantern", "causeway_socket": "Causeway Socket", "causeway_lantern": "Causeway Lantern",
                "causeway_plaque": "Causeway Plaque", "drift_buoy": "Drift Buoy", "roost_post": "Roost Post"}
 
 # (id, parent, icon, frame, hidden)
@@ -44,6 +48,13 @@ ADVANCEMENTS = [
     ("attuned", "root", "tuning_fork", "task", False),
     ("lattice_jump", "attuned", "minecraft:ender_pearl", "goal", False),
     ("moored", "attuned", "drift_helm", "goal", False),
+    ("high_water_mark", "a_hole_full_of_stars", "tidewrack", "goal", False),
+    ("starstruck", "root", "starfall_shard", "task", False),
+    ("a_quiet_hour", "echoes_of_them", "eclipse_dust", "challenge", True),
+    ("dusk_flight", "patience_of_the_void", "skate_harness", "challenge", False),
+    ("special_delivery", "fair_trade", "courier_token", "goal", False),
+    ("tide_angler", "a_hole_full_of_stars", "mirrorfish", "task", False),
+    ("still_angler", "tide_angler", "cooked_mirrorfish", "task", False),
 ]
 
 LANG = {
@@ -127,6 +138,20 @@ LANG = {
     "gui.worldsfall.lattice.skate": "A Skate is perched here",
     "gui.worldsfall.lattice.no_skate": "No Skate seen here",
     "gui.worldsfall.lattice.cost": "One ender pearl per jump",
+    # 1.5 living systems
+    "entity.worldsfall.lantern_moth": "Lantern Moth",
+    "item.worldsfall.bottled_lantern_moth": "Bottled Lantern Moth",
+    "message.worldsfall.roost.no_wyrm": "No Wyrm of yours is near enough to settle here.",
+    "message.worldsfall.roost.settled": "%s settles on the roost. It will keep watch here.",
+    "message.worldsfall.hoard.trusted": "The Hoarders know your face now. They might trust you with a Courier Token.",
+    "message.worldsfall.hoard.distrusted": "Word travels among Hoarders: they no longer trust you.",
+    "message.worldsfall.courier.only_end": "Couriers only work in the End.",
+    "message.worldsfall.courier.standing": "The Hoarders don't trust you enough (standing %s, needs %s).",
+    "message.worldsfall.courier.first": "First cache marked. Now use the token on the cache it should deliver to.",
+    "message.worldsfall.courier.same": "Pick a different cache to deliver to.",
+    "message.worldsfall.courier.too_far": "The caches must be within %s blocks of each other.",
+    "message.worldsfall.courier.hired": "A Courier will carry one stack every five minutes from (%s, %s) to (%s, %s).",
+    "message.worldsfall.courier.cancelled": "Your Courier contracts are cancelled. Hoarders don't work for thieves.",
     "message.worldsfall.pillars.phrase": "\"Where the Warden falls, follow it down through the dark.\" A glyph forms in your hand.",
 }
 _WORDS = ["Where", "the", "Warden", "falls,", "follow", "it", "down", "through", "the", "dark."]
@@ -157,6 +182,16 @@ DESC = {
     "city_chart": ("Use in the End to unroll a chart of the three nearest End Cities you have not been shown.", None),
     "drift_helm": ("Set on an End Ship's deck to make it a Mooring on the Gateway Lattice.", None),
     "ships_bell": ("Rung on a Mooring, it calls your tamed Skates and Drakes aboard from up to 256 blocks away.", None),
+    "mirrorfish": ("Caught on the tide at High Tide. Eating it grants 20 seconds of Tidesight.", None),
+    "driftsilt": ("Scatter on open end stone to seed a small patch of Pale Loam.", None),
+    "eclipse_dust": ("Left behind by the memories that walk during an Eclipse of Stillness. A rare dye and Pact Glyph material.", None),
+    "courier_token": ("Use on two Courier Caches up to 2,000 blocks apart: a Hoarder carries one stack between them every five minutes.",
+                      "Theft from any Hoard cancels the contract."),
+    "tide_bell": ("Rings and sends a redstone pulse at every tide phase change.", None),
+    "wyrm_roost": ("Use it to settle your nearest Wyrm here. While it rests, Echoes can't disguise and Lurkers can't hide within 24 blocks.", None),
+    "gravity_plate": ("Step on it to open a small low-gravity zone for ten seconds (End only).", None),
+    "courier_cache": ("A small chest: the endpoint of a Hoarder Courier contract.", None),
+    "anchor_frame_lamp": ("A solid Anchor Frame panel with a glowing core.", None),
 }
 for _p in PACTS:
     DESC[f"pact_crystal_{_p}"] = ("Place on the exit portal (one of the four respawn crystals) to bind the next dragon to this pact.", None)
@@ -175,6 +210,13 @@ ADV_TEXT = {
     "attuned": ("Perfect Pitch", "Attune an End Gateway with a Tuning Fork"),
     "lattice_jump": ("Shortcut Through Nothing", "Travel through the Gateway Lattice"),
     "moored": ("All Hands", "Turn an End Ship into a Mooring with a Drift Helm"),
+    "high_water_mark": ("High Water Mark", "Be in the End when a King Tide reaches its height"),
+    "starstruck": ("Starstruck", "Mine a shard that fell in a Starfall"),
+    "a_quiet_hour": ("A Quiet Hour", "Meet a memory that walks during an Eclipse of Stillness"),
+    "dusk_flight": ("Dusk Flight", "Tame a Dusk Skate from a passing migration"),
+    "special_delivery": ("Special Delivery", "Hire a Hoarder Courier between two Courier Caches"),
+    "tide_angler": ("Casting the Tide", "Catch something on the tide plane at High Tide"),
+    "still_angler": ("Patient Angler", "Catch something in Stillwater"),
 }
 
 # -------------------------------------------------------------------------------------------------- assets
@@ -186,6 +228,7 @@ def assets(g):
     lantern(g, "wardens_lantern")
     gap_assets(g)
     nav_assets(g)
+    life_assets(g)
     # elytra looks: upgrade × Dragon Scale overlay
     for up in ("", "gale", "still", "hover", "tempest"):
         for scaled in (False, True):
@@ -294,6 +337,83 @@ def nav_assets(g):
     g.item_def("ships_bell", bell)
 
 
+def life_assets(g):
+    from PIL import Image
+    tex_dir = os.path.join(ASSETS, "textures/block")
+    # Anchor Frame plate: the frame texture with its open cells filled in a deep purpur, for stairs and slabs
+    im = Image.open(os.path.join(tex_dir, "anchor_frame.png")).convert("RGBA")
+    opaque = [p for p in im.getdata() if p[3] > 0]
+    avg = tuple(sum(p[i] for p in opaque) // len(opaque) for i in range(3))
+    fill = (int(avg[0] * 0.42), int(avg[1] * 0.36), int(avg[2] * 0.5), 255)
+    px = im.load()
+    for y in range(im.height):
+        for x in range(im.width):
+            if px[x, y][3] == 0:
+                shade = 1.0 + 0.08 * (((x * 7 + y * 13) % 5) - 2) / 2
+                px[x, y] = tuple(min(255, int(c * shade)) for c in fill[:3]) + (255,)
+    im.save(os.path.join(tex_dir, "anchor_frame_plate.png"))
+    t = g.b("anchor_frame_plate")
+    plate = g.model("anchor_frame_plate", "minecraft:block/cube_all", {"all": t})
+    slab = g.model("anchor_frame_slab", "minecraft:block/slab", {"bottom": t, "top": t, "side": t})
+    slab_top = g.model("anchor_frame_slab_top", "minecraft:block/slab_top", {"bottom": t, "top": t, "side": t})
+    write(f"{g.BS}/anchor_frame_slab.json", {"variants": {"type=bottom": {"model": slab}, "type=top": {"model": slab_top},
+                                                         "type=double": {"model": plate}}})
+    g.item_def("anchor_frame_slab", slab)
+    st = g.model("anchor_frame_stairs", "minecraft:block/stairs", {"bottom": t, "top": t, "side": t})
+    g.model("anchor_frame_stairs_inner", "minecraft:block/inner_stairs", {"bottom": t, "top": t, "side": t})
+    g.model("anchor_frame_stairs_outer", "minecraft:block/outer_stairs", {"bottom": t, "top": t, "side": t})
+    g.remap_state("purpur_stairs", "anchor_frame_stairs", {"purpur_stairs": st, "purpur_stairs_inner": st + "_inner", "purpur_stairs_outer": st + "_outer"})
+    g.item_def("anchor_frame_stairs", st)
+    lamp = g.cube_with_emissive("anchor_frame_lamp", g.b("anchor_frame_lamp"), g.b("anchor_frame_lamp_emissive"))
+    g.simple_state("anchor_frame_lamp", lamp)
+    g.item_def("anchor_frame_lamp", lamp)
+    # Lantern Moth jar (bottled moth), like the Tidewisp jar
+    jar = g.custom("lantern_moth_jar", {"jar": g.b("lantern_moth_jar"), "glow": g.b("lantern_moth_jar_emissive"), "particle": g.b("lantern_moth_jar")},
+                   [g.box((5, 0, 5), (11, 9, 11), g.all_faces("#jar")), g.box((5, 0, 5), (11, 9, 11), g.all_faces("#glow"), emission=15)], ao=False)
+    g.simple_state("lantern_moth_jar", jar)
+    g.item_def("bottled_lantern_moth", jar)
+    g.item_sprite("lantern_moth_spawn_egg", [f"{NS}:item/lantern_moth_spawn_egg"])
+    # Gravity Plate: a thin stillstone plate with a glowing ring
+    gp = g.custom("gravity_plate", {"plate": g.b("gravity_plate"), "glow": g.b("gravity_plate_emissive"), "particle": g.b("gravity_plate")},
+                  [g.box((1, 0, 1), (15, 1, 15), {"down": "#plate", "up": "#plate", "north": "#plate", "south": "#plate", "west": "#plate", "east": "#plate"}),
+                   g.box((1, 0, 1), (15, 1, 15), {"up": "#glow"}, emission=15)])
+    gp_down = g.custom("gravity_plate_down", {"plate": g.b("gravity_plate"), "glow": g.b("gravity_plate_emissive"), "particle": g.b("gravity_plate")},
+                       [g.box((1, 0, 1), (15, 0.5, 15), {"down": "#plate", "up": "#plate", "north": "#plate", "south": "#plate", "west": "#plate", "east": "#plate"}),
+                        g.box((1, 0, 1), (15, 0.5, 15), {"up": "#glow"}, emission=15)])
+    write(f"{g.BS}/gravity_plate.json", {"variants": {"powered=false": {"model": gp}, "powered=true": {"model": gp_down}}})
+    g.item_def("gravity_plate", gp)
+    # Courier Cache: a neat end-stone chest with a violet ender seal
+    cc = g.oriented_box("courier_cache", (1, 0, 1), (15, 14, 15), "courier_cache_side", "courier_cache_top", "courier_cache_front",
+                        glow_front="courier_cache_front_emissive")
+    write(f"{g.BS}/courier_cache.json", {"variants": g.horizontal_variants({"": cc})})
+    g.item_def("courier_cache", cc)
+    # Starfall shard cluster (cross model, glowing tips) and Tidewrack pile
+    sf = g.cross_block("starfall_shard", "starfall_shard", "starfall_shard_emissive")
+    g.simple_state("starfall_shard", sf)
+    g.item_sprite("starfall_shard", [g.b("starfall_shard"), g.b("starfall_shard_emissive")], emissive_layers=(1,))
+    tw = g.custom("tidewrack", {"all": g.b("tidewrack"), "particle": g.b("tidewrack")}, [g.box((0, 0, 0), (16, 8, 16), g.all_faces("#all"))])
+    g.simple_state("tidewrack", tw)
+    g.item_def("tidewrack", tw)
+    # Tide Bell: a teal-bronze bell plate hung in a driftstone yoke
+    side = {f: "#post" for f in ("down", "up", "north", "south", "west", "east")}
+    bell = {f: "#bell" for f in ("down", "up", "north", "south", "west", "east")}
+    tb = g.custom("tide_bell", {"post": g.b("driftstone"), "bell": g.b("tide_bell"), "particle": g.b("tide_bell")},
+                  [g.box((1, 0, 6), (15, 2, 10), side), g.box((1, 2, 7), (3, 15, 9), side), g.box((13, 2, 7), (15, 15, 9), side),
+                   g.box((1, 13, 7), (15, 15, 9), side), g.box((5, 5, 5), (11, 12, 11), bell), g.box((7, 12, 7), (9, 13, 9), bell)], ao=False)
+    variants = {}
+    for k, v in g.horizontal_variants({"": tb}).items():
+        for phase in range(4):
+            for powered in ("false", "true"):
+                variants[f"{k},phase={phase},powered={powered}"] = v
+    write(f"{g.BS}/tide_bell.json", {"variants": variants})
+    g.item_def("tide_bell", tb)
+    # Wyrm Roost: a low woven nest
+    roost = g.custom("wyrm_roost", {"top": g.b("wyrm_roost_top"), "side": g.b("wyrm_roost_side"), "particle": g.b("wyrm_roost_side")},
+                     [g.box((0, 0, 0), (16, 6, 16), {"down": "#side", "up": "#top", "north": "#side", "south": "#side", "west": "#side", "east": "#side"})])
+    g.simple_state("wyrm_roost", roost)
+    g.item_def("wyrm_roost", roost)
+
+
 def lantern(g, name):
     tmpl = vanilla_json("assets/minecraft/models/block/template_lantern.json")
     tmplh = vanilla_json("assets/minecraft/models/block/template_hanging_lantern.json")
@@ -335,6 +455,7 @@ def data(d):
                                             "length_in_seconds": 150.0, "sound_event": d.i("music_disc.warden")})
     gap_data(d)
     nav_data(d)
+    life_data(d)
     d.tag("worldgen/structure", NS, "lore", [d.i("fallen_spire"), d.i("sunken_archive")] if os.path.exists(
         os.path.join(D, "worldgen/structure/sunken_archive.json")) else [d.i("fallen_spire")])
 
@@ -394,17 +515,60 @@ def nav_data(d):
         "random_sequence": d.i("entities/shulker_archivist")})
 
 
+def life_data(d):
+    D = d.D
+    d.cooking("cooked_mirrorfish", d.i("mirrorfish"), d.i("cooked_mirrorfish"))
+    d.shaped("tide_bell", ["DDD", "D D", " B "], {"D": d.i("driftstone"), "B": "minecraft:bell"}, d.i("tide_bell"), category="redstone")
+    d.shaped("gravity_plate", ["PFP"], {"P": d.i("polished_stillstone"), "F": d.i("stillness_fragment")}, d.i("gravity_plate"), n=2, category="redstone")
+    d.shaped("wyrm_roost", ["FCF", "MMM"], {"F": d.i("voidroot_fiber"), "C": d.i("chorus_pod"), "M": d.i("skate_membrane")}, d.i("wyrm_roost"),
+             category="building")
+    d.shaped("courier_cache", ["BBB", "BEB", "BBB"], {"B": "minecraft:end_stone_bricks", "E": "minecraft:ender_pearl"}, d.i("courier_cache"))
+    d.shapeless("anchor_frame_lamp", [d.i("anchor_frame"), d.i("glowbulb")], d.i("anchor_frame_lamp"), category="building")
+    d.shaped("anchor_frame_slab", ["AAA"], {"A": d.i("anchor_frame")}, d.i("anchor_frame_slab"), n=6, category="building")
+    d.shaped("anchor_frame_stairs", ["A  ", "AA ", "AAA"], {"A": d.i("anchor_frame")}, d.i("anchor_frame_stairs"), n=4, category="building")
+    item = lambda n, w, lo=1, hi=1: dict(d.count(n, lo, hi) if hi > 1 else {"type": "minecraft:item", "name": n}, weight=w)
+    # Casting the Tide: Mirrorfish, Driftsilt, Glow Glands, Driftstone and rare tablets (never Sigils or boss items)
+    write(f"{D}/loot_table/gameplay/tide_fishing.json", {"type": "minecraft:fishing", "pools": d.convert([{"rolls": 1, "entries": [
+        dict(item(d.i("mirrorfish"), 45), quality=-1), item(d.i("driftsilt"), 15, 1, 3), item(d.i("glow_gland"), 10),
+        item(d.i("driftstone"), 10, 2, 5), dict(d.tablet_entry(3), quality=2), dict(item(d.i("mirror_shard_fragment"), 4), quality=1)]}]),
+        "random_sequence": d.i("gameplay/tide_fishing")})
+    # Still angling: Mirror Shards, floating relics of Overworld blocks, a small chance of a Pact Glyph
+    relics = ["minecraft:moss_block", "minecraft:oak_log", "minecraft:mossy_cobblestone", "minecraft:clay", "minecraft:dripstone_block",
+              "minecraft:tuff", "minecraft:mud_bricks", "minecraft:copper_block"]
+    write(f"{D}/loot_table/gameplay/still_angling.json", {"type": "minecraft:fishing", "pools": d.convert([{"rolls": 1, "entries": [
+        item(d.i("mirror_shard_fragment"), 30, 1, 3), item(d.i("mirrorfish"), 25)] + [item(r, 4, 1, 4) for r in relics] + [
+        dict({"type": "minecraft:tag", "items": f"#{NS}:pact_glyphs_craftable", "expand": True}, weight=2, quality=2)]}]),
+        "random_sequence": d.i("gameplay/still_angling")})
+    d.block_loot("tidewrack", [{"rolls": {"type": "minecraft:uniform", "min": 2, "max": 4}, "entries": [
+        item(d.i("driftstone"), 10, 2, 6), item(d.i("driftsilt"), 8, 1, 3), item(d.i("voidroot_fiber"), 6, 1, 3), item(d.i("glow_gland"), 4),
+        item(d.i("mirrorfish"), 4), item("minecraft:ender_pearl", 3), dict(d.tablet_entry(2))]}])
+    d.block_loot("starfall_shard", [{"rolls": 1, "entries": [item(d.i("lumen_crystal_shard"), 1, 2, 5)]},
+                                    {"rolls": 1, "entries": [{"type": "minecraft:empty", "weight": 6}, dict(d.tablet_entry(1))]}])
+    d.drop_self("lantern_moth_jar", "bottled_lantern_moth")
+    d.tag("item", "minecraft", "fishes", [d.i("mirrorfish"), d.i("cooked_mirrorfish")])
+    d.tag("block", "minecraft", "mineable/shovel", [d.i(n) for n in shovel_blocks()])
+    d.block_loot("anchor_frame_slab", [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": d.i("anchor_frame_slab"), "functions": [
+        {"function": "minecraft:set_count", "count": 2, "conditions": [{"condition": "minecraft:block_state_property",
+         "block": d.i("anchor_frame_slab"), "properties": {"type": "double"}}]}, {"function": "minecraft:explosion_decay"}]}]}])
+
+
 def block_loot(d):
-    for n in ("wardens_lantern", "causeway_lantern", "causeway_plaque", "drift_buoy", "roost_post", "drift_helm", "ships_bell"):
+    for n in ("wardens_lantern", "causeway_lantern", "causeway_plaque", "drift_buoy", "roost_post", "drift_helm", "ships_bell", "tide_bell",
+              "wyrm_roost", "gravity_plate", "courier_cache", "anchor_frame_lamp", "anchor_frame_stairs"):
         d.drop_self(n)
 
 
 def axe_blocks():
-    return ["drift_helm"]
+    return ["drift_helm", "wyrm_roost"]
+
+
+def shovel_blocks():
+    return ["tidewrack"]
 
 
 def pickaxe_blocks():
-    return ["wardens_lantern", "causeway_lantern", "causeway_plaque", "roost_post", "ships_bell"]
+    return ["wardens_lantern", "causeway_lantern", "causeway_plaque", "roost_post", "ships_bell", "tide_bell", "gravity_plate", "courier_cache",
+            "anchor_frame_lamp", "anchor_frame_slab", "anchor_frame_stairs", "starfall_shard"]
 
 
 def advancement_criteria(aid, i):
@@ -426,5 +590,6 @@ def lang(L, title):
     for k, (t, dsc) in ADV_TEXT.items():
         L[f"advancements.{NS}.{k}.title"] = t
         L[f"advancements.{NS}.{k}.description"] = dsc
+    L["block.worldsfall.anchor_frame_slab"] = "Anchor Frame Slab"
     for ent in ("elder_warden", "lumen_heart"):
         L.setdefault(f"entity.{NS}.{ent}", title(ent))

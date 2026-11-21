@@ -32,8 +32,13 @@ public final class Tides {
     }
 
     public static TideCycle cycle(Level level) {
-        TideCycle base = level.isClientSide() ? clientCycle : WFConfig.SERVER.tideCycle();
-        return state(level).calmed() ? base.calmed() : base;
+        if (level.isClientSide() || !(level instanceof ServerLevel server)) {
+            return state(level).calmed() ? clientCycle.calmed() : clientCycle;
+        }
+        TideState state = state(level);
+        TideCycle base = dev.worldsfall.life.KingTide.adjust(server.getServer(), WFConfig.SERVER.tideCycle(), state.effectiveTime(level.getGameTime()),
+            state.calmed());
+        return state.calmed() ? base.calmed() : base;
     }
 
     public static long effectiveTime(Level level) {

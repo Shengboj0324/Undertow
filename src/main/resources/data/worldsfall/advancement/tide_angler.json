@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:mirrorfish"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.tide_angler.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.tide_angler.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:a_hole_full_of_stars"
+}

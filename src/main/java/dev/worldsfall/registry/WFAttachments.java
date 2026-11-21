@@ -56,6 +56,9 @@ public final class WFAttachments {
     public static final Supplier<AttachmentType<Set<Integer>>> TABLETS_READ = ATTACHMENTS.register("tablets_read",
         () -> AttachmentType.<Set<Integer>>builder(() -> new HashSet<>())
             .serialize(Codec.INT.listOf().<Set<Integer>>xmap(HashSet::new, List::copyOf).fieldOf("tablets")).copyOnDeath().build());
+    /** Standing with Hoarders, −100..100 (expansion 1.5). */
+    public static final Supplier<AttachmentType<Integer>> HOARD_STANDING = ATTACHMENTS.register("hoard_standing",
+        () -> AttachmentType.builder(() -> 0).serialize(Codec.INT.fieldOf("standing")).copyOnDeath().build());
     public static final Supplier<AttachmentType<Set<String>>> HINTS_SHOWN = ATTACHMENTS.register("hints_shown",
         () -> AttachmentType.<Set<String>>builder(() -> new HashSet<>())
             .serialize(Codec.STRING.listOf().<Set<String>>xmap(HashSet::new, List::copyOf).fieldOf("hints")).copyOnDeath().build());

@@ -77,6 +77,10 @@ def build():
     egg = os.path.join(VANILLA, "assets/minecraft/textures/item/shulker_spawn_egg.png")
     if os.path.exists(egg):
         recolour_egg(egg, os.path.join(ASSETS, "textures/item/shulker_archivist_spawn_egg.png"), (224, 214, 196), (122, 74, 160))
+    for src, name, light, dark in (("bat", "lantern_moth", (236, 120, 214), (70, 30, 70)),):
+        path = os.path.join(VANILLA, f"assets/minecraft/textures/item/{src}_spawn_egg.png")
+        if os.path.exists(path):
+            recolour_egg(path, os.path.join(ASSETS, f"textures/item/{name}_spawn_egg.png"), light, dark)
 
 
 if __name__ == "__main__":

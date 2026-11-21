@@ -113,6 +113,7 @@ public class VoidSkate extends TamableAnimal {
     protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(1, new SkateGoals.FleeWhenHurt(this));
+        goalSelector.addGoal(2, new SkateGoals.Migrate(this));
         goalSelector.addGoal(2, new BreedGoal(this, 1.0));
         goalSelector.addGoal(3, new TemptGoal(this, 1.1, s -> s.is(WFTags.Items.SKATE_FOOD), false, 2.5));
         goalSelector.addGoal(4, new SkateGoals.WaitWhenTrusted(this));
@@ -131,6 +132,18 @@ public class VoidSkate extends TamableAnimal {
     public void setVariant(int v) { entityData.set(VARIANT, v); }
     public void setSaddled(boolean s) { entityData.set(SADDLED, s); }
 
+    /** Where a migrating flock is headed (proposal "Skate Migration"); null for resident Skates. */
+    private @Nullable Vec3 migrationTarget;
+
+    public @Nullable Vec3 migrationTarget() { return migrationTarget; }
+    public void setMigrationTarget(@Nullable Vec3 target) { migrationTarget = target; }
+    public boolean isMigrating() { return migrationTarget != null && !isTame(); }
+
+    /** Trust needed to tame: Dusk Skates can only be tamed while migrating, and need less patience then. */
+    public int trustNeeded() {
+        return isMigrating() ? 3 : TRUST_NEEDED;
+    }
+
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(WFTags.Items.SKATE_BREEDING);
@@ -140,7 +153,8 @@ public class VoidSkate extends TamableAnimal {
     public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         VoidSkate baby = WFEntities.VOID_SKATE.get().create(level, EntitySpawnReason.BREEDING);
         if (baby != null) {
-            baby.setVariant(random.nextInt(10) == 0 ? 1 : variant());
+            boolean duskParent = variant() == 1 || partner instanceof VoidSkate other && other.variant() == 1;
+            baby.setVariant(duskParent && random.nextBoolean() ? 1 : 0);
             if (getOwnerReference() != null) {
                 baby.setOwnerReference(getOwnerReference());
                 baby.setTame(true, true);
@@ -162,6 +176,12 @@ public class VoidSkate extends TamableAnimal {
             return super.mobInteract(player, hand);
         }
         if (!isTame() && stack.is(WFTags.Items.SKATE_FOOD)) {
+            if (variant() == 1 && !isMigrating()) {
+                if (level() instanceof ServerLevel server) {
+                    server.sendParticles(ParticleTypes.SMOKE, getX(), getY() + 0.5, getZ(), 3, 0.4, 0.1, 0.4, 0.01);
+                }
+                return InteractionResult.FAIL;
+            }
             if (level() instanceof ServerLevel server) {
                 stack.consume(1, player);
                 trustDecay = 0;
@@ -170,8 +190,13 @@ public class VoidSkate extends TamableAnimal {
                     entityData.set(TRUST, trust);
                     playSound(WFSounds.ENTITY_VOID_SKATE_TAME_PROGRESS.get(), 1.0f, 0.8f + trust * 0.1f);
                     server.sendParticles(WFParticles.SKATE_WAKE.get(), getX(), getY() + 0.5, getZ(), 6 + trust * 3, 1.2, 0.2, 1.2, 0.01);
-                    if (trust >= TRUST_NEEDED) {
+                    if (trust >= trustNeeded()) {
+                        boolean dusk = isMigrating() && variant() == 1;
+                        migrationTarget = null;
                         tame(player);
+                        if (dusk && player instanceof ServerPlayer sp) {
+                            Progress.award(sp, "dusk_flight");
+                        }
                         setPerched(false);
                         playSound(WFSounds.ENTITY_VOID_SKATE_TAME_PROGRESS.get(), 1.5f, 1.4f);
                         ringOfParticles(server);
@@ -409,7 +434,7 @@ public class VoidSkate extends TamableAnimal {
 
     @Override
     public boolean removeWhenFarAway(double distSqr) {
-        return !isTame() && !hasCustomName() && distSqr > 128 * 128;
+        return !isTame() && !hasCustomName() && (distSqr > 128 * 128 || isMigrating() && distSqr > 96 * 96);
     }
 
     // ------------------------------------------------------------ sounds
@@ -447,6 +472,7 @@ public class VoidSkate extends TamableAnimal {
         out.putBoolean("perched", isPerched());
         out.putFloat("stamina", stamina());
         out.putInt("variant", variant());
+        out.storeNullable("migration", Vec3.CODEC, migrationTarget);
     }
 
     @Override
@@ -457,13 +483,14 @@ public class VoidSkate extends TamableAnimal {
         setPerched(in.getBooleanOr("perched", false));
         entityData.set(STAMINA, in.getFloatOr("stamina", MAX_STAMINA));
         setVariant(in.getIntOr("variant", 0));
+        migrationTarget = in.read("migration", Vec3.CODEC).orElse(null);
     }
 
     @Override
     public net.minecraft.world.entity.SpawnGroupData finalizeSpawn(net.minecraft.world.level.ServerLevelAccessor level,
                                                                   net.minecraft.world.DifficultyInstance difficulty, EntitySpawnReason reason,
                                                                   net.minecraft.world.entity.@Nullable SpawnGroupData data) {
-        setVariant(random.nextInt(12) == 0 ? 1 : 0);
+        setVariant(0); // Dusk Skates arrive only with a Skate Migration
         return super.finalizeSpawn(level, difficulty, reason, data);
     }
 }

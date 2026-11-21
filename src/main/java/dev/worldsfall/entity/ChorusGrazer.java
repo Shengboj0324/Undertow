@@ -113,6 +113,9 @@ public class ChorusGrazer extends Animal implements IShearable {
         }
     }
 
+    /** More Grazers than this within the radius overgraze: loam under them turns back to bare end stone. */
+    public static final int OVERGRAZE_HERD = 6, OVERGRAZE_RADIUS = 16;
+
     @Override
     public void aiStep() {
         super.aiStep();
@@ -131,7 +134,12 @@ public class ChorusGrazer extends Animal implements IShearable {
                 if (under.is(Blocks.END_STONE) && server.getBiome(below).is(WFBiomes.CHORUS_REACH) && !PaleLoamBlock.isCovered(server, below)) {
                     server.setBlockAndUpdate(below, dev.worldsfall.registry.WFBlocks.PALE_LOAM.get().defaultBlockState());
                 } else if (under.is(dev.worldsfall.registry.WFBlocks.PALE_LOAM.get())) {
-                    PaleLoamBlock.spreadFrom(server, below, random);
+                    // a herd too big for its island grazes the loam bare (proposal "A food web you can see")
+                    if (server.getEntitiesOfClass(ChorusGrazer.class, getBoundingBox().inflate(OVERGRAZE_RADIUS)).size() > OVERGRAZE_HERD) {
+                        server.setBlockAndUpdate(below, Blocks.END_STONE.defaultBlockState());
+                    } else {
+                        PaleLoamBlock.spreadFrom(server, below, random);
+                    }
                 }
             }
         }

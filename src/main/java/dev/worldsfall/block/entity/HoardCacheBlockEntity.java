@@ -105,6 +105,10 @@ public class HoardCacheBlockEntity extends WFBlockEntity {
         if (done > 0) {
             lastBarterTime = level.getGameTime();
             barters += done;
+            int standing = dev.worldsfall.life.HoardStanding.add(player, done * dev.worldsfall.life.HoardStanding.PER_BARTER);
+            if (standing >= dev.worldsfall.life.HoardStanding.COURIER && level.getRandom().nextFloat() < 0.25f) {
+                results.add(new ItemStack(WFItems.COURIER_TOKEN.get()));
+            }
             notifyHoarders(level, player, !results.isEmpty());
         }
         setChanged();
@@ -116,6 +120,7 @@ public class HoardCacheBlockEntity extends WFBlockEntity {
         LootParams params = new LootParams.Builder(level)
             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(worldPosition))
             .withParameter(LootContextParams.THIS_ENTITY, player)
+            .withLuck(dev.worldsfall.life.HoardStanding.luck(player))
             .create(LootContextParamSets.CHEST);
         List<ItemStack> out = new ArrayList<>();
         for (ItemStack s : table.getRandomItems(params)) {
@@ -141,6 +146,8 @@ public class HoardCacheBlockEntity extends WFBlockEntity {
 
     /** Angers every Hoarder of this Hoard for 2 minutes (§8.5.1). Anger is per Hoard, not per player (§17.5). */
     public void anger(ServerLevel level, ServerPlayer culprit) {
+        dev.worldsfall.life.HoardStanding.add(culprit, dev.worldsfall.life.HoardStanding.THEFT);
+        dev.worldsfall.life.Couriers.cancelFor(level, culprit);
         List<Hoarder> hoarders = level.getEntitiesOfClass(Hoarder.class, new AABB(worldPosition).inflate(24));
         for (Hoarder h : hoarders) {
             h.angerAt(culprit, 2 * 1200);

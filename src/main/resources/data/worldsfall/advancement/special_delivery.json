@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:courier_token"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.special_delivery.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.special_delivery.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:fair_trade"
+}

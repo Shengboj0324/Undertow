@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "P": "worldsfall:polished_stillstone",
+    "F": "worldsfall:stillness_fragment"
+  },
+  "pattern": [
+    "PFP"
+  ],
+  "result": {
+    "id": "worldsfall:gravity_plate",
+    "count": 2
+  }
+}

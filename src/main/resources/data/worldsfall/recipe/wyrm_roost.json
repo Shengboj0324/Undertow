@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "F": "worldsfall:voidroot_fiber",
+    "C": "worldsfall:chorus_pod",
+    "M": "worldsfall:skate_membrane"
+  },
+  "pattern": [
+    "FCF",
+    "MMM"
+  ],
+  "result": {
+    "id": "worldsfall:wyrm_roost"
+  }
+}

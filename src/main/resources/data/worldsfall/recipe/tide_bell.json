@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "D": "worldsfall:driftstone",
+    "B": "minecraft:bell"
+  },
+  "pattern": [
+    "DDD",
+    "D D",
+    " B "
+  ],
+  "result": {
+    "id": "worldsfall:tide_bell"
+  }
+}

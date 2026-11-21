@@ -37,6 +37,13 @@ public final class ClientWorldState {
     private Vec3 camera = Vec3.ZERO;
     private float riseFlash;
     private TideCycle.Phase lastPhase = TideCycle.Phase.LOW;
+    // expansion: restoration and world events, from RestorationPayload
+    private int restorationStage;
+    private float restorationFraction;
+    private int worldEvent;
+    private long worldEventStart;
+    private java.util.List<Long> orreryStars = java.util.List.of();
+    private float stars = 1f;
 
     private ClientWorldState() {}
 
@@ -44,7 +51,25 @@ public final class ClientWorldState {
         return INSTANCE;
     }
 
+    public void acceptRestoration(dev.worldsfall.network.RestorationPayload p) {
+        restorationStage = p.stage();
+        restorationFraction = p.fraction();
+        worldEvent = p.event();
+        worldEventStart = p.eventStart();
+        orreryStars = java.util.List.copyOf(p.orreryStars());
+    }
+
+    public int restorationStage() { return restorationStage; }
+    public float restorationFraction() { return restorationFraction; }
+    public int worldEvent() { return worldEvent; }
+    public long worldEventStart() { return worldEventStart; }
+    public java.util.List<Long> orreryStars() { return orreryStars; }
+    /** 1 normally; fades to almost nothing over ten seconds of an Eclipse of Stillness. */
+    public float starBrightness() { return stars; }
+
     public void tick(Minecraft mc) {
+        float starTarget = worldEvent == dev.worldsfall.life.WorldEvents.ECLIPSE ? 0.05f : 1f;
+        stars += (starTarget - stars) * 0.02f;
         ClientLevel level = mc.level;
         if (level == null || mc.player == null) {
             return;

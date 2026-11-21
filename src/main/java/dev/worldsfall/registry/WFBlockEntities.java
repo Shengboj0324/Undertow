@@ -23,6 +23,8 @@ public final class WFBlockEntities {
         "gravity_anchor", () -> new BlockEntityType<>(GravityAnchorBlockEntity::new, WFBlocks.GRAVITY_ANCHOR.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RiftFrameBlockEntity>> RIFT_FRAME = BLOCK_ENTITIES.register(
         "rift_frame", () -> new BlockEntityType<>(RiftFrameBlockEntity::new, WFBlocks.FRACTURE_RIFT_FRAME.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<dev.worldsfall.life.CourierCacheBlockEntity>> COURIER_CACHE = BLOCK_ENTITIES.register(
+        "courier_cache", () -> new BlockEntityType<>(dev.worldsfall.life.CourierCacheBlockEntity::new, WFBlocks.COURIER_CACHE.get()));
 
     private WFBlockEntities() {}
 }

@@ -67,6 +67,13 @@
     "worldsfall:causeway_lantern",
     "worldsfall:causeway_plaque",
     "worldsfall:roost_post",
-    "worldsfall:ships_bell"
+    "worldsfall:ships_bell",
+    "worldsfall:tide_bell",
+    "worldsfall:gravity_plate",
+    "worldsfall:courier_cache",
+    "worldsfall:anchor_frame_lamp",
+    "worldsfall:anchor_frame_slab",
+    "worldsfall:anchor_frame_stairs",
+    "worldsfall:starfall_shard"
   ]
 }

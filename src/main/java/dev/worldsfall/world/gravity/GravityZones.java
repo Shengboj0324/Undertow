@@ -53,6 +53,30 @@ public final class GravityZones {
         }
     }
 
+    /** Temporary Light Zones from Gravity Plates (proposal "Building and redstone"). */
+    private static final List<Lens> LIGHTS = new ArrayList<>();
+
+    public static void addLight(Level level, Vec3 center, double radius, int ticks) {
+        synchronized (LIGHTS) {
+            LIGHTS.add(new Lens(level.dimension(), center, radius, level.getGameTime() + ticks));
+        }
+    }
+
+    public static boolean inLight(Level level, Vec3 p) {
+        synchronized (LIGHTS) {
+            Iterator<Lens> it = LIGHTS.iterator();
+            while (it.hasNext()) {
+                Lens light = it.next();
+                if (light.expiresAt < level.getGameTime() - 200) {
+                    it.remove();
+                } else if (light.dim == level.dimension() && light.expiresAt >= level.getGameTime() && p.distanceToSqr(light.center) <= light.radius * light.radius) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static List<Lens> lenses() {
         synchronized (LENSES) {
             return List.copyOf(LENSES);
@@ -104,6 +128,9 @@ public final class GravityZones {
         }
         if (level.dimension() != Level.END) {
             return Zone.NONE;
+        }
+        if (inLight(level, p)) {
+            return Zone.LIGHT;
         }
         if (StableFields.isInside(level, p.x, p.y, p.z)) {
             return Zone.STABLE;

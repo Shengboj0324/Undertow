@@ -125,7 +125,10 @@ public class UndersideLurker extends Monster {
         if (anchor().equals(BlockPos.ZERO)) {
             attachToCeiling(level);
         }
-        entityData.set(LIT, isNearBrightLight(level));
+        if (tickCount % 20 == 0) {
+            // a resting Wyrm at its roost keeps Lurkers from hiding (proposal "The Wyrm grows a personality")
+            entityData.set(LIT, isNearBrightLight(level) || dev.worldsfall.life.WyrmRoostBlock.guarded(level, blockPosition()));
+        }
         snareCooldown = Math.max(0, snareCooldown - 1);
         biteCooldown = Math.max(0, biteCooldown - 1);
         LivingEntity target = getTarget();
@@ -140,6 +143,8 @@ public class UndersideLurker extends Monster {
                     setState(State.ALERT);
                 } else if (random.nextInt(160) == 0) {
                     playSound(WFSounds.ENTITY_UNDERSIDE_LURKER_CLICK.get(), 0.35f, 0.9f + random.nextFloat() * 0.2f);
+                } else if (tickCount % 20 == 0) {
+                    eatTidewisp(level);
                 }
             }
             case ALERT -> {
@@ -206,6 +211,17 @@ public class UndersideLurker extends Monster {
         double dz = (a.getZ() + 0.5 - getZ()) * 0.1;
         setDeltaMovement(dx, vy, dz);
         move(MoverType.SELF, getDeltaMovement());
+    }
+
+    /** The food web (proposal "Living systems"): a hidden Lurker snaps up Tidewisps that drift close, so islands thick with Lurkers get fewer tide warnings. */
+    private void eatTidewisp(ServerLevel level) {
+        for (Tidewisp w : level.getEntitiesOfClass(Tidewisp.class, getBoundingBox().inflate(3.0))) {
+            level.sendParticles(dev.worldsfall.registry.WFParticles.TIDEWISP_TRAIL.get(), w.getX(), w.getY(), w.getZ(), 12, 0.2, 0.2, 0.2, 0.02);
+            playSound(WFSounds.ENTITY_UNDERSIDE_LURKER_BITE.get(), 0.6f, 1.4f);
+            w.discard();
+            heal(2);
+            return;
+        }
     }
 
     private boolean isNearBrightLight(ServerLevel level) {

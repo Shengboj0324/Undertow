@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "worldsfall:block/anchor_frame_plate",
+    "top": "worldsfall:block/anchor_frame_plate",
+    "side": "worldsfall:block/anchor_frame_plate"
+  }
+}

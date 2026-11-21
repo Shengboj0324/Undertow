@@ -44,6 +44,8 @@ public class Echo extends EnderCaste {
 
     private int activeTicks;
     private int attackCooldown;
+    /** A memory figure of the Eclipse of Stillness: harmless, glowing, walking openly; it fades when approached. */
+    private boolean memory;
 
     public Echo(EntityType<? extends Echo> type, Level level) {
         super(type, level);
@@ -101,7 +103,24 @@ public class Echo extends EnderCaste {
         }
     }
 
+    public boolean isMemory() {
+        return memory;
+    }
+
+    /** Turns this Echo into a harmless memory figure for an Eclipse of Stillness. */
+    public void makeMemory() {
+        memory = true;
+        entityData.set(DISGUISED, false);
+        setGlowingTag(true);
+        setPersistenceRequired();
+    }
+
     private void redisguise(ServerLevel level) {
+        if (dev.worldsfall.life.WyrmRoostBlock.guarded(level, blockPosition())) {
+            activeTicks = ACTIVE_TICKS;
+            teleportRandomly(level, 32);
+            return;
+        }
         teleportRandomly(level, 24);
         Player nearest = level.getNearestPlayer(this, 48);
         BlockState mimic = WFBlocks.PURPUR_RUBBLE.get().defaultBlockState();
@@ -119,6 +138,10 @@ public class Echo extends EnderCaste {
     protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
         attackCooldown = Math.max(0, attackCooldown - 1);
+        if (memory) {
+            dev.worldsfall.life.Eclipse.tickMemory(level, this);
+            return;
+        }
         if (isDisguised()) {
             getNavigation().stop();
             setDeltaMovement(Vec3.ZERO);
@@ -168,7 +191,7 @@ public class Echo extends EnderCaste {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (isDisguised()) {
+        if (isDisguised() && !memory) {
             if (!level().isClientSide()) {
                 unfold(player);
             }
@@ -179,6 +202,9 @@ public class Echo extends EnderCaste {
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+        if (memory) {
+            return false;
+        }
         if (isDisguised() && source.getEntity() instanceof Player p) {
             unfold(p);
         }
@@ -210,6 +236,7 @@ public class Echo extends EnderCaste {
         super.addAdditionalSaveData(out);
         out.store("disguise", BlockState.CODEC, disguise());
         out.putBoolean("disguised", isDisguised());
+        out.putBoolean("memory", memory);
     }
 
     @Override
@@ -217,5 +244,6 @@ public class Echo extends EnderCaste {
         super.readAdditionalSaveData(in);
         in.read("disguise", BlockState.CODEC).ifPresent(this::setDisguise);
         entityData.set(DISGUISED, in.getBooleanOr("disguised", true));
+        memory = in.getBooleanOr("memory", false);
     }
 }

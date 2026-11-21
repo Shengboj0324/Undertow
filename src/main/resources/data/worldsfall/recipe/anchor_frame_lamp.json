@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "worldsfall:anchor_frame",
+    "worldsfall:glowbulb"
+  ],
+  "result": {
+    "id": "worldsfall:anchor_frame_lamp"
+  }
+}

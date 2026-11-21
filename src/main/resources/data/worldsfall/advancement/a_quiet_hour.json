@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:eclipse_dust"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.a_quiet_hour.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.a_quiet_hour.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:echoes_of_them"
+}

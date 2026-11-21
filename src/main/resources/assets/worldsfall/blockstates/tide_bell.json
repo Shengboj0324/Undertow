@@ -1,0 +1,124 @@
+{
+  "variants": {
+    "facing=north,phase=0,powered=false": {
+      "model": "worldsfall:block/tide_bell"
+    },
+    "facing=north,phase=0,powered=true": {
+      "model": "worldsfall:block/tide_bell"
+    },
+    "facing=north,phase=1,powered=false": {
+      "model": "worldsfall:block/tide_bell"
+    },
+    "facing=north,phase=1,powered=true": {
+      "model": "worldsfall:block/tide_bell"
+    },
+    "facing=north,phase=2,powered=false": {
+      "model": "worldsfall:block/tide_bell"
+    },
+    "facing=north,phase=2,powered=true": {
+      "model": "worldsfall:block/tide_bell"
+    },
+    "facing=north,phase=3,powered=false": {
+      "model": "worldsfall:block/tide_bell"
+    },
+    "facing=north,phase=3,powered=true": {
+      "model": "worldsfall:block/tide_bell"
+    },
+    "facing=east,phase=0,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 90
+    },
+    "facing=east,phase=0,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 90
+    },
+    "facing=east,phase=1,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 90
+    },
+    "facing=east,phase=1,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 90
+    },
+    "facing=east,phase=2,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 90
+    },
+    "facing=east,phase=2,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 90
+    },
+    "facing=east,phase=3,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 90
+    },
+    "facing=east,phase=3,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 90
+    },
+    "facing=south,phase=0,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 180
+    },
+    "facing=south,phase=0,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 180
+    },
+    "facing=south,phase=1,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 180
+    },
+    "facing=south,phase=1,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 180
+    },
+    "facing=south,phase=2,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 180
+    },
+    "facing=south,phase=2,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 180
+    },
+    "facing=south,phase=3,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 180
+    },
+    "facing=south,phase=3,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 180
+    },
+    "facing=west,phase=0,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 270
+    },
+    "facing=west,phase=0,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 270
+    },
+    "facing=west,phase=1,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 270
+    },
+    "facing=west,phase=1,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 270
+    },
+    "facing=west,phase=2,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 270
+    },
+    "facing=west,phase=2,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 270
+    },
+    "facing=west,phase=3,powered=false": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 270
+    },
+    "facing=west,phase=3,powered=true": {
+      "model": "worldsfall:block/tide_bell",
+      "y": 270
+    }
+  }
+}

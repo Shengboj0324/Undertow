@@ -29,7 +29,10 @@ public final class WFNetwork {
     }
 
     public static TideSyncPayload tidePayload(MinecraftServer server) {
-        return TideSyncPayload.of(TideData.get(server).state(), WFConfig.SERVER.tideCycle(), WFConfig.get(WFConfig.SERVER.tidesEnabled, true));
+        var state = TideData.get(server).state();
+        var cycle = dev.worldsfall.life.KingTide.adjust(server, WFConfig.SERVER.tideCycle(), state.effectiveTime(server.overworld().getGameTime()),
+            state.calmed());
+        return TideSyncPayload.of(state, cycle, WFConfig.get(WFConfig.SERVER.tidesEnabled, true));
     }
 
     /** Sends only to players whose connection negotiated the payload (vanilla clients / mock players are skipped). */

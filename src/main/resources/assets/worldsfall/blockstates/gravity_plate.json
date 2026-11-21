@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "worldsfall:block/gravity_plate"
+    },
+    "powered=true": {
+      "model": "worldsfall:block/gravity_plate_down"
+    }
+  }
+}

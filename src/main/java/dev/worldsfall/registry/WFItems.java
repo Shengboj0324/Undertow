@@ -136,8 +136,21 @@ public final class WFItems {
     public static final DeferredItem<dev.worldsfall.nav.BlankChartItem> CITY_CHART = reg("city_chart",
         p -> new dev.worldsfall.nav.BlankChartItem(p, true), p -> p.rarity(Rarity.UNCOMMON));
 
+    // ================= Expansion 1.5: living systems
+    public static final DeferredItem<Item> MIRRORFISH = simple("mirrorfish", p -> p.food(food(2, 1.0f), Consumables.defaultFood()
+        .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(dev.worldsfall.registry.WFEffects.TIDESIGHT, 400))).build()));
+    public static final DeferredItem<Item> COOKED_MIRRORFISH = simple("cooked_mirrorfish", p -> p.food(food(6, 7.2f)));
+    public static final DeferredItem<dev.worldsfall.life.DriftsiltItem> DRIFTSILT = reg("driftsilt", dev.worldsfall.life.DriftsiltItem::new,
+        UnaryOperator.identity());
+    public static final DeferredItem<Item> ECLIPSE_DUST = simple("eclipse_dust", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<dev.worldsfall.life.CourierTokenItem> COURIER_TOKEN = reg("courier_token", dev.worldsfall.life.CourierTokenItem::new,
+        p -> p.stacksTo(16).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<BlockItem> BOTTLED_LANTERN_MOTH = reg("bottled_lantern_moth", p -> new BlockItem(WFBlocks.LANTERN_MOTH_JAR.get(), p),
+        UnaryOperator.identity());
+
     private static final List<DeferredItem<Item>> SPAWN_EGGS = new ArrayList<>();
     public static final DeferredItem<Item> VOID_SKATE_SPAWN_EGG = egg("void_skate", WFEntities.VOID_SKATE);
+    public static final DeferredItem<Item> LANTERN_MOTH_SPAWN_EGG = egg("lantern_moth", WFEntities.LANTERN_MOTH);
     public static final DeferredItem<Item> SHULKER_ARCHIVIST_SPAWN_EGG = egg("shulker_archivist", WFEntities.SHULKER_ARCHIVIST);
     public static final DeferredItem<Item> CHORUS_GRAZER_SPAWN_EGG = egg("chorus_grazer", WFEntities.CHORUS_GRAZER);
     public static final DeferredItem<Item> UNDERSIDE_LURKER_SPAWN_EGG = egg("underside_lurker", WFEntities.UNDERSIDE_LURKER);

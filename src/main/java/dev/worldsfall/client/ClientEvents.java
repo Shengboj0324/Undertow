@@ -238,6 +238,11 @@ public final class ClientEvents {
             volume = 0.4f;
             pitch = 0.8f;
         }
+        if (ClientWorldState.get().worldEvent() == dev.worldsfall.life.WorldEvents.ECLIPSE && mc.level.dimension() == net.minecraft.world.level.Level.END) {
+            // an Eclipse of Stillness muffles the world
+            volume *= 0.55f;
+            pitch *= 0.92f;
+        }
         if (d > 1.0 && d < 32 * 32 && throughStillglass(mc, ear, new Vec3(s.getX(), s.getY(), s.getZ()))) {
             volume *= 0.5f;
             pitch *= 0.92f;

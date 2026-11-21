@@ -57,7 +57,7 @@ public final class WFTests {
     private WFTests() {}
 
     /** 24 from 1.0 plus the expansion's (1.2 → 2.0). */
-    static final int EXPECTED_ADVANCEMENTS = 37;
+    static final int EXPECTED_ADVANCEMENTS = 44;
 
     static void collect(Map<String, Consumer<GameTestHelper>> out) {
         out.put("tide_cycle_math", WFTests::tideCycleMath);
@@ -98,6 +98,15 @@ public final class WFTests {
         out.put("sinking_pulls_down", WFTests::sinkingPull);
         out.put("void_chart_exact_centre_and_palette", WFTests::voidChart);
         out.put("end_city_loot_points_onward", WFTests::cityLoot);
+        // expansion 1.5: living systems
+        out.put("king_tide_one_cycle_in_eight", WFTests::kingTide);
+        out.put("world_events_are_scheduled_deterministically", WFTests::eventSchedule);
+        out.put("hoard_standing_and_couriers", WFTests::couriers);
+        out.put("driftsilt_seeds_pale_loam", WFTests::driftsilt);
+        out.put("gravity_plate_and_tide_bell", WFTests::plateAndBell);
+        out.put("lost_things_and_fishing_tables", WFTests::lostThings);
+        out.put("dusk_skates_only_while_migrating", WFTests::duskSkates);
+        out.put("eclipse_memories_are_harmless", WFTests::eclipseMemory);
     }
 
     static int maxTicks(String name) {
@@ -648,6 +657,146 @@ public final class WFTests {
             }
         }
         h.assertTrue(ours > 0, "End City chests gain Worldsfall loot through the global loot modifier");
+        h.succeed();
+    }
+
+    private static void kingTide(GameTestHelper h) {
+        long seed = 1234567L;
+        int kings = 0;
+        for (long i = 1; i <= 800; i++) {
+            kings += dev.worldsfall.life.KingTide.isKing(seed, i) ? 1 : 0;
+        }
+        h.assertTrue(kings > 60 && kings < 140, "about one cycle in eight is a King Tide: " + kings);
+        h.assertTrue(!dev.worldsfall.life.KingTide.isKing(seed, 0), "never the very first cycle");
+        var base = TideCycle.DEFAULT;
+        long king = -1;
+        for (long i = 1; i < 200 && king < 0; i++) {
+            if (dev.worldsfall.life.KingTide.isKing(h.getLevel().getServer().overworld().getSeed(), i)) {
+                king = i;
+            }
+        }
+        h.assertTrue(king > 0, "a King cycle exists");
+        long t = king * base.period() + 10;
+        var server = h.getLevel().getServer();
+        h.assertTrue(dev.worldsfall.life.KingTide.adjust(server, base, t, false).highY() == dev.worldsfall.life.KingTide.HIGH_Y,
+            "a King Tide's High reaches Y 60");
+        h.assertTrue(dev.worldsfall.life.KingTide.adjust(server, base, t, true).highY() == base.highY(), "never once the tide is calmed");
+        h.succeed();
+    }
+
+    private static void eventSchedule(GameTestHelper h) {
+        long p = dev.worldsfall.life.WorldEvents.STARFALL_PERIOD;
+        for (long i = 0; i < 50; i++) {
+            long due = dev.worldsfall.life.WorldEvents.dueAt(99L, "starfall", i, p, 6200);
+            h.assertTrue(due >= i * p && due + 6200 + 1200 <= (i + 1) * p, "an event falls inside its own period");
+            h.assertTrue(due == dev.worldsfall.life.WorldEvents.dueAt(99L, "starfall", i, p, 6200), "deterministic");
+        }
+        h.assertTrue(dev.worldsfall.life.WorldEvents.current(h.getLevel().getServer()) == dev.worldsfall.life.WorldEvents.NONE, "no event at rest");
+        h.succeed();
+    }
+
+    private static void couriers(GameTestHelper h) {
+        ServerPlayer player = h.makeMockServerPlayerInLevel();
+        h.assertTrue(dev.worldsfall.life.HoardStanding.get(player) == 0, "standing starts at zero");
+        dev.worldsfall.life.HoardStanding.add(player, 500);
+        h.assertTrue(dev.worldsfall.life.HoardStanding.get(player) == 100 && dev.worldsfall.life.HoardStanding.luck(player) == 4.0f, "standing caps at 100");
+        dev.worldsfall.life.HoardStanding.add(player, -300);
+        h.assertTrue(dev.worldsfall.life.HoardStanding.get(player) == -100, "and floors at -100");
+        BlockPos a = h.absolutePos(new BlockPos(0, 1, 0)), b = h.absolutePos(new BlockPos(2, 1, 0));
+        h.getLevel().setBlockAndUpdate(a, WFBlocks.COURIER_CACHE.get().defaultBlockState());
+        h.getLevel().setBlockAndUpdate(b, WFBlocks.COURIER_CACHE.get().defaultBlockState());
+        var from = (dev.worldsfall.life.CourierCacheBlockEntity) h.getLevel().getBlockEntity(a);
+        var to = (dev.worldsfall.life.CourierCacheBlockEntity) h.getLevel().getBlockEntity(b);
+        from.setItem(3, new ItemStack(Items.ENDER_PEARL, 7));
+        from.setItem(5, new ItemStack(Items.CHORUS_FRUIT, 2));
+        var c = new dev.worldsfall.life.Couriers.Contract(player.getUUID(), a, b, 0, ItemStack.EMPTY);
+        var after = dev.worldsfall.life.Couriers.run(h.getLevel(), c, 100);
+        h.assertTrue(after != null && after.next() == 100 + dev.worldsfall.life.Couriers.INTERVAL && after.carrying().isEmpty(), "one delivery");
+        h.assertTrue(to.countItem(Items.ENDER_PEARL) == 7 && to.countItem(Items.CHORUS_FRUIT) == 0 && from.countItem(Items.CHORUS_FRUIT) == 2,
+            "exactly one stack moves per visit");
+        h.getLevel().removeBlock(b, false);
+        h.assertTrue(dev.worldsfall.life.Couriers.run(h.getLevel(), after, 200) == null, "a contract ends when a cache is gone");
+        for (var e : h.getLevel().getEntities((net.minecraft.world.entity.Entity) null, new AABB(a).inflate(8),
+            e -> e.entityTags().contains(dev.worldsfall.life.Couriers.TAG))) {
+            e.discard();
+        }
+        h.getLevel().removeBlock(a, false);
+        h.succeed();
+    }
+
+    private static void driftsilt(GameTestHelper h) {
+        BlockPos p = h.absolutePos(new BlockPos(1, 1, 1));
+        h.getLevel().setBlockAndUpdate(p, Blocks.END_STONE.defaultBlockState());
+        ServerPlayer player = h.makeMockServerPlayerInLevel();
+        player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(WFItems.DRIFTSILT.get(), 2));
+        var ctx = new net.minecraft.world.item.context.UseOnContext(player, net.minecraft.world.InteractionHand.MAIN_HAND,
+            new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(p), Direction.UP, p, false));
+        WFItems.DRIFTSILT.get().useOn(ctx);
+        h.assertTrue(h.getLevel().getBlockState(p).is(WFBlocks.PALE_LOAM.get()), "Driftsilt seeds Pale Loam on open end stone");
+        h.assertTrue(player.getMainHandItem().getCount() == 1, "one Driftsilt is used");
+        h.succeed();
+    }
+
+    private static void plateAndBell(GameTestHelper h) {
+        var c = net.minecraft.world.phys.Vec3.atCenterOf(h.absolutePos(new BlockPos(1, 3, 1)));
+        h.assertTrue(!dev.worldsfall.world.gravity.GravityZones.inLight(h.getLevel(), c), "no Light Zone before the plate is used");
+        dev.worldsfall.world.gravity.GravityZones.addLight(h.getLevel(), c, 3, dev.worldsfall.life.GravityPlateBlock.TICKS);
+        h.assertTrue(dev.worldsfall.world.gravity.GravityZones.inLight(h.getLevel(), c.add(2, 0, 0))
+            && !dev.worldsfall.world.gravity.GravityZones.inLight(h.getLevel(), c.add(4, 0, 0)), "a Gravity Plate opens a radius-3 Light Zone");
+        BlockPos bell = h.absolutePos(new BlockPos(2, 1, 2));
+        h.getLevel().setBlockAndUpdate(bell, WFBlocks.TIDE_BELL.get().defaultBlockState().setValue(dev.worldsfall.life.TideBellBlock.POWERED, true));
+        h.assertTrue(h.getLevel().getSignal(bell.east(), Direction.EAST) == 15 || h.getLevel().getBestNeighborSignal(bell.east()) == 15,
+            "a ringing Tide Bell gives a full redstone signal");
+        h.succeed();
+    }
+
+    private static void lostThings(GameTestHelper h) {
+        var server = h.getLevel().getServer();
+        var data = dev.worldsfall.life.LostThings.get(server);
+        int before = data.size();
+        data.remember(new ItemStack(Items.DIAMOND_SWORD));
+        h.assertTrue(data.size() == before + 1, "an item lost to the void is remembered");
+        ItemStack back = ItemStack.EMPTY;
+        for (int i = 0; i < 200 && !back.is(Items.DIAMOND_SWORD); i++) {
+            back = dev.worldsfall.life.LostThings.take(server);
+            if (!back.is(Items.DIAMOND_SWORD) && !back.isEmpty()) {
+                data.remember(back);
+            }
+        }
+        h.assertTrue(back.is(Items.DIAMOND_SWORD), "and can come back");
+        for (var key : List.of(dev.worldsfall.life.TideFishing.TIDE_LOOT, dev.worldsfall.life.TideFishing.STILL_LOOT)) {
+            h.assertTrue(server.reloadableRegistries().getLootTable(key) != net.minecraft.world.level.storage.loot.LootTable.EMPTY, "fishing table loads: " + key);
+        }
+        h.succeed();
+    }
+
+    private static void duskSkates(GameTestHelper h) {
+        ServerPlayer player = h.makeMockServerPlayerInLevel();
+        player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        var skate = WFEntities.VOID_SKATE.get().create(h.getLevel(), EntitySpawnReason.COMMAND);
+        h.assertTrue(skate != null, "skate constructs");
+        BlockPos at = h.absolutePos(new BlockPos(1, 3, 1));
+        skate.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0, 0);
+        h.getLevel().addFreshEntity(skate);
+        skate.setVariant(1);
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(WFItems.CHORUS_POD.get(), 16));
+        var result = skate.mobInteract(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+        h.assertTrue(result == net.minecraft.world.InteractionResult.FAIL && player.getMainHandItem().getCount() == 16,
+            "a resident Dusk Skate refuses food");
+        skate.setMigrationTarget(net.minecraft.world.phys.Vec3.atCenterOf(at).add(700, 0, 0));
+        h.assertTrue(skate.isMigrating() && skate.trustNeeded() == 3, "a migrating Skate can be won over, with less patience");
+        skate.discard();
+        h.succeed();
+    }
+
+    private static void eclipseMemory(GameTestHelper h) {
+        var echo = WFEntities.ECHO.get().create(h.getLevel(), EntitySpawnReason.COMMAND);
+        h.assertTrue(echo != null, "echo constructs");
+        echo.makeMemory();
+        h.assertTrue(echo.isMemory() && !echo.isDisguised() && echo.hasGlowingTag(), "a memory walks openly and glows");
+        h.assertTrue(!echo.hurtServer(h.getLevel(), h.getLevel().damageSources().generic(), 5), "and cannot be hurt");
+        echo.discard();
         h.succeed();
     }
 }

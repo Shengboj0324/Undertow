@@ -36,6 +36,21 @@ import java.util.Locale;
 public final class WFCommands {
     private WFCommands() {}
 
+    private static int eventStart(CommandContext<CommandSourceStack> c, int event) {
+        ServerLevel end = c.getSource().getServer().getLevel(Level.END);
+        if (end == null || dev.worldsfall.life.WorldEvents.current(c.getSource().getServer()) != dev.worldsfall.life.WorldEvents.NONE) {
+            c.getSource().sendFailure(Component.literal("Another world event is running (or the End is not loaded)"));
+            return 0;
+        }
+        boolean ok = dev.worldsfall.life.WorldEvents.start(end, event);
+        if (!ok) {
+            c.getSource().sendFailure(Component.literal("The event could not begin here (no player in the End, or no open island top)"));
+            return 0;
+        }
+        c.getSource().sendSuccess(() -> Component.literal("World event " + event + " started"), true);
+        return 1;
+    }
+
     public static void register(CommandDispatcher<CommandSourceStack> d, CommandBuildContext ctx) {
         d.register(Commands.literal("worldsfall").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.literal("tide")
@@ -55,6 +70,29 @@ public final class WFCommands {
                     .executes(WFCommands::wyrmStage))))
                 .then(Commands.literal("shoulder").then(Commands.argument("player", EntityArgument.player()).executes(WFCommands::wyrmShoulder))))
             .then(Commands.literal("boss").then(Commands.literal("reset").executes(WFCommands::bossReset)))
+            .then(Commands.literal("event")
+                .then(Commands.literal("starfall").executes(c -> eventStart(c, dev.worldsfall.life.WorldEvents.STARFALL)))
+                .then(Commands.literal("eclipse").executes(c -> eventStart(c, dev.worldsfall.life.WorldEvents.ECLIPSE)))
+                .then(Commands.literal("migration").executes(c -> eventStart(c, dev.worldsfall.life.WorldEvents.MIGRATION)))
+                .then(Commands.literal("tidewrack").executes(c -> {
+                    ServerLevel end = c.getSource().getServer().getLevel(Level.END);
+                    int n = end == null ? 0 : dev.worldsfall.life.Tidewrack.scatter(end);
+                    c.getSource().sendSuccess(() -> Component.literal("Tidewrack piles: " + n), false);
+                    return n;
+                }))
+                .then(Commands.literal("stop").executes(c -> {
+                    ServerLevel end = c.getSource().getServer().getLevel(Level.END);
+                    if (end != null) {
+                        dev.worldsfall.life.WorldEvents.stop(end);
+                    }
+                    c.getSource().sendSuccess(() -> Component.literal("World event stopped"), true);
+                    return 1;
+                }))
+                .then(Commands.literal("status").executes(c -> {
+                    var data = dev.worldsfall.life.WorldEventData.get(c.getSource().getServer());
+                    c.getSource().sendSuccess(() -> Component.literal("World event " + data.current() + " since " + data.start() + " until " + data.end()), false);
+                    return data.current();
+                })))
             .then(Commands.literal("locate").then(Commands.argument("structure", StringArgumentType.word())
                 .suggests((c, b) -> SharedSuggestionProvider.suggest(new String[] {"fallen_spire", "hoard", "driftwreck", "skate_roost",
                     "echo_shrine", "root_hollow", "deep_root_hollow"}, b))

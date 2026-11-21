@@ -12,6 +12,51 @@ import java.util.EnumSet;
 final class SkateGoals {
     private SkateGoals() {}
 
+    /**
+     * A migrating flock (proposal "Skate Migration") flies straight to its far point and leaves. It pauses for a player
+     * holding Chorus Pods nearby, the only time a Dusk Skate can be won over.
+     */
+    static final class Migrate extends Goal {
+        private final VoidSkate skate;
+
+        Migrate(VoidSkate skate) {
+            this.skate = skate;
+            setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        private boolean tempted() {
+            var p = skate.level().getNearestPlayer(skate, 8);
+            return p != null && (p.getMainHandItem().is(dev.worldsfall.registry.WFTags.Items.SKATE_FOOD)
+                || p.getOffhandItem().is(dev.worldsfall.registry.WFTags.Items.SKATE_FOOD));
+        }
+
+        @Override
+        public boolean canUse() {
+            return skate.isMigrating() && !skate.isVehicle() && !tempted();
+        }
+
+        @Override
+        public void start() {
+            skate.setPerched(false);
+        }
+
+        @Override
+        public void tick() {
+            Vec3 target = skate.migrationTarget();
+            if (target == null) {
+                return;
+            }
+            Vec3 to = target.subtract(skate.position());
+            if (to.horizontalDistanceSqr() < 24 * 24) {
+                skate.discard();
+                return;
+            }
+            Vec3 step = skate.position().add(to.normalize().scale(16));
+            double bob = Math.sin((skate.tickCount + skate.getId() * 7) * 0.05) * 2;
+            skate.getMoveControl().setWantedPosition(step.x, target.y + bob, step.z, 1.35);
+        }
+    }
+
     /** Slow orbits around a chosen center at a comfortable altitude. */
     static final class CircleIsland extends Goal {
         private final VoidSkate skate;
