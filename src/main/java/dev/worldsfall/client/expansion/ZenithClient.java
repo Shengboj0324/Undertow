@@ -94,12 +94,26 @@ public final class ZenithClient {
             return;
         }
         Vec3 now = on.position();
+        double x = player.getX(), y = player.getY(), z = player.getZ();
         if (lastLeviathan != null && leviathanId == on.getId()) {
             Vec3 d = now.subtract(lastLeviathan);
             if (d.lengthSqr() < 4) {
-                player.setPos(player.getX() + d.x, player.getY() + d.y, player.getZ() + d.z);
+                x += d.x;
+                y += d.y;
+                z += d.z;
             }
         }
+        // keep the feet on the back: as it eases its climb or dive the interpolated hull can rise into the rider, and
+        // a player already overlapping an entity's box falls through it
+        double top = on.getBoundingBox().maxY;
+        Vec3 v = player.getDeltaMovement();
+        if (v.y <= 0 && y < top) {
+            y = top;
+            player.setDeltaMovement(v.x, 0, v.z);
+            player.setOnGround(true);
+            player.resetFallDistance();
+        }
+        player.setPos(x, y, z);
         lastLeviathan = now;
         leviathanId = on.getId();
     }

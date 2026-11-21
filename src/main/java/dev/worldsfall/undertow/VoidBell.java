@@ -195,6 +195,10 @@ public class VoidBell extends Mob {
             }
             return InteractionResult.SUCCESS;
         }
+        if (player.getVehicle() == this) {
+            // aboard, the crosshair rests on the hull: let the click use whatever is in hand (a Codex, a chart, food)
+            return InteractionResult.PASS;
+        }
         if (player.isShiftKeyDown()) {
             if (!level().isClientSide()) {
                 setLamp(!lampOn());

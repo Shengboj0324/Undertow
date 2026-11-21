@@ -201,7 +201,7 @@ public final class RestorationWorld extends SavedData {
     }
 
     /** The mural's lower-left panel and the direction its rows run. */
-    static BlockPos muralOrigin(UndercroftBuilder.Layout l) {
+    public static BlockPos muralOrigin(UndercroftBuilder.Layout l) {
         return archiveCentre(l).relative(l.inward(), 5).relative(side(l).getOpposite(), 2).above(1);
     }
 

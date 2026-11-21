@@ -75,18 +75,25 @@ public final class TideMaws {
             return;
         }
         double tide = Tides.height(end);
-        for (ServerPlayer p : end.players()) {
+        // gather the maws near any player first: swallowing a player moves them out of the End (and out of
+        // end.players()) mid-loop, and two players by one maw must not pull it twice
+        java.util.Set<Vec3> active = new java.util.LinkedHashSet<>();
+        for (ServerPlayer p : List.copyOf(end.players())) {
             for (Vec3 m : mawsNear(end.getSeed(), p.getX(), p.getZ())) {
-                if (Math.hypot(m.x - p.getX(), m.z - p.getZ()) > 160) {
-                    continue;
+                if (Math.hypot(m.x - p.getX(), m.z - p.getZ()) <= 160) {
+                    active.add(m);
                 }
-                Vec3 centre = new Vec3(m.x, tide, m.z);
-                if (end.getGameTime() % 40 == 0) {
-                    end.playSound(null, BlockPos.containing(centre), WFSounds.EVENT_MAW_OPEN.get(), SoundSource.AMBIENT, 3.0f, 0.8f);
-                }
-                AABB area = new AABB(centre, centre).inflate(PULL_RADIUS, 8, PULL_RADIUS);
-                for (Entity e : end.getEntities((Entity) null, area, e -> !e.isPassenger() && !e.isSpectator() && (e instanceof ServerPlayer
-                    || e instanceof ItemEntity || e instanceof VoidBell || e instanceof net.minecraft.world.entity.LivingEntity))) {
+            }
+        }
+        for (Vec3 m : active) {
+            Vec3 centre = new Vec3(m.x, tide, m.z);
+            if (end.getGameTime() % 40 == 0) {
+                end.playSound(null, BlockPos.containing(centre), WFSounds.EVENT_MAW_OPEN.get(), SoundSource.AMBIENT, 3.0f, 0.8f);
+            }
+            AABB area = new AABB(centre, centre).inflate(PULL_RADIUS, 8, PULL_RADIUS);
+            for (Entity e : end.getEntities((Entity) null, area, e -> !e.isPassenger() && !e.isSpectator() && (e instanceof ServerPlayer
+                || e instanceof ItemEntity || e instanceof VoidBell || e instanceof net.minecraft.world.entity.LivingEntity))) {
+                if (!e.isRemoved() && e.level() == end) {
                     pull(end, e, centre);
                 }
             }

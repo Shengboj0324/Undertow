@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.0.1: tested in the real game
+
+Found by a full playtest in the real client (official launcher, NeoForge 26.3.0.113, a survival player pressing the real
+keys): see `docs/PLAYTEST.md`.
+
+**Fixes**
+- **Crash: diving a Tide Maw.** Being swallowed by a maw crashed the server (the maw loop walked the End's player list
+  while the dive moved the player out of it). Maws are now gathered first, and a maw two players stand by pulls once.
+- **The Void Bell crawled in the Undertow.** The Undertow's drifting gravity nudged every creature upward; for a bell the
+  player steers, each nudge was sent back to the pilot's client and cancelled their speed (a third of normal). Vehicles a
+  player steers are no longer nudged: the dive to an Archive and the climb out now take seconds, not minutes.
+- **Nothing could be used aboard a Void Bell.** Right-clicking hit the bell's own hull and "boarded" it again; a Codex,
+  a chart or food in hand now works from inside (a Stillness Fragment still charges it).
+- **The last Empty Void Chart vanished.** Using your last blank chart consumed it and cleared your hand instead of
+  giving you the drawn chart.
+- **Falling through a Leviathan.** As a Leviathan eased its climb or dive, a player on its back could sink into it and
+  fall through; riders are now held on the back.
+- **Sky Currents a moment late.** The currents near you now reach your client the tick you arrive, not up to a second
+  later (a glider launched at once could miss the current).
+- **The Void Bell from inside.** In first person the bell's own hull no longer covers a third of the pilot's view.
+- **The Leviathan was drawn too high.** Its body rendered about five blocks above its solid back, so riders stood inside
+  it and its garden was buried. The model now sits on the hitbox, with the garden bed on top.
+
+**Testing**
+- New real-client playtest driver (`-Dworldsfall.playtest=<dir>` or a `worldsfall-playtest.properties` file in the game
+  folder): 13 scenarios, 62 checks, a report and a clip per scenario.
+
 ## 2.0.0: the Expansion
 
 The whole "Expansion & Dragon" proposal, in one release (it was planned as 1.2 → 2.0; every part is in).

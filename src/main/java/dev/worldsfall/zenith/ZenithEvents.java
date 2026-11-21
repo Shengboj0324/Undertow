@@ -23,23 +23,28 @@ import java.util.UUID;
 /** Server side of the Zenith, run from the End's level tick: current sync, the Current Vane, riding credit, spawning. */
 public final class ZenithEvents {
     public static final int HIGHWAY_SECONDS = 10;
-    private static final Map<UUID, Long> REGION = new HashMap<>();
+    /** Region last sent to each player (cleared by {@link #forget}, and dropped with the player object). */
+    private static final Map<ServerPlayer, Long> REGION = new java.util.WeakHashMap<>();
     private static final Map<UUID, Integer> RIDING = new HashMap<>();
 
     private ZenithEvents() {}
 
     public static void tick(ServerLevel end) {
-        if (end.getGameTime() % 20 != 7) {
-            return;
-        }
         long seed = end.getSeed();
+        // the currents, drafts and maws near each player: sent the moment they arrive or cross into a new region
         for (ServerPlayer p : end.players()) {
             long region = ((long) Mth.floor(p.getX() / SkyCurrents.REGION) << 32) ^ (Mth.floor(p.getZ() / SkyCurrents.REGION) & 0xFFFFFFFFL);
-            if (!Long.valueOf(region).equals(REGION.get(p.getUUID()))) {
-                REGION.put(p.getUUID(), region);
+            Long sent = REGION.get(p);
+            if (sent == null || sent != region) {
+                REGION.put(p, region);
                 WFNetwork.send(p, new ZenithPayload(SkyCurrents.currentsNear(seed, p.getX(), p.getZ()), SkyCurrents.draftsNear(seed, p.getX(), p.getZ()),
                     dev.worldsfall.undertow.TideMaws.enabled() ? dev.worldsfall.undertow.TideMaws.mawsNear(seed, p.getX(), p.getZ()) : java.util.List.of()));
             }
+        }
+        if (end.getGameTime() % 20 != 7) {
+            return;
+        }
+        for (ServerPlayer p : end.players()) {
             var currents = SkyCurrents.currentsNear(seed, p.getX(), p.getZ());
             boolean gliding = p.isFallFlying() || p.getVehicle() != null && p.getVehicle().getControllingPassenger() == p;
             SkyCurrents.Hit hit = SkyCurrents.nearest(currents, p.position());
@@ -74,7 +79,7 @@ public final class ZenithEvents {
 
     /** For a player logging in or entering the End, so their client has the currents straight away. */
     public static void forget(ServerPlayer p) {
-        REGION.remove(p.getUUID());
+        REGION.remove(p);
         RIDING.remove(p.getUUID());
     }
 }

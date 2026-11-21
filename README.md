@@ -465,6 +465,19 @@ Every clip was recorded in the game by an automated camera tour. Click a scene t
 | [▶ The Zenith](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_zenith.mp4) | [▶ The Orrery](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_orrery.mp4) | [▶ The Orrery aligned](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_orrery_aligned.mp4) |
 | [▶ The Undertow](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_undertow.mp4) | [▶ The 2.0 items](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_items.mp4) |  |
 
+**Played in the real game (2.0.1).** These were recorded in the real client, started from the official launcher. A survival
+player pressed the real keys, used items, rode the Leviathan and piloted the Void Bell. Every scene ends in checks; see
+[docs/PLAYTEST.md](docs/PLAYTEST.md).
+
+![Twelve moments from the real-client playtest](docs/images/playtest_grid.jpg)
+
+| | | |
+|---|---|---|
+| [▶ **Playtest cut** (2:49)](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/worldsfall_2.0.1_playtest.mp4) | [▶ Gateway Lattice](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_lattice.mp4) | [▶ A Void Chart](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_chart.mp4) |
+| [▶ Piloting a Void Bell into a Maw](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_bell_dive.mp4) | [▶ The Undertow and back](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_undertow.mp4) | [▶ On a Leviathan's back](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_leviathan.mp4) |
+| [▶ Elytra in a Sky Current](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_sky_current.mp4) | [▶ Starfall](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_starfall.mp4) | [▶ Eclipse of Stillness](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_eclipse.mp4) |
+| [▶ Freeing the Orrery](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_orrery.mp4) | [▶ The Restoration](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_restoration.mp4) | [▶ Arriving](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.1/play_arrival.mp4) |
+
 <p align="center">
 <img src="docs/media/x_zenith.webp" width="440" alt="The Zenith: a Leviathan over the Skystone shoals">
 <img src="docs/media/x_undertow.webp" width="440" alt="The Undertow: a Void Bell over a Sunken Archive">
@@ -538,6 +551,12 @@ The jar is written to `build/libs/`. Compilation runs with `-Xlint:all -Werror`.
 ./gradlew test --no-configuration-cache                 # JUnit (tide maths, region rules)
 ./gradlew runGameTestServer --no-configuration-cache    # 55 in-world GameTests, exits non-zero on failure
 ```
+
+**Real client:** put `worldsfall-playtest.properties` (`out=<dir>`, optionally `scenarios=p_lattice,p_bell_dive`) in the
+game folder of a launcher profile, or pass `-Dworldsfall.playtest=<dir>`. The game makes a fresh survival world and
+plays 13 scenarios with real key presses and clicks: the Lattice, charts, the Void Bell dive into the Undertow, a
+Leviathan ride, Sky Currents, world events, the Orrery and the Restoration. It writes `report.md` and a frame sequence
+per scenario (`tools/showcase/make_video.sh <dir>` makes the clips), then quits. See [docs/PLAYTEST.md](docs/PLAYTEST.md).
 
 **Multiplayer:** `python3 tools/mptest/mp_test.py <server dir> <jar>` starts a production NeoForge server (installed
 with the official installer, EULA accepted) running the jar. It joins that server with two dev clients (`runMpAlice`,

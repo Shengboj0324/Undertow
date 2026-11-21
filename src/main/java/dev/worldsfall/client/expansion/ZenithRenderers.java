@@ -115,8 +115,10 @@ public final class ZenithRenderers {
 
         @Override
         protected void scale(LeviathanState s, PoseStack pose) {
-            // the model's back sits at the top of the (solid) hitbox
-            pose.translate(0.0, -2.6, 0.0);
+            // the model's back sits at the top of the (solid) hitbox. This runs after the renderer flips the pose upside
+            // down, so +y here moves the model down: body top (model y -6) * 4 + 1.501 * 4 = 7.5 above the origin, less
+            // 2.5 = 5.0, the hitbox top, where riders stand and the garden grows
+            pose.translate(0.0, 2.5, 0.0);
             pose.scale(LEVIATHAN_SCALE, LEVIATHAN_SCALE, LEVIATHAN_SCALE);
         }
 
@@ -128,7 +130,7 @@ public final class ZenithRenderers {
             }
             pose.pushPose();
             pose.rotate(Axis.YP.rotationDegrees(180.0f - s.bodyYaw));
-            pose.translate(0.0, s.boundingBoxHeight, 2.0);
+            pose.translate(0.0, s.boundingBoxHeight + 0.02, 2.0); // the bed lies on the back (just above it: no z-fighting)
             for (int i = 0; i < GARDEN.length; i++) {
                 int[] g = GARDEN[i];
                 place(pose, collector, s, g[0], g[1], g[2], WFBlocks.PALE_LOAM.get().defaultBlockState());

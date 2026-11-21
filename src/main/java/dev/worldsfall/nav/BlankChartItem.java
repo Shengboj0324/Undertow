@@ -44,8 +44,11 @@ public class BlankChartItem extends Item {
         ItemStack held = player.getItemInHand(hand);
         held.consume(1, player);
         if (held.isEmpty()) {
-            player.setItemInHand(hand, chart);
-        } else if (!player.getInventory().add(chart)) {
+            // the last blank becomes the chart: hand it back as the use result (ItemStack.use otherwise reports the
+            // emptied stack as the held result and the server clears the hand, chart and all)
+            return InteractionResult.SUCCESS.heldItemTransformedTo(chart);
+        }
+        if (!player.getInventory().add(chart)) {
             player.spawnAtLocation((ServerLevel) level, chart);
         }
         return InteractionResult.SUCCESS;

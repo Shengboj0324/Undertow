@@ -106,7 +106,9 @@ public final class WFEvents {
                 if (living instanceof ServerPlayer sp && zone == GravityZones.Zone.LIGHT && entity.tickCount % 40 == 0) {
                     Progress.award(sp, "underneath");
                 }
-                if (zone == GravityZones.Zone.WELL && !living.onGround()) {
+                // a vehicle a player steers is moved by that player's client: a server-side nudge would be sent back as a
+                // velocity and cancel the pilot's own movement (a Void Bell crawled at a third of its speed in the Undertow)
+                if (zone == GravityZones.Zone.WELL && !living.onGround() && !(living.getControllingPassenger() instanceof Player)) {
                     living.push(0, 0.02, 0);
                 }
                 if (level.dimension() == Level.END && !living.onGround() && living.getDeltaMovement().y < -0.5

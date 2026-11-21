@@ -75,6 +75,16 @@ public final class UndertowRenderers {
             return new BellState();
         }
 
+        /** The pilot sits inside the hull: in first person the bell is not drawn for its own riders, so they can see out. */
+        @Override
+        public boolean shouldRender(VoidBell bell, net.minecraft.client.renderer.culling.Frustum culler, double camX, double camY, double camZ, float partial) {
+            net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+            if (mc.options.getCameraType().isFirstPerson() && mc.getCameraEntity() != null && bell.hasPassenger(mc.getCameraEntity())) {
+                return false;
+            }
+            return super.shouldRender(bell, culler, camX, camY, camZ, partial);
+        }
+
         @Override
         public void extractRenderState(VoidBell e, BellState s, float partial) {
             super.extractRenderState(e, s, partial);

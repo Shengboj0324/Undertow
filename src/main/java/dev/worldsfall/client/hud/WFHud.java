@@ -53,6 +53,11 @@ public final class WFHud {
         showLine("tablet.worldsfall." + index, 0xE9DEFF);
     }
 
+    /** The glyph line most recently shown (read by the real-client playtest). */
+    public static String currentLine() {
+        return lineKey;
+    }
+
     /** A glyph line that resolves into readable text (Echo Tablets, the Wardensong, Archive Codices). */
     public static void showLine(String key, int rgb) {
         lineKey = key;
