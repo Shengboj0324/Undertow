@@ -8,7 +8,8 @@ For every file stem referenced in sound_spec.py this checks that
     loops (which may be mono or stereo)
   * the duration is sane for its category
   * it does not clip (decoded peak < 0 dBFS) and is not silent
-  * ambient loops and the boss music loops have no discontinuity at the loop point
+  * ambient loops, the boss music loops and the loopable positional hums have no
+    discontinuity at the loop point
 and that the whole sounds directory stays under the size budget.
 
 Usage: python3 tools/audio/verify_audio.py [--max-mb 45]
@@ -31,6 +32,8 @@ REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 SOUNDS = os.path.join(REPO, "src", "main", "resources", "assets", "worldsfall", "sounds")
 
 LOOPED_MUSIC = {"music/unmade_1", "music/unmade_2", "music/unmade_3"}
+# mono positional sounds the game plays on repeat (rendered as seamless 'sfxloop' recipes)
+LOOPED_SFX = {"event/gravity_anchor_hum", "item/capsule_hum", "mob/void_bell/move"}
 
 
 def categorise():
@@ -126,7 +129,7 @@ def main():
                 problems.append(f"clipping (peak {pk_db:.2f} dBFS)")
             if pk_db < -40 or rms_db < -65:
                 problems.append(f"near-silent (peak {pk_db:.1f}, rms {rms_db:.1f} dBFS)")
-            if cat == "ambient_loop" or stem in LOOPED_MUSIC:
+            if cat == "ambient_loop" or stem in LOOPED_MUSIC or stem in LOOPED_SFX:
                 ok, jump, ref = seam_ok(x)
                 if not ok:
                     problems.append(f"loop seam jump {jump:.4f} > typical {ref:.4f}")

@@ -63,6 +63,9 @@
     "worldsfall:driftstone_brick_stairs",
     "worldsfall:driftstone_brick_wall",
     "worldsfall:stillwater_cauldron",
-    "worldsfall:wardens_lantern"
+    "worldsfall:wardens_lantern",
+    "worldsfall:causeway_lantern",
+    "worldsfall:causeway_plaque",
+    "worldsfall:roost_post"
   ]
 }

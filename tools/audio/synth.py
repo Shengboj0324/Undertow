@@ -12,6 +12,8 @@ Dependencies: python3, numpy, scipy, ffmpeg (with libvorbis) on PATH.
 
 Usage:
     python3 tools/audio/synth.py --tmp /path/to/scratch [--only PREFIX ...] [--jobs N]
+    python3 tools/audio/synth.py --stems music/ladders event/maw_open ...   (exact stems)
+    python3 tools/audio/synth.py --missing                (only stems with no .ogg yet)
 
 Techniques used (see the instrument sections below):
   * modal synthesis (sums of exponentially decaying, slightly inharmonic
@@ -3257,6 +3259,1356 @@ for _k in range(3):
 
 
 # =============================================================================
+# Expansion 1.2-2.0: the Warden Cycle, the Gap, cities, living systems,
+# the Zenith, the Undertow and the Restoration
+# =============================================================================
+
+def _u(x):
+    """Unit-RMS copy, for mixing layers by ratio."""
+    return x / (np.std(x) + 1e-9)
+
+
+def _pk(x):
+    """Unit-peak copy."""
+    return x / (np.max(np.abs(x)) + 1e-9)
+
+
+def _tame(x, k=2.5):
+    """Unit-RMS copy with its spikes soft-limited to about k x RMS (crackles, grit), so a
+    transient layer can sit at a useful level without dictating the peak normalisation."""
+    return k * np.tanh(_u(x) / k)
+
+
+def _whisper(d, rng, v1="a", v2=None, fscale=1.0, fscale2=None, amp_pts=None, lo=250.0, hiss=0.5):
+    """Whispered (unvoiced) vowel: noise through time-varying formants plus a little sibilance."""
+    v2 = v2 or v1
+    fs2 = fscale if fscale2 is None else fscale2
+
+    def g(F, T):
+        w = np.clip(T / d, 0, 1)
+        sc = fscale * (1 - w) + fs2 * w
+        fg = (1 - w) * formant_gain(F / sc, v1, 1.0, 0.03, 1.5) + w * formant_gain(F / sc, v2, 1.0, 0.03, 1.5)
+        return (fg + hiss * 0.25 * band(F, 5500, 0.45)) * (F > lo)
+    x = _u(noise_shaped(d, rng, g, 1024))
+    if amp_pts:
+        x = x * curve(d, amp_pts)
+    return x
+
+
+def _dragon_voice(d, rng, pts, v1="a", v2="o", fscale=0.55, rough=0.3, drive=1.6, breath=0.15,
+                  vib=0.0, vib_rate=4.0):
+    """Large-creature call: low voiced source with period-doubling roughness, dark formants."""
+    t = tt(d)
+    f = curve(d, pts, log=True)
+    if vib:
+        f = f * (1 + vib * np.clip(t / (0.5 * d), 0, 1) * np.sin(TWO_PI * vib_rate * t))
+    x = voice(d, f, rng, v1, v2, 1.05, breath, fscale, fscale * 1.12, 0.008, nmax=120)
+    am = 1 + rough * np.sin(0.5 * phase_of(f) + 0.3) + 0.5 * rough * smooth_noise(d, 28, rng)
+    x = softclip(_pk(x * np.clip(am, 0, None)), drive)
+    return x * env_swell(d, min(0.18, 0.2 * d), 0.45 * d)
+
+
+BRONZE_RATIOS = [0.5, 1.0, 1.183, 1.506, 2.0, 2.514, 2.662, 3.011, 4.166, 5.433]
+BRONZE_AMPS = [0.18, 0.45, 0.4, 0.3, 1.0, 0.5, 0.4, 0.32, 0.2, 0.1]
+BRONZE_TAUS = [1.3, 1.0, 0.8, 0.5, 0.75, 0.42, 0.36, 0.27, 0.18, 0.11]
+
+
+def _bronze_bell(f, decay, rng, bright=0.6, split=0.0022):
+    """Cast bronze bell (f = prime; the strike note is the nominal an octave up).
+
+    Every partial is a slightly split pair, so old bronze warbles as it rings."""
+    fr, ta, am = [], [], []
+    for r, a, tau in zip(BRONZE_RATIOS, BRONZE_AMPS, BRONZE_TAUS):
+        a = a * (1.0 if r <= 2.0 else bright)
+        for s, w in ((-1, 0.6), (1, 0.4)):
+            fr.append(f * r * (1 + s * split * rng.uniform(0.4, 1.0)))
+            ta.append(decay * tau)
+            am.append(a * w)
+    ir = modes(decay * 6.0, fr, ta, am, rng)
+    n = ns(0.003)
+    exc = np.hanning(2 * n)[n:] * (1 + 0.4 * rng.standard_normal(n))
+    exc = lp(exc, 3000 + 7000 * bright)
+    y = _pk(excite(exc, ir))
+    k = _pk(_clank(rng, f * 5.1, 0.012)) * 0.12
+    y[: len(k)] += k
+    return y
+
+
+def _screech(d, rng, pts, rasp=0.5, noise=0.6, hpf=1200.0):
+    """Raptor screech: bright harmonic tone and pitch-tracking noise band, rasped."""
+    t = tt(d)
+    f = curve(d, pts, log=True) * (1 + 0.01 * smooth_noise(d, 18, rng))
+    x = _u(harmonic(f, [1.0, 0.75, 0.5, 0.3, 0.18, 0.1], rng))
+
+    def g(F, T):
+        fc = np.interp(T, t, f)
+        return band(F, fc, 0.12) + 0.5 * band(F, 2 * fc, 0.1) + 0.08 * band(F, 1.5 * fc, 0.6)
+    nz = _u(noise_shaped(d, rng, g, 512))
+    am = np.clip(1 + rasp * smooth_noise(d, 110, rng), 0.0, None)
+    y = (x + noise * nz) * am
+    return hp(y, hpf) * env_swell(d, 0.025, 0.5 * d, 1.2)
+
+
+def _fork(f, d, rng, beat=0.0, tau=1.0, clang=0.35):
+    """Tuning fork: near-pure tone (two tines may beat), brief clang mode at ~6.27 f."""
+    t = tt(d)
+    p = rng.uniform(0, TWO_PI)
+    x = np.sin(TWO_PI * f * t + p)
+    if beat:
+        x = x + 0.55 * np.sin(TWO_PI * (f + beat) * t + p + 0.5)
+    x = x + 0.012 * np.sin(TWO_PI * 2 * f * t) + 0.004 * np.sin(TWO_PI * 3 * f * t)
+    x = x * np.exp(-t / tau)
+    x = x + clang * np.sin(TWO_PI * 6.27 * f * t) * np.exp(-t / 0.035)
+    return x * (1 - np.exp(-t / 0.0015))
+
+
+def _metal_creak(d, rng, rate_pts, scale=1.0, tau=0.07, amp_pts=None):
+    """Stick-slip creak through stiff metal-plate modes (high Q, inharmonic)."""
+    mf = [m * scale for m in (310, 523, 871, 1340, 2050, 2890)]
+    x = creak(d, rng, rate_pts, mf, tau, 0.35, amp_pts)
+    hull = reson(x, 95 * scale, 6)
+    return x + 0.6 * _u(hull) * np.std(x)
+
+
+def _spiral(d, rng, s_pts, f0=73.42, octs=6, centre=3.0, width=1.1, noise=0.5):
+    """Shepard-Risset spiral: octave-spaced partials and noise bands gliding forever.
+
+    s_pts: breakpoints of the spiral position in octaves (falling = sinking spiral)."""
+    t = tt(d)
+    s = curve(d, s_pts)
+    x = np.zeros(len(t))
+    for k in range(octs):
+        oc = np.mod(k + s, octs)
+        f = f0 * 2.0 ** oc
+        a = np.exp(-0.5 * ((oc - centre) / width) ** 2)
+        x += a * (np.sin(phase_of(f) + k) + 0.3 * np.sin(phase_of(f * 1.5) + 2 * k))
+    sg = np.interp(np.linspace(0, d, 400), t, s)
+    tg = np.linspace(0, d, 400)
+
+    def g(F, T):
+        sv = np.interp(T, tg, sg)
+        out = 0
+        for k in range(octs):
+            oc = np.mod(k + sv, octs)
+            out = out + np.exp(-0.5 * ((oc - centre) / width) ** 2) * band(F, f0 * 2.0 ** oc, 0.12)
+        return out
+    nz = noise_shaped(d, rng, g, 2048)
+    return _u(x) + noise * _u(nz)
+
+
+# ---------------------------------------------------------------- 1.2 the Warden Cycle
+
+@reg(["event/warden/crystal_echo1", "event/warden/crystal_echo2"], level=-4.0)
+def sfx_warden_crystal_echo(rng, i):
+    d = 1.5
+    f0, f1 = [(nf("E5"), nf("D5")), (nf("B4"), nf("A4"))][i]
+    f = curve(d, [(0, f0 * 1.004), (0.45, f0), (d, f1)], log=True)      # the sigh: settle, then fall a step
+    g = glass_harm(f, d, 0.25, 0.8, rng, 0.05) + 0.35 * glass_harm(f * 1.5, d, 0.4, 0.8, rng, 0.03)
+    v1, v2 = [("a", "o"), ("e", "u")][i]
+    wh = lp(_whisper(d, rng, v1, v2, 1.0 + 0.1 * i, 0.9, [(0, 0), (0.35, 1.0), (0.9, 0.7), (d, 0)]), 6500)
+    glint = glass_pings(d, rng, 5, 2600, 5200, (0.05, 0.15), span=0.7, shape=1.5)
+    x = (0.8 * _u(g) + 0.7 * wh) * env_swell(d, 0.05, 0.4) + 0.6 * _pk(glint)
+    return reverb(x, 0.38, 3.0, 6000, 1.3, seed=200)
+
+
+@reg("event/warden/cracks", level=-2.5)
+def sfx_warden_cracks(rng, i):
+    d = 2.0
+    groan = creak(d, rng, [(0, 16), (0.8, 34), (1.4, 26), (d, 12)], [82, 141, 233, 377, 590], 0.06, 0.35,
+                  [(0, 0), (0.25, 1), (1.4, 0.8), (d, 0)])
+    groan = lp(_u(groan), 1100)
+    nz = white(d, rng)
+    body = lp(_u(reson(nz, 55, 10) + reson(nz, 92, 10) + reson(nz, 150, 8)), 300)
+    body *= curve(d, [(0, 0), (0.4, 1), (1.6, 0.7), (d, 0)])
+    crk = np.zeros(ns(d))
+    tm = 0.12
+    while tm < d - 0.25:
+        add_at(crk, _crack(rng, 0.04, 8, 1500, 9000), tm, rng.uniform(0.25, 1.0) * (1 - 0.4 * tm / d))
+        tm += rng.exponential(0.09) + 0.01
+    fine = crumble(d, rng, 260, 2500, 10000, (0.0003, 0.0015), 1.0, decay_amp=False)
+    fine *= curve(d, [(0, 0.2), (0.5, 1), (1.6, 0.6), (d, 0)])
+    x = 0.8 * groan + 0.7 * body + 0.6 * _tame(crk) + 0.25 * _tame(fine)
+    return reverb(lp(x, 9000), 0.25, 2.2, 2500, 1.4, seed=201)
+
+
+@reg("event/warden/portal_hum", level=-3.0)
+def sfx_warden_portal_hum(rng, i):
+    d = 3.2
+    t = tt(d)
+    br = 0.5 - 0.5 * np.cos(TWO_PI * t / 1.6)          # two slow breaths
+    br = 0.3 + 0.7 * br ** 1.3
+    f = nf("D1") * (1 + 0.003 * smooth_noise(d, 0.8, rng))
+    h = harmonic(f, [k ** -0.55 for k in range(1, 26)], rng) + 0.8 * harmonic(f * 1.0136, [1, 0.5, 0.3], rng)
+    dark, bright = lp(h, 200), lp(h, 1100)
+    x = dark + (bright - dark) * br ** 2                # brighter on each inhale
+    grit = lp(colored(d, rng, -6), 120) * 0.5
+    y = (_u(x) + 0.4 * _u(grit)) * br * env_swell(d, 0.35, 0.6)
+    return reverb(y, 0.25, 2.0, 2500, 1.3, seed=202)
+
+
+@reg("event/warden/tide_creep", level=-3.0)
+def sfx_warden_tide_creep(rng, i):
+    d = 2.2
+    pitch = 2 ** (curve(d, [(0, -1.0), (d, 1.0)]) / 12)
+    x = np.zeros(ns(d))
+    for m, a in ((nm("D3"), 1.0), (nm("A3"), 0.8), (nm("D4"), 0.5), (nm("F4"), 0.4)):
+        for det in (0.0, 0.004):                          # chorused pair: teal, watery
+            x += a * harmonic(mtof(m) * pitch * (1 + det), [1, 0.45, 0.25, 0.12, 0.06], rng)
+    x = lp(x, 2200)
+    sw = whoosh(d, rng, [(0, 300), (d, 3200)], [(0, 0.1), (d * 0.85, 1), (d, 0.6)], 0.9)
+    sh = _shimmer(d, rng, 3500, 9000, 13) * curve(d, [(0, 0), (d * 0.4, 0.3), (d * 0.9, 1), (d, 0.5)])
+    pings = glass_pings(d, rng, 10, 2200, 5000, (0.05, 0.15), span=d * 0.9, shape=0.6)
+    e = curve(d, [(0, 0), (d * 0.85, 1), (d, 0)]) ** 1.4
+    y = (0.7 * _u(x) + 0.55 * _u(sw) + 0.25 * _u(sh)) * e + 0.5 * _pk(pings)
+    return reverb(y, 0.3, 2.2, 5000, 1.2, seed=203)
+
+
+@reg("event/warden/tide_recede", level=-4.0)
+def sfx_warden_tide_recede(rng, i):
+    d = 1.6
+    pitch = 2 ** (curve(d, [(0, 0), (d, -1.5)]) / 12)
+    x = np.zeros(ns(d))
+    for m, a in ((nm("D3"), 1.0), (nm("A3"), 0.8), (nm("D4"), 0.5)):
+        x += a * harmonic(mtof(m) * pitch, [1, 0.45, 0.25, 0.12], rng)
+    third = mtof(nm("F4")) * pitch * 2 ** (curve(d, [(0, 0), (0.8, 0), (1.25, 1)]) / 12)   # minor -> major: relief
+    x += 0.45 * harmonic(third, [1, 0.3, 0.1], rng)
+    x = lp(x, 1800)
+    sw = whoosh(d, rng, [(0, 2800), (d, 280)], [(0, 1), (d, 0)], 0.9)
+    br = _breath(d, rng, [(0, 0.6), (0.3, 1), (d, 0)], "a", 0.6)
+    e = curve(d, [(0, 0), (0.08, 1), (d, 0)])
+    y = (0.75 * _u(x) + 0.45 * _u(sw) + 0.3 * _u(lp(br, 2500))) * e
+    return reverb(y, 0.3, 2.0, 4500, 1.2, seed=203)
+
+
+@reg("event/warden/shard_charge", level=-3.0)
+def sfx_warden_shard_charge(rng, i):
+    d = 1.0
+    t = tt(d)
+    f = 520 * 4.6 ** ((t / d) ** 1.5)
+    tone = fm_tone(d, f, 2.0, 0.5 + 0.8 * t / d) + 0.4 * np.sin(phase_of(f * 1.5))
+    trem = 1 - 0.4 * (0.5 + 0.5 * np.sin(phase_of(8 + 36 * (t / d) ** 2)))
+    nz = whoosh(d, rng, [(0, 1500), (d, 7000)], [(0, 0), (d, 1)], 0.5)
+    e = (t / d) ** 1.6 * env_swell(d, 0.0, 0.03)
+    x = np.zeros(ns(d + 1.2))
+    add_at(x, (0.7 * _u(tone) * trem + 0.4 * _u(nz)) * e, 0.0)
+    add_at(x, 0.5 * glass_pings(d, rng, 14, 2500, 6000, (0.03, 0.08), span=0.6, shape=0.7, start=0.35), 0.0)
+    add_at(x, glass_chime(f[-1] * 1.0, 0.9, 0.35, rng, 0.3), d - 0.02, 1.2)
+    return reverb(x, 0.18, 1.2, 8000, 0.7, seed=204)
+
+
+@reg("event/warden/learn", level=-2.5)
+def sfx_warden_learn(rng, i):
+    x = np.zeros(ns(3.2))
+    roar = _dragon_voice(1.25, rng, [(0, 92), (0.25, 124), (0.8, 112), (1.25, 82)], "a", "o", 0.55, 0.35, 2.2, 0.25)
+    roar = reverb(lp(roar, 1500), 0.55, 2.2, 2000, 1.4, seed=205, predelay=0.03)   # distant
+    add_at(x, roar * curve(len(roar) / SR, [(0, 1), (0.9, 1), (1.6, 0.25), (len(roar) / SR, 0)]), 0.0, 1.0)
+    d = 1.6
+    gl = glass_harm(curve(d, [(0, nf("A4")), (1.0, nf("A5")), (d, nf("A5"))], log=True), d, 0.5, 0.6, rng, 0.04)
+    add_at(x, 0.35 * _pk(gl), 0.45)
+    for k, n_ in enumerate(["D6", "E6", "A6", "D7"]):
+        add_at(x, glass_chime(nf(n_), 0.55 - 0.05 * k, 1.2, rng, 0.12), 0.85 + 0.11 * k)
+    return reverb(x, 0.28, 1.8, 7000, 1.0, seed=205)
+
+
+@reg("event/warden/gale", level=-1.5)
+def sfx_warden_gale(rng, i):
+    d = 1.6
+    mid = whoosh(d, rng, [(0, 220), (0.15, 900), (0.6, 700), (d, 280)], [(0, 0), (0.08, 1), (0.5, 0.8), (d, 0)], 1.4, 40)
+    mid *= np.clip(1 + 0.35 * smooth_noise(d, 14, rng), 0.2, 2)
+    high = whoosh(d, rng, [(0, 1500), (0.2, 4200), (d, 2000)], [(0, 0), (0.1, 0.6), (d, 0)], 0.9)
+    low = lp(colored(d, rng, -6), 180) * np.clip(1 + 0.5 * smooth_noise(d, 9, rng), 0.1, 3)
+    low *= curve(d, [(0, 0), (0.06, 1), (0.7, 0.6), (d, 0)])
+    x = _u(mid) + 0.35 * _u(high) + 0.7 * _u(low)
+    add_at(x, thump(0.5, 62, 36, 0.12, 0.05), 0.0, 1.6)          # the wingbeat behind it
+    return x
+
+
+@reg("event/warden/dive_warning", level=-1.5)
+def sfx_warden_dive_warning(rng, i):
+    d = 1.5
+    t = tt(d)
+    rum = noise_shaped(d, rng, lambda F, T: band(F, 60 * 2.6 ** (T / d), 0.9) * (F > 25), 2048)
+    sub = np.sin(phase_of(curve(d, [(0, 35), (d, 70)], log=True)))
+    pf = curve(d, [(0, 110), (d, 220)], log=True)
+    pres = lp(harmonic(pf, [0, 0.5, 0.4, 0.35, 0.25, 0.2, 0.15, 0.1], rng), 1500)   # cuts through small speakers
+    mf = curve(d, [(0, 1200), (d, 2600)], log=True)
+    mag = harmonic(mf, [1, 0.4, 0.2], rng) * (0.5 + 0.5 * np.sin(phase_of(10 + 22 * t / d)))
+    sh = _shimmer(d, rng, 3000, 8000, 18)
+    e = (t / d) ** 1.6 * env_swell(d, 0.0, 0.06)
+    x = (0.9 * _u(rum) + 0.6 * sub + 0.55 * _u(pres) + 0.6 * _u(mag) + 0.3 * _u(sh)) * e
+    return reverb(x, 0.2, 1.6, 4000, 1.2, seed=206)
+
+
+@reg("event/warden/breach", level=-1.0)
+def sfx_warden_breach(rng, i):
+    d = 2.2
+    x = np.zeros(ns(d))
+    up = whoosh(d, rng, [(0, 150), (0.35, 1200), (1.0, 3600), (d, 2500)], [(0, 0), (0.12, 1), (0.6, 0.7), (d, 0)], 1.3, 40)
+    add_at(x, _u(up), 0.0, 1.0)
+    low = lp(colored(d, rng, -6), 300) * curve(d, [(0, 0), (0.1, 1), (1.2, 0.3), (d, 0)])
+    add_at(x, _u(low), 0.0, 0.7)
+    add_at(x, thump(1.0, 72, 32, 0.3, 0.06), 0.02, 2.2)
+    spl = hp(crumble(0.9, rng, 220, 1500, 11000, (0.0004, 0.004), 1.8), 900)
+    spl += 0.5 * hp(white(0.9, rng), 2500) * env_ad(0.9, 0.003, 0.12)
+    add_at(x, _pk(spl), 0.06, 1.4)
+    add_at(x, glass_pings(1.8, rng, 40, 1500, 6000, (0.05, 0.25), span=0.7, shape=1.6), 0.08, 1.8)
+    gd = 1.6
+    rise = 2 ** (curve(gd, [(0, -5), (0.6, 0), (gd, 0)]) / 12)
+    light = sum(glass_harm(nf(n_) * rise, gd, 0.08, 1.0, rng, 0.05) for n_ in ("D6", "F#6", "A6"))
+    add_at(x, 0.5 * _pk(light) * np.max(np.abs(x[: ns(1.0)])) / 3, 0.1)
+    return reverb(x, 0.3, 2.4, 6000, 1.4, seed=207)
+
+
+@reg("event/warden/dive", level=-2.0)
+def sfx_warden_dive(rng, i):
+    d = 2.0
+    t = tt(d)
+    w = whoosh(d, rng, [(0, 3500), (0.6, 1500), (d, 150)], [(0, 0), (0.5, 0.6), (1.4, 1), (d, 0)], 1.0, 40)
+    wf = curve(d, [(0, 1400), (d, 230)], log=True)
+
+    def g(F, T):
+        return band(F, np.interp(T, t, wf), 0.08)
+    whis = _u(noise_shaped(d, rng, g, 1024)) + 0.6 * np.sin(phase_of(wf))
+    whis *= curve(d, [(0, 0), (0.6, 0.8), (1.3, 1), (d, 0)]) * (1 + 0.25 * np.sin(TWO_PI * 11 * t))
+    rum = lp(colored(d, rng, -6), 160) * (t / d) ** 2 * env_swell(d, 0, 0.15)
+    return _u(w) + 0.3 * _u(whis) + 0.6 * _u(rum)
+
+
+@reg("event/warden/release_chime", level=-3.0)
+def sfx_warden_release_chime(rng, i):
+    d = 7.0
+    x = np.zeros(ns(d))
+    for k, (n_, tm) in enumerate((("A5", 0.0), ("F#5", 0.5), ("D6", 1.0), ("D5", 1.5))):  # four crystals
+        b = mixdown(glass_chime(nf(n_), 0.75, 3.0, rng, 0.2), 0.25 * glass_harm(nf(n_), 5.5 - tm, 0.05, 2.5, rng, 0.03))
+        add_at(x, b, tm, 1.0 - 0.06 * k)
+    ch = pad_chord([nm("D3"), nm("A3"), nm("D4"), nm("F#4"), nm("A4")], 5.6, "warm", 1.6, 2.6, seed=210).mean(axis=1)
+    add_at(x, ch * 0.75 * np.std(x[: ns(2.0)]) / (np.std(ch) + 1e-9), 1.2)
+    x *= curve(d, [(0, 1), (5.2, 1), (d, 0)])
+    return reverb(x, 0.35, 3.0, 6000, 1.4, seed=210)
+
+
+@reg("event/warden/bow", level=-4.0)
+def sfx_warden_bow(rng, i):
+    d = 2.7
+    x = np.zeros(ns(d))
+    ex = lp(_breath(2.4, rng, [(0, 0), (0.25, 1), (1.0, 0.7), (2.4, 0)], "o", 0.38, 40), 1300)
+    chest = reson(white(2.4, rng), 68, 7) * np.abs(ex)
+    add_at(x, ex + 0.8 * _u(chest) * np.std(ex), 0.0)
+    hm = voice(1.8, curve(1.8, [(0, 62), (1.8, 52)], log=True), rng, "u", "u", 1.6, 0.05, 0.5, 0.5, 0.004)
+    add_at(x, 0.25 * _u(lp(hm, 500)) * env_swell(1.8, 0.3, 1.0) * np.std(ex), 0.1)
+    add_at(x, 0.3 * glass_chime(nf("D6"), 0.6, 1.6, rng, 0.05) * np.max(np.abs(ex)), 0.75)
+    add_at(x, 0.18 * glass_chime(nf("A6"), 0.6, 1.4, rng, 0.05) * np.max(np.abs(ex)), 0.95)
+    return reverb(x, 0.3, 2.5, 4000, 1.4, seed=211)
+
+
+@reg(["mob/elder_warden/call1", "mob/elder_warden/call2"], level=-3.0)
+def sfx_elder_warden_call(rng, i):
+    d = 3.0
+    pts = [[(0, 82), (0.6, 110), (1.6, 123), (2.4, 104), (d, 92)],
+           [(0, 98), (0.5, 92), (1.3, 131), (2.2, 117), (d, 87)]][i]
+    v = _dragon_voice(d, rng, pts, "o", "u", 0.5, 0.12, 1.2, 0.06, vib=0.012, vib_rate=3.2)
+    v = lp(v, 2200)
+    x = np.zeros(ns(d + 2.0))
+    add_at(x, v, 0.0)
+    fe = pts[-1][1]
+    tail = pad_note(fe * 2, 2.8, "warm", 0.9, 1.6, seed=212 + i).mean(axis=1)    # the warm tail
+    tail += 0.6 * pad_note(fe * 3, 2.8, "warm", 1.1, 1.6, seed=214 + i).mean(axis=1)
+    add_at(x, 0.35 * _u(tail) * np.std(v), 1.7)
+    return reverb(x, 0.45, 3.5, 2500, 1.6, seed=212, predelay=0.04)
+
+
+@reg("mob/lumen_heart/pulse", level=-5.0)
+def sfx_lumen_heart_pulse(rng, i):
+    d = 1.1
+    t = tt(d)
+    x = lp(thump(0.6, 82, 55, 0.12, 0.03), 300)
+    x = pad_to(x, ns(d))
+    sw = np.clip(t / 0.12, 0, 1) ** 1.5 * np.exp(-np.maximum(t - 0.12, 0) / 0.3)   # the throb
+    cr = (glass_harm(740, d, 0.01, 0.2, rng, 0.0) + 0.5 * glass_harm(1110, d, 0.01, 0.2, rng, 0.0)) * sw
+    sh = _shimmer(d, rng, 2500, 6000, 9) * sw * 0.12
+    y = _pk(x) + 0.55 * _pk(cr) + _u(sh) * 0.06
+    return reverb(y, 0.25, 1.4, 6000, 0.8, seed=213)
+
+
+@reg("mob/lumen_heart/break", level=-2.0)
+def sfx_lumen_heart_break(rng, i):
+    x = np.zeros(ns(2.6))
+    add_at(x, glass_pings(1.6, rng, 30, 700, 3000, (0.08, 0.4), span=0.35, shape=1.8,
+                          ratios=(1.0, 2.756, 5.404, 8.933)), 0.0, 1.0)
+    add_at(x, _crack(rng, 0.12, 40, 1000, 9000), 0.0, 1.2)
+    add_at(x, thump(0.3, 150, 80, 0.06), 0.0, 0.5)
+    for k, f in enumerate(np.geomspace(4200, 1300, 12)):          # falling sparkle
+        add_at(x, glass_chime(f, 0.45 - 0.025 * k, 0.22, rng, 0.05), 0.28 + 0.085 * k)
+    return reverb(x, 0.22, 1.6, 7000, 0.9, seed=214)
+
+
+# ---------------------------------------------------------------- 1.3 the Gap
+
+@reg("event/causeway_restore", level=-3.0)
+def sfx_causeway_restore(rng, i):
+    x = np.zeros(ns(4.2))
+    gd = 1.9
+    add_at(x, 0.8 * _tame(_grind(gd, rng, 100, 800, 18)) * env_swell(gd, 0.3, 0.5), 0.0, 1.0)
+    for tm, a in ((1.72, 1.0), (1.98, 0.7)):
+        add_at(x, 1.3 * _pk(stone_hits(0.4, rng, 3, 300, 900, (0.012, 0.03), span=0.02)), tm, a)
+        add_at(x, thump(0.35, 95, 55, 0.08), tm, 1.3 * a)
+    ig = _ignite(rng, 0.3)
+    add_at(x, 0.4 * _pk(ig), 2.05)
+    add_at(x, bell(1040, 1.0, rng, 0.75), 2.25, 1.5)
+    add_at(x, bell(1560, 0.8, rng, 0.8), 2.25, 0.5)
+    return reverb(x, 0.25, 2.0, 5000, 1.2, seed=220)
+
+
+@reg("block/drift_buoy_pop", level=-4.0)
+def sfx_drift_buoy_pop(rng, i):
+    x = np.zeros(ns(1.0))
+    add_at(x, bubble(0.07, 260, 620, 0.02, rng), 0.0, 1.0)
+    tube = modes(0.3, [340, 694, 1061], [0.06, 0.04, 0.025], [1.0, 0.4, 0.2], rng)
+    add_at(x, excite(lp(white(0.01, rng), 1500) * env_ad(0.01, 0.001, 0.003), tube) * 0.5, 0.0)
+    add_at(x, glass_chime(3136, 0.22, 0.5, rng, 0.05), 0.03)
+    return reverb(x, 0.15, 1.0, 6000, 0.6, seed=221)
+
+
+# ---------------------------------------------------------------- 1.4 cities and navigation
+
+@reg("mob/shulker_archivist/read", level=-5.0)
+def sfx_archivist_read(rng, i):
+    d = 1.6
+    x = np.zeros(ns(d + 1.0))
+    cr = creak(1.2, rng, [(0, 12), (0.6, 30), (1.2, 10)], [870, 1430, 2210, 3050], 0.012, 0.35,
+               [(0, 0), (0.15, 1), (1.0, 0.6), (1.2, 0)])
+    dust = crumble(1.2, rng, 60, 3000, 9000, (0.0003, 0.0015), 1.0, decay_amp=False)
+    add_at(x, _pk(cr) + 0.25 * _pk(dust), 0.0)
+    sh = _shimmer(1.3, rng, 3000, 9000, 7) * env_swell(1.3, 0.4, 0.7)
+    add_at(x, 0.12 * _pk(sh), 0.35)
+    for k in range(5):
+        add_at(x, glass_chime(rng.uniform(2500, 4500), 0.09, 0.18, rng, 0.0), 0.45 + 0.2 * k + rng.uniform(0, 0.1))
+    return reverb(x, 0.25, 1.4, 7000, 0.8, seed=222)
+
+
+@reg("mob/shulker_archivist/trade", level=-4.0)
+def sfx_archivist_trade(rng, i):
+    x = np.zeros(ns(1.4))
+    for tm, a in ((0.0, 1.0), (0.07, 0.7)):
+        f = rng.uniform(1100, 1800)
+        ir = modes(0.15, [f, f * 1.73, f * 2.61], [0.025, 0.015, 0.01], [1, 0.5, 0.25], rng)
+        add_at(x, excite(click(rng, 1.0, 9000, 300), ir), tm, a)
+    ref = np.max(np.abs(x))
+    for t0, dd, pts in ((0.2, 0.28, [(0, 128), (0.28, 142)]), (0.52, 0.55, [(0, 150), (0.2, 168), (0.55, 152)])):
+        hm = voice(dd, curve(dd, pts, log=True), rng, "m", "o", 1.4, 0.03, 0.9, 0.9, 0.004)
+        add_at(x, 0.5 * ref * _pk(lp(hm, 1800) * env_swell(dd, 0.05, dd * 0.5)), t0)
+    return reverb(x, 0.18, 1.0, 5000, 0.7, seed=223)
+
+
+@reg("block/ships_bell", level=-2.0)
+def sfx_ships_bell(rng, i):
+    x = np.zeros(ns(6.5))
+    for tm, a in ((0.0, 1.0), (0.42, 0.85)):          # ding-ding
+        add_at(x, _bronze_bell(nf("D5"), 2.2, rng, 0.7), tm, a)
+    x *= curve(6.5, [(0, 1), (5.0, 1), (6.5, 0)])
+    return reverb(x, 0.16, 1.8, 6000, 1.0, seed=224)
+
+
+@reg("event/lattice_jump", level=-3.0)
+def sfx_lattice_jump(rng, i):
+    d = 1.6
+    x = np.zeros(ns(d + 1.5))
+    w = whoosh(d, rng, [(0, 200), (0.5, 1800), (d, 600)], [(0, 0), (0.35, 1), (d, 0)], 1.1)
+    t = tt(d)
+    warb = fm_tone(d, curve(d, [(0, 300), (0.4, 700), (d, 420)], log=True), 1.5, 1.2) * \
+        (1 + 0.4 * np.sin(TWO_PI * 9 * t)) * env_swell(d, 0.3, 0.8)
+    add_at(x, _u(w) + 0.25 * _u(warb), 0.0)
+    fk = _fork(880.0, 2.6, rng, 0.0, 0.9, 0.25)
+    fk += 0.25 * _fork(1760.0, 2.6, rng, 0.0, 0.5, 0.0) + 0.12 * _fork(2640.0, 2.6, rng, 0.0, 0.35, 0.0)
+    add_at(x, 1.2 * _pk(fk) * np.max(np.abs(_u(w))), 0.28)
+    return reverb(x, 0.25, 1.8, 7000, 1.0, seed=225)
+
+
+@reg("item/tuning_fork", level=-8.0)
+def sfx_tuning_fork(rng, i):
+    x = _fork(440.0, 3.0, rng, 1.1, 0.8, 0.4)
+    add_at(x, click(rng, 0.4, 9000, 1500), 0.0, 0.3)
+    return reverb(x, 0.12, 1.0, 7000, 0.6, seed=226)
+
+
+# ---------------------------------------------------------------- 1.5 living systems
+
+@reg("event/tide_bite", level=-3.0)
+def sfx_tide_bite(rng, i):
+    x = np.zeros(ns(1.4))
+    spl = hp(crumble(0.5, rng, 90, 1500, 10000, (0.0005, 0.004), 1.8), 800)
+    add_at(x, _pk(spl), 0.0, 1.0)
+    add_at(x, thump(0.15, 210, 120, 0.03), 0.0, 0.5)
+    for k in range(4):
+        add_at(x, bubble(0.06, rng.uniform(600, 900), rng.uniform(1200, 1700), 0.015, rng), 0.03 + 0.07 * k, 0.4)
+    add_at(x, glass_pings(1.0, rng, 8, 1800, 5000, (0.05, 0.2), span=0.25), 0.0, 0.8)
+    d = 0.9
+    sh = (glass_harm(nf("D6"), d, 0.1, 0.6, rng, 0.0) + 0.6 * glass_harm(nf("A6"), d, 0.1, 0.6, rng, 0.0))
+    sh *= 1 + 0.5 * np.sin(TWO_PI * 9 * tt(d))
+    add_at(x, 0.3 * _pk(sh), 0.08)
+    return reverb(x, 0.2, 1.3, 6000, 0.8, seed=230)
+
+
+@reg("event/courier_deliver", level=-3.0)
+def sfx_courier_deliver(rng, i):
+    x = np.zeros(ns(1.3))
+    wb = _warble(0.55, rng, [(0, 170), (0.2, 260), (0.55, 140)], 1.0, 11, ("o", "a"), 1.0, 0.1)
+    add_at(x, _pk(wb), 0.0, 1.0)
+    pf = fm_tone(0.5, curve(0.5, [(0, 900), (0.5, 400)], log=True), 1.41, 2.0) * env_swell(0.5, 0.1, 0.3)
+    add_at(x, 0.15 * pf, 0.05)
+    add_at(x, thump(0.3, 140, 80, 0.05), 0.62, 0.8)
+    add_at(x, lp(crumble(0.2, rng, 15, 200, 1500, (0.002, 0.008), 2.0), 1800), 0.62, 0.4)
+    return reverb(x, 0.18, 1.2, 4000, 0.8, seed=231)
+
+
+@reg("event/starfall_streak", level=-3.0)
+def sfx_starfall_streak(rng, i):
+    x = np.zeros(ns(3.8))
+    for k, n_ in enumerate(["E6", "A6", "C#7", "E7"]):
+        add_at(x, glass_chime(nf(n_), 0.5, 0.8, rng, 0.1), 0.08 * k)
+    d = 2.9
+    t = tt(d)
+    wf = curve(d, [(0, 3400), (d, 520)], log=True) * (1 + 0.004 * np.sin(TWO_PI * 6 * t))
+
+    def g(F, T):
+        return band(F, np.interp(T, t, wf), 0.1)
+    air = _u(noise_shaped(d, rng, g, 1024))
+    tone = np.sin(phase_of(wf)) + 0.2 * np.sin(2 * phase_of(wf))
+    e = curve(d, [(0, 0), (0.4, 1), (1.8, 0.8), (d, 0)])
+    rush = whoosh(d, rng, [(0, 2500), (d, 400)], [(0, 0), (0.6, 1), (d, 0)], 1.0)
+    add_at(x, (0.5 * _u(tone) + 0.5 * air + 0.3 * _u(rush)) * e * 0.5, 0.3)
+    return reverb(x, 0.3, 2.5, 6000, 1.3, seed=232)
+
+
+@reg("event/starfall_land", level=-2.0)
+def sfx_starfall_land(rng, i):
+    x = np.zeros(ns(3.0))
+    add_at(x, thump(0.8, 95, 42, 0.18, 0.05), 0.0, 1.2)
+    add_at(x, _crack(rng, 0.1, 35, 900, 9000), 0.0, 1.0)
+    add_at(x, glass_pings(1.4, rng, 22, 1000, 4500, (0.06, 0.3), span=0.2), 0.0, 1.0)
+    d = 2.6
+    t = tt(d)
+    sh = sum(glass_harm(f, d, 0.02, 1.6, rng, 0.0) * a for f, a in ((nf("E6"), 1.0), (nf("G#6"), 0.7), (nf("B6"), 0.6)))
+    sh = _pk(sh) * np.exp(-t / 0.9) * (1 + 0.4 * np.sin(TWO_PI * 10 * t))
+    hiss = _shimmer(d, rng, 4000, 10000, 12) * np.exp(-t / 0.6)
+    add_at(x, 0.45 * sh + 0.06 * _u(hiss), 0.03)
+    return reverb(x, 0.28, 2.2, 7000, 1.2, seed=233)
+
+
+@reg("event/king_tide", level=-2.0)
+def sfx_king_tide(rng, i):
+    d = 4.3
+    t = tt(d)
+    sw = curve(d, [(0, 0), (2.7, 1), (d, 0)])
+    pitch = 2 ** ((2.0 * sw - 0.5) / 12)
+    x = np.zeros(ns(d))
+    for m, a in ((nm("D2"), 1.0), (nm("A2"), 0.8), (nm("D3"), 0.6), (nm("F3"), 0.45)):
+        x += a * harmonic(mtof(m) * pitch, [1, 0.4, 0.2, 0.1, 0.05], rng)
+    x = lp(x, 1400) + 0.6 * np.sin(phase_of(nf("D1") * pitch)) * np.std(x) * 1.4
+    wave = 0.55 + 0.45 * np.sin(TWO_PI * 0.55 * t - 1.2)
+    surf = noise_shaped(d, rng, lambda F, T: band(F, 250 * 3.0 ** np.interp(T, t, sw), 1.4) * (F > 30), 2048)
+    surf = _u(surf) * wave
+    light = pad_chord([nm("D5"), nm("A5"), nm("D6")], d, "glass", 1.5, 1.2, seed=234).mean(axis=1)
+    light = _u(light) * (1 + 0.3 * np.sin(TWO_PI * 7 * t))
+    y = (0.8 * _u(x) + 0.6 * surf + 0.22 * light * sw) * sw ** 1.3
+    return reverb(y, 0.35, 3.0, 4000, 1.6, seed=234)
+
+
+@reg("event/eclipse_begin", level=-6.0)
+def sfx_eclipse_begin(rng, i):
+    d = 4.2
+    ch = pad_chord([nm("D3"), nm("A3"), nm("F#4"), nm("E5")], d, "warm", 0.25, 0.3, seed=235).mean(axis=1)
+    air = bp(white(d, rng), 2000, 9000) * 0.2
+    full = _u(ch) + _u(air) * 0.3
+    full = stft_shape(full, lambda F, T: 1.0 / (1 + (F / (6000 * 0.025 ** np.clip(T / 3.2, 0, 1))) ** 4), 2048)
+    full *= curve(d, [(0, 0.8), (0.3, 1), (3.4, 0.0), (d, 0)]) ** 1.2
+    tone = glass_harm(nf("A5"), d, 1.6, 0.7, rng, 0.012)
+    tone *= curve(d, [(0, 0), (0.8, 0.3), (2.4, 0.75), (d, 0.75)])
+    return reverb(_u(full) + 0.4 * _u(tone), 0.3, 2.8, 5000, 1.4, seed=235)
+
+
+@reg("event/eclipse_end", level=-5.0)
+def sfx_eclipse_end(rng, i):
+    d = 3.3
+    tone = glass_harm(nf("A5"), d, 0.05, 1.2, rng, 0.012)
+    ch = pad_chord([nm("D3"), nm("A3"), nm("D4"), nm("F#4"), nm("E5")], d - 0.4, "warm", 1.4, 1.2, seed=236).mean(axis=1)
+    ch = stft_shape(ch, lambda F, T: 1.0 / (1 + (F / (200 * 30 ** np.clip(T / 2.0, 0, 1))) ** 4), 2048)
+    x = np.zeros(ns(d))
+    add_at(x, 0.8 * _u(tone), 0.0)
+    add_at(x, _u(ch), 0.4)
+    add_at(x, 0.4 * glass_chime(nf("F#6"), 0.6, 1.2, rng, 0.05) * np.max(np.abs(_u(tone))), 1.3)
+    return reverb(x, 0.32, 2.8, 5000, 1.4, seed=236)
+
+
+@reg("event/migration_calls", level=-4.0)
+def sfx_migration_calls(rng, i):
+    x = np.zeros(ns(6.5))
+    calls = [(0.0, 2.2, [(0, 150), (0.8, 215), (2.2, 170)], 1.0), (0.9, 1.8, [(0, 230), (0.6, 262), (1.8, 192)], 0.55),
+             (2.0, 2.6, [(0, 118), (1.2, 176), (2.6, 132)], 0.85), (3.3, 1.6, [(0, 198), (0.7, 250), (1.6, 212)], 0.5),
+             (4.0, 2.3, [(0, 166), (1.0, 140), (2.3, 104)], 0.7)]
+    for k, (t0, dd, pts, a) in enumerate(calls):
+        w = whale(dd, pts, rng, vib=3.2 + 0.25 * k, vib_depth=0.011)
+        add_at(x, a * _pk(lp(w, 1300)), t0)
+    bed = whoosh(6.5, rng, [(0, 250), (6.5, 400)], [(0, 0), (1.5, 1), (5.0, 1), (6.5, 0)], 1.0)
+    x += 0.05 * _u(bed)
+    return reverb(x, 0.55, 4.0, 2000, 1.8, seed=237)
+
+
+@reg("block/tide_bell", level=-3.0)
+def sfx_tide_bell(rng, i):
+    x = _bronze_bell(nf("A5"), 0.8, rng, 0.85)
+    add_at(x, 0.25 * glass_chime(nf("A6") * 1.5, 0.8, 0.6, rng, 0.05), 0.0)   # the teal glassy edge
+    return reverb(x, 0.2, 1.4, 7000, 0.8, seed=238)
+
+
+@reg("block/gravity_plate", level=-5.0)
+def sfx_gravity_plate(rng, i):
+    d = 1.0
+    t = tt(d)
+    w = whoosh(d, rng, [(0, 250), (d * 0.7, 1400), (d, 1800)], [(0, 0), (0.5, 1), (d, 0)], 0.8)
+    f = curve(d, [(0, 180), (d, 360)], log=True) * (1 + 0.03 * np.sin(TWO_PI * 8 * t))
+    tone = (np.sin(phase_of(f)) + 0.3 * np.sin(2 * phase_of(f))) * env_swell(d, 0.15, 0.4)
+    return reverb(_u(w) + 0.45 * _u(tone), 0.15, 1.0, 5000, 0.7, seed=239)
+
+
+@reg("mob/lantern_moth/flutter", level=-9.0)
+def sfx_lantern_moth(rng, i):
+    d = 0.45
+    x = np.zeros(ns(d + 0.05))
+    tm = 0.0
+    while tm < d:
+        frac = tm / d
+        b = bp(white(0.012, rng), 1800, 7000) * env_ad(0.012, 0.001, 0.003)
+        add_at(x, b, tm, rng.uniform(0.4, 1.0) * np.sin(np.pi * min(1.0, frac * 1.1)) ** 0.6)
+        tm += 1 / 26.0 * rng.uniform(0.8, 1.2)
+    puff = lp(white(d, rng), 500) * env_swell(d, 0.05, 0.2) * 0.04
+    add_at(x, puff, 0.0)
+    return x
+
+
+@reg("mob/mirrorfish_flop", level=-5.0)
+def sfx_mirrorfish_flop(rng, i):
+    x = np.zeros(ns(0.8))
+    for tm, a in ((0.0, 1.0), (0.18, 0.5)):
+        add_at(x, thump(0.12, 320, 190, 0.025), tm, a)
+        add_at(x, bp(white(0.05, rng), 600, 3000) * env_ad(0.05, 0.001, 0.01), tm, 0.6 * a)
+        add_at(x, glass_chime(2489 * (1 + 0.05 * tm), 0.35, 0.35, rng, 0.1), tm + 0.005, 0.5 * a)
+        add_at(x, glass_chime(3729, 0.2, 0.25, rng, 0.05), tm + 0.012, 0.5 * a)
+    return x
+
+
+# ---------------------------------------------------------------- 1.6 the Zenith
+
+def _leviathan_song(d, rng, pts):
+    w = whale(d, pts, rng, vib=2.6, vib_depth=0.01, vowel="u", vowel2="o", fscale=0.42, tilt_exp=1.4,
+              breath=0.03, sub=0.45)
+    ov = whale(d, [(a, b * 1.5) for a, b in pts], rng, vib=2.6, vib_depth=0.008, vowel="o", vowel2="u",
+               fscale=0.5, tilt_exp=1.6, breath=0.02, sub=0.0)
+    return lp(_u(w) + 0.25 * _u(ov), 1800)
+
+
+@reg("mob/leviathan/song", level=-2.0)
+def sfx_leviathan_song(rng, i):
+    d = 6.0
+    x = _leviathan_song(d, rng, [(0, 205), (0.8, 220), (2.2, 196), (4.5, 130), (d, 108)])
+    y = reverb(x, 0.45, 4.0, 2500, 1.9, seed=240)
+    return y * curve(len(y) / SR, [(0, 1), (8.5, 1), (len(y) / SR, 0)])
+
+
+@reg(["mob/leviathan/ambient1", "mob/leviathan/ambient2"], level=-4.0)
+def sfx_leviathan_ambient(rng, i):
+    d = [3.2, 3.8][i]
+    f = curve(d, [(0, 38 + 3 * i), (d, 34 + 2 * i)], log=True)
+    sub = np.sin(phase_of(f))
+    rum = lp(colored(d, rng, -6), 110) * np.clip(1 + 0.4 * smooth_noise(d, 1.5, rng), 0.2, 2)
+    ov = whale(d, [(0, f[0] * 5), (d * 0.5, f[0] * 5.3), (d, f[-1] * 5)], rng, vib=2.0, vib_depth=0.006,
+               vowel="u", vowel2="u", fscale=0.45, tilt_exp=1.8, breath=0.02, sub=0.0)
+    x = (sub + 0.6 * _u(rum)) * env_swell(d, 0.8, 1.2) + 0.9 * _u(lp(ov, 1200)) * env_swell(d, 1.0, 1.2)
+    return reverb(x, 0.3, 3.0, 2000, 1.6, seed=241)
+
+
+@reg(["mob/gale_harrier/screech1", "mob/gale_harrier/screech2"], level=-3.0)
+def sfx_harrier_screech(rng, i):
+    d, pts = [(0.75, [(0, 2600), (0.08, 3300), (0.3, 3100), (0.75, 2100)]),
+              (0.6, [(0, 2900), (0.1, 3550), (0.6, 2300)])][i]
+    x = np.zeros(ns(1.2))
+    add_at(x, _screech(d, rng, pts, 0.5, 0.6), 0.0)
+    wind = whoosh(1.1, rng, [(0, 800), (0.4, 2500), (1.1, 1200)], [(0, 0), (0.3, 1), (1.1, 0)], 1.0)
+    add_at(x, 0.25 * _u(wind) * np.std(x[: ns(d)]), 0.0)
+    return reverb(x, 0.2, 1.6, 7000, 1.0, seed=242)
+
+
+@reg("mob/gale_harrier/dive", level=-3.0)
+def sfx_harrier_dive(rng, i):
+    d = 1.1
+    t = tt(d)
+    wf = curve(d, [(0, 3200), (d, 900)], log=True)
+
+    def g(F, T):
+        return band(F, np.interp(T, t, wf), 0.09)
+    whis = 0.8 * np.sin(phase_of(wf)) + 0.6 * _u(noise_shaped(d, rng, g, 512))
+    w = whoosh(d, rng, [(0, 2500), (d, 600)], [(0, 0), (0.75, 1), (d, 0)], 1.0)
+    e = curve(d, [(0, 0), (0.8, 1), (d, 0)]) ** 1.4
+    return reverb((0.6 * whis + 0.6 * _u(w)) * e, 0.15, 1.2, 7000, 0.8, seed=243)
+
+
+@reg("mob/gale_harrier/hurt", level=-3.0)
+def sfx_harrier_hurt(rng, i):
+    x = _screech(0.32, rng, [(0, 3000), (0.05, 3800), (0.32, 2600)], 0.8, 0.7)
+    return reverb(x, 0.12, 0.9, 7000, 0.7, seed=244)
+
+
+@reg("mob/gale_harrier/death", level=-3.0)
+def sfx_harrier_death(rng, i):
+    x = np.zeros(ns(2.4))
+    d = 1.1
+    s = _screech(d, rng, [(0, 3200), (0.15, 3500), (d, 900)], 0.7, 0.8, 700) * curve(d, [(0, 1), (0.5, 0.8), (d, 0)])
+    add_at(x, s, 0.0)
+    w = whoosh(1.8, rng, [(0, 1800), (1.8, 400)], [(0, 0), (0.4, 1), (1.8, 0)], 1.1)
+    add_at(x, 0.45 * _u(w) * np.std(s), 0.5)
+    return reverb(x, 0.2, 1.6, 6000, 1.0, seed=245)
+
+
+@reg("event/sky_current", level=-4.0)
+def sfx_sky_current(rng, i):
+    d = 1.6
+    x = np.zeros(ns(d + 1.5))
+    rush = whoosh(d, rng, [(0, 500), (0.7, 2200), (d, 1200)], [(0, 0), (0.8, 1), (d, 0)], 1.2)
+    body = lp(whoosh(d, rng, [(0, 200), (d, 400)], [(0, 0), (0.8, 1), (d, 0)], 1.0), 600)
+    add_at(x, _u(rush) + 0.4 * _u(body), 0.0)
+    for k, n_ in enumerate(["E6", "G#6", "B6", "E7"]):            # gold: a warm major glint
+        add_at(x, 0.5 * glass_chime(nf(n_), 0.45, 0.9, rng, 0.05), 0.4 + 0.11 * k)
+    sh = _shimmer(1.2, rng, 4000, 10000, 15) * env_swell(1.2, 0.3, 0.7)
+    add_at(x, 0.2 * _u(sh), 0.3)
+    return reverb(x, 0.22, 1.8, 7000, 1.0, seed=246)
+
+
+@reg("block/orrery_turn", level=-3.0)
+def sfx_orrery_turn(rng, i):
+    d = 3.2
+    x = np.zeros(ns(d + 0.5))
+    g = _grind(d, rng, 70, 600, 10) * env_swell(d, 0.4, 0.8)
+    ring = creak(d, rng, [(0, 9), (d * 0.5, 12), (d, 8)], [61, 97, 155, 236], 0.25, 0.3)
+    add_at(x, _u(g) + 0.6 * _u(lp(ring, 500)) * env_swell(d, 0.4, 0.8), 0.0)
+    tm = 0.2
+    while tm < d - 0.3:
+        add_at(x, _pk(_clank(rng, rng.uniform(1900, 2300), 0.03)), tm, 0.9)
+        add_at(x, click(rng, 0.4, 8000, 800), tm, 0.4)
+        tm += 0.36
+    return reverb(x, 0.25, 2.2, 3500, 1.5, seed=247)
+
+
+@reg("block/orrery_align", level=-2.5)
+def sfx_orrery_align(rng, i):
+    d = 5.5
+    x = np.zeros(ns(d + 0.5))
+    deep = pad_chord([nm("D2"), nm("A2"), nm("D3")], d, "warm", 1.2, 1.5, seed=248).mean(axis=1)
+    deep = _u(deep) + 0.3 * _u(bowed_metal(nf("D3"), d, rng, 1.0, 1.5, 0.3))
+    add_at(x, deep, 0.0)
+    for k, (n_, tm) in enumerate((("A3", 0.8), ("D4", 1.4), ("F#4", 2.0), ("A4", 2.5), ("D5", 3.0))):
+        gh = glass_harm(nf(n_), d - tm, 0.5, 1.3, rng, 0.02)
+        add_at(x, 0.45 * _u(gh), tm)
+    for k, n_ in enumerate(["D6", "F#6", "A6", "D7"]):           # the star
+        add_at(x, 2.2 * glass_chime(nf(n_), 0.7, 1.4, rng, 0.12), 3.4 + 0.07 * k)
+    add_at(x, 1.4 * bell(nf("D7"), 1.5, rng, 0.8), 3.4)
+    sh = _shimmer(1.8, rng, 4000, 10000, 14) * env_swell(1.8, 0.05, 1.2)
+    add_at(x, 0.25 * _u(sh), 3.4)
+    return reverb(x, 0.3, 3.0, 6000, 1.5, seed=248)
+
+
+# ---------------------------------------------------------------- 2.0 the Undertow and the Restoration
+
+def _eel_hiss(d, rng, lo=3500, hi=7000):
+    return noise_shaped(d, rng, lambda F, T: band(F, math.sqrt(lo * hi), 0.7) + 0.6 * band(F, 2800, 0.04)
+                        + 0.4 * band(F, 4150, 0.03), 1024)
+
+
+@reg(["mob/tide_eel/ambient1", "mob/tide_eel/ambient2"], level=-5.0)
+def sfx_tide_eel_ambient(rng, i):
+    d = [2.0, 2.4][i]
+    t = tt(d)
+    hiss = _u(_eel_hiss(d, rng)) * env_swell(d, 0.6, 0.9) * (1 + 0.25 * np.sin(TWO_PI * 1.2 * t))
+    wet = squelch(d, rng, [(0, 400), (d * 0.5, 900), (d, 500)], 0.5, [(0, 0), (0.5 * d, 1), (d, 0)])
+    x = hiss + 0.35 * _u(wet)
+    for k in range(2 + i):
+        add_at(x, bubble(0.08, rng.uniform(500, 800), rng.uniform(1000, 1500), 0.03, rng), rng.uniform(0.3, d - 0.4), 0.8)
+    add_at(x, 0.3 * glass_pings(d, rng, 3, 2500, 4500, (0.1, 0.25), span=d * 0.6, start=0.3), 0.0)
+    return reverb(x, 0.25, 1.6, 4000, 0.9, seed=250)
+
+
+@reg("mob/tide_eel/drain", level=-4.0)
+def sfx_tide_eel_drain(rng, i):
+    d = 1.1
+    t = tt(d)
+    f = curve(d, [(0, 102), (d, 86)], log=True)
+    amps = [(1.0 if k % 2 else 0.35) / k for k in range(1, 41)]
+    buzz = lp(harmonic(f, amps, rng), 3500) * (1 + 0.4 * np.sin(TWO_PI * 13 * t))
+    suck = whoosh(d, rng, [(0, 2600), (d, 350)], [(0, 0.2), (d * 0.9, 1), (d, 0)], 0.7)
+    e = np.clip(t / d, 0, 1) ** 0.8 * env_swell(d, 0.02, 0.08)
+    return reverb((_u(buzz) + 0.7 * _u(suck)) * e, 0.15, 1.0, 4000, 0.7, seed=251)
+
+
+@reg("mob/tide_eel/hurt", level=-3.0)
+def sfx_tide_eel_hurt(rng, i):
+    d = 0.4
+    x = bp(white(d, rng), 2500, 9000) * env_ad(d, 0.002, 0.08)
+    add_at(x, 0.6 * glass_pings(d, rng, 5, 2500, 6000, (0.04, 0.12), span=0.05), 0.0)
+    sq = glass_harm(curve(d, [(0, 2400), (d, 1800)], log=True), d, 0.01, 0.25, rng, 0.0)
+    add_at(x, 0.4 * _pk(sq) * np.max(np.abs(x)), 0.0)
+    return reverb(x, 0.15, 1.0, 6000, 0.7, seed=252)
+
+
+@reg("mob/tide_eel/death", level=-3.0)
+def sfx_tide_eel_death(rng, i):
+    d = 2.6
+    hiss = noise_shaped(d, rng, lambda F, T: band(F, 3000 * 2.6 ** (T / d), 0.6), 1024)
+    hiss = _u(hiss) * curve(d, [(0, 0), (0.05, 1), (d, 0)]) ** 1.5
+    dens = curve(d, [(0, 0.04), (d, 0.0005)])
+    gr = bp((rng.random(ns(d)) < dens) * rng.standard_normal(ns(d)), 2000, 9000)
+    x = hiss * (0.4 + 0.6 * np.clip(curve(d, [(0, 1), (d, 0.2)]), 0, 1)) + 0.8 * _u(gr) * curve(d, [(0, 1), (d, 0)])
+    add_at(x, 0.35 * np.max(np.abs(x)) * _pk(glass_pings(d, rng, 10, 2000, 5000, (0.05, 0.2), span=d * 0.9, shape=1.5)), 0.0)
+    return reverb(x, 0.25, 1.8, 5000, 1.0, seed=253)
+
+
+def _whisper_line(d, rng, n_syl, fs=1.0):
+    """Unintelligible whispered phrase: consonant puffs and whispered vowels."""
+    x = np.zeros(ns(d + 0.3))
+    tm = 0.05
+    vowels = ["a", "e", "i", "o", "u"]
+    for k in range(n_syl):
+        if tm > d - 0.2:
+            break
+        cd = rng.uniform(0.03, 0.08)
+        lo, hi = [(3500, 8000), (1800, 4500), (1000, 6000)][rng.integers(3)]
+        add_at(x, bp(white(cd, rng), lo, hi) * env_swell(cd, 0.008, cd * 0.6) * rng.uniform(0.25, 0.6), tm)
+        vd = rng.uniform(0.14, 0.3)
+        v1, v2 = vowels[rng.integers(5)], vowels[rng.integers(5)]
+        w = _whisper(vd, rng, v1, v2, fs * rng.uniform(0.92, 1.12), fs * rng.uniform(0.92, 1.12),
+                     [(0, 0), (0.25 * vd, 1), (vd, 0)], 300, 0.3)
+        add_at(x, 0.5 * w, tm + cd * 0.7)
+        tm += cd + vd + rng.uniform(0.02, 0.12)
+    return x
+
+
+@reg(["mob/drowned_ascendant/whisper1", "mob/drowned_ascendant/whisper2"], level=-6.0)
+def sfx_ascendant_whisper(rng, i):
+    d = [2.1, 2.5][i]
+    x = _whisper_line(d, rng, [7, 9][i], 1.0 - 0.05 * i)
+    t = tt(len(x) / SR)
+    muff = lp(x, 900) + (lp(x, 2200) - lp(x, 900)) * (0.5 + 0.5 * np.sin(TWO_PI * 0.7 * t + i))   # under water
+    return reverb(muff, 0.5, 3.0, 1800, 1.4, seed=254)
+
+
+@reg(["mob/void_bell/creak1", "mob/void_bell/creak2"], level=-3.0)
+def sfx_void_bell_creak(rng, i):
+    d = [1.8, 2.2][i]
+    pts = [[(0, 10), (0.6, 45), (1.2, 22), (d, 8)], [(0, 14), (0.5, 9), (1.3, 50), (d, 10)]][i]
+    x = _metal_creak(d, rng, pts, 1.0 + 0.06 * i, 0.07, [(0, 0), (0.2, 1), (d * 0.8, 0.7), (d, 0)])
+    x = _pk(x)
+    add_at(x, 0.5 * _pk(_clank(rng, 690 + 60 * i, 0.12)), rng.uniform(0.4, d - 0.6))     # a stress ping
+    return reverb(lp(x, 4000), 0.2, 1.2, 3500, 0.6, seed=255)
+
+
+@reg("mob/void_bell/move", kind="sfxloop", level=-8.0)
+def sfx_void_bell_move(rng, i):
+    d = 2.0
+    n = ns(d)
+    t = np.arange(n) / SR
+    # every frequency completes a whole number of cycles in 2 s -> seamless loop
+    x = (np.sin(TWO_PI * 55.0 * t) + 0.25 * np.sin(TWO_PI * 55.5 * t + 0.7) + 0.55 * np.sin(TWO_PI * 110 * t + 0.4)
+         + 0.4 * np.sin(TWO_PI * 165 * t + 1.1) + 0.25 * np.sin(TWO_PI * 220.5 * t + 2.0)
+         + 0.12 * np.sin(TWO_PI * 330 * t) + 0.05 * np.sin(TWO_PI * 440.5 * t))
+    x *= 1 + 0.08 * np.cos(TWO_PI * 1.0 * t)
+    nz = np.fft.irfft(np.fft.rfft(rng.standard_normal(n)) * band(np.fft.rfftfreq(n, 1 / SR), 160, 0.5), n)
+    return x + 0.5 * nz / (np.std(nz) + 1e-9) * 0.15
+
+
+@reg("mob/void_bell/lamp", level=-8.0)
+def sfx_void_bell_lamp(rng, i):
+    x = np.zeros(ns(1.6))
+    add_at(x, click(rng, 0.5, 9000, 800), 0.0, 1.0)
+    add_at(x, 0.4 * _pk(_clank(rng, 3200, 0.008)), 0.0)
+    add_at(x, click(rng, 0.4, 7000, 600), 0.014, 0.6)
+    add_at(x, glass_chime(nf("E6"), 0.55, 0.6, rng, 0.05), 0.02)
+    add_at(x, 0.1 * glass_harm(nf("E6"), 0.8, 0.05, 0.6, rng, 0.0), 0.02)
+    return reverb(x, 0.18, 1.0, 6000, 0.6, seed=256)
+
+
+@reg("event/maw_open", level=-2.5)
+def sfx_maw_open(rng, i):
+    d = 4.2
+    sp = _spiral(d, rng, [(0, 0.0), (d, -(0.12 * d + 0.06 * d * d))], nf("D2"), 6, 3.0, 1.1, 0.6)
+    whirl = lp(colored(d, rng, -6), 140) * (1 + 0.5 * np.sin(phase_of(curve(d, [(0, 0.5), (d, 3.0)]))))
+    e = curve(d, [(0, 0), (2.8, 1), (3.6, 0.9), (d, 0)]) ** 1.5
+    return reverb((_u(sp) + 0.5 * _u(whirl)) * e, 0.35, 2.8, 4000, 1.5, seed=257)
+
+
+@reg("event/maw_pull", level=-2.0)
+def sfx_maw_pull(rng, i):
+    d = 2.1
+    w = whoosh(d, rng, [(0, 2600), (1.2, 500), (d, 110)], [(0, 0.2), (0.4, 1), (1.7, 0.9), (d, 0)], 1.2, 30)
+    sub = np.sin(phase_of(curve(d, [(0, 90), (d, 28)], log=True))) * curve(d, [(0, 0), (0.8, 0.7), (1.8, 1), (d, 0)])
+    rush = lp(colored(d, rng, -6), 250) * curve(d, [(0, 0), (0.3, 1), (d, 0)])
+    return reverb(_u(w) + 0.8 * sub + 0.6 * _u(rush), 0.25, 2.0, 2500, 1.4, seed=258)
+
+
+@reg("block/archive_read", level=-5.0)
+def sfx_archive_read(rng, i):
+    d = 2.1
+    x = np.zeros(ns(d + 1.0))
+    sh = _shimmer(d, rng, 3000, 9000, 7) * env_swell(d, 0.4, 0.9)
+    add_at(x, 0.25 * _u(sh), 0.0)
+    for k in range(6):
+        add_at(x, 2.0 * glass_chime(rng.uniform(2500, 5000), 0.3, 0.3, rng, 0.0), rng.uniform(0.15, 1.6))
+    md = 1.6
+    mur = voice(md, curve(md, [(0, 122), (0.5, 136), (1.0, 118), (md, 110)], log=True), rng, "m", "o",
+                1.6, 0.15, 0.9, 0.95, 0.006)
+    mur = lp(mur, 1400) * env_swell(md, 0.3, 0.6)
+    add_at(x, 0.6 * _u(mur), 0.25)
+    return reverb(x, 0.35, 2.2, 6000, 1.2, seed=259)
+
+
+@reg("event/restoration_stage", level=-3.0)
+def sfx_restoration_stage(rng, i):
+    d = 5.6
+    x = np.zeros(ns(d + 0.5))
+    entries = (("D2", 0.0), ("A2", 0.4), ("F#3", 0.9), ("A3", 1.4), ("D4", 1.9), ("E4", 2.4), ("A4", 2.9))
+    for k, (n_, tm) in enumerate(entries):
+        p = pad_note(nf(n_), d - tm, "warm", 1.2, 1.8, seed=260 + k).mean(axis=1)
+        add_at(x, (1.0 if k < 2 else 0.7) * _u(p), tm)
+    for n_, tm in (("D5", 1.6), ("A5", 2.4), ("F#5", 3.2)):          # distant bells
+        b = lp(bell(nf(n_), 1.6, rng, 0.8), 2500)
+        add_at(x, 1.4 * b, tm)
+    add_at(x, 0.5 * _u(glass_harm(nf("D6"), d - 3.2, 1.0, 1.4, rng, 0.02)), 3.2)
+    return reverb(x, 0.35, 3.2, 5000, 1.5, seed=260)
+
+
+# ---------------------------------------------------------------- ambience: the Zenith and the Undertow
+
+def _circular_lp(x, f, order=2):
+    n = len(x)
+    y = lp(np.concatenate([x, x, x], axis=0), f, order)
+    return y[n: 2 * n]
+
+
+@reg("ambient/zenith_loop", kind="loop", level=AMB_LEVEL)
+def amb_zenith(rng, i):
+    L = 32.0
+    d = L + LOOP_XF
+    wg = _wind_gain(rng, d, 1400, 3800, 1.0, -1.0, 0.07)
+    tg = np.arange(ns(d)) / SR
+    glints = []
+    for k, fq in enumerate((nf("B6"), nf("E7"), nf("F#7"), nf("A7"))):
+        amp = np.clip(smooth_noise(d, 0.09, rng) - 0.2, 0, None) ** 1.5
+        glints.append((fq, amp))
+
+    def g(F, T):
+        x = wg(F, T)
+        for fq, amp in glints:
+            x = x + 0.35 * band(F, fq, 0.008) * np.interp(T, tg, amp)
+        return x
+    wind = xfade_bed(stereo_bed(d, rng, g, 4096), L)
+    wind /= np.std(wind) + 1e-9
+    body = xfade_bed(stereo_bed(d, rng, _wind_gain(rng, d, 350, 800, 1.0, -3.0, 0.05), 4096), L)
+    body /= np.std(body) + 1e-9
+    n = ns(L)
+    pad = np.zeros((n, 2))
+    for k, (m, a) in enumerate(((nm("A4"), 1.0), (nm("E5"), 0.8), (nm("B5"), 0.5), (nm("F#6"), 0.25))):
+        p = periodic_pad(mtof(m), L, "glass", seed=270 + k)
+        pad += a * p * (1 + 0.35 * periodic_smooth_noise(n, 2 + k, rng))[:, None]
+    pad /= np.std(pad) + 1e-9
+    x = 0.6 * wind + 0.25 * body + 0.22 * pad
+    return circ_reverb(x, 0.3, 3.0, 8000, 1.3, seed=270)
+
+
+@reg("ambient/zenith_add1", kind="add", level=ADD_LEVEL)
+def add_zenith1(rng, i):
+    x = _leviathan_song(5.5, rng, [(0, 190), (0.9, 205), (2.4, 176), (5.5, 98)])
+    return reverb(lp(x, 1100), 0.7, 4.0, 2000, 1.8, seed=271)
+
+
+@reg("ambient/zenith_add2", kind="add", level=ADD_LEVEL)
+def add_zenith2(rng, i):
+    x = np.zeros(ns(3.5))
+    for k, n_ in enumerate(["B6", "E7", "G#6", "B7", "E7", "G#7"]):
+        add_at(x, glass_chime(nf(n_), 0.45 - 0.04 * k, 0.9, rng, 0.04), 0.14 * k + rng.uniform(0, 0.05))
+    sh = _shimmer(2.2, rng, 4500, 11000, 11) * env_swell(2.2, 0.4, 1.2)
+    add_at(x, 0.08 * _u(sh), 0.1)
+    return reverb(x, 0.4, 2.5, 8000, 1.2, seed=271)
+
+
+@reg("ambient/undertow_loop", kind="loop", level=AMB_LEVEL)
+def amb_undertow(rng, i):
+    L = 30.0
+    n = ns(L)
+    t = np.arange(n) / SR
+    # the tide's hum (as in event/tide_stir) heard from inside: A1 and its beating partner
+    hum = (np.sin(TWO_PI * int_freq(55.0, L) * t) + 0.7 * np.sin(TWO_PI * int_freq(58.3, L) * t + 1.0)
+           + 0.45 * np.sin(TWO_PI * int_freq(110.4, L) * t + 0.3) + 0.22 * np.sin(TWO_PI * int_freq(165.0, L) * t)
+           + 0.12 * np.sin(TWO_PI * int_freq(220.6, L) * t + 2.0) + 0.06 * np.sin(TWO_PI * int_freq(330.0, L) * t))
+    hum *= 1 + 0.25 * periodic_smooth_noise(n, 3, rng)
+    hum = np.stack([hum, np.roll(hum, ns(0.017))], axis=1)
+    hum /= np.std(hum) + 1e-9
+    deep = np.zeros((n, 2))
+    for k, (m, a) in enumerate(((nm("D2"), 1.0), (nm("A2"), 0.7), (nm("F3"), 0.35))):
+        p = periodic_pad(mtof(m), L, "deep", seed=280 + k)
+        deep += a * p * (1 + 0.3 * periodic_smooth_noise(n, 2 + k, rng))[:, None]
+    deep /= np.std(deep) + 1e-9
+    d = L + LOOP_XF
+    wash = xfade_bed(stereo_bed(d, rng, _wind_gain(rng, d, 120, 380, 1.2, -6.0, 0.06), 4096), L)
+    wash /= np.std(wash) + 1e-9
+    light = np.zeros((n, 2))
+    for k, m in enumerate((nm("A5"), nm("D6"))):
+        light += periodic_pad(mtof(m), L, "glass", seed=283 + k) * (0.5 + 0.5 * periodic_smooth_noise(n, 3, rng))[:, None]
+    light /= np.std(light) + 1e-9
+    x = 0.8 * hum + 0.6 * deep + 0.45 * wash
+    x = _circular_lp(x, 800, 2) + 0.035 * _circular_lp(light, 2500)     # heavy, muffled; a faint glow above
+    return circ_reverb(x, 0.35, 3.0, 1200, 1.4, seed=280)
+
+
+@reg("ambient/undertow_loop_add1", kind="add", level=ADD_LEVEL)
+def add_undertow1(rng, i):
+    d = 2.4
+    x = _metal_creak(d, rng, [(0, 8), (0.8, 30), (1.6, 16), (d, 6)], 0.85, 0.08, [(0, 0), (0.4, 1), (1.8, 0.6), (d, 0)])
+    return reverb(lp(x, 1500), 0.6, 3.5, 1500, 1.6, seed=281)
+
+
+@reg("ambient/undertow_loop_add2", kind="add", level=ADD_LEVEL)
+def add_undertow2(rng, i):
+    x = np.zeros(ns(5.0))
+    for c, (t0, chord) in enumerate(((0.0, ("D4", "F4", "A4", "E5")), (2.0, ("Bb3", "D4", "F4", "A4")))):
+        for k in range(9):
+            m = chord[k % len(chord)]
+            f1 = nf(m)
+            add_at(x, bubble(rng.uniform(0.08, 0.14), f1 * 0.72, f1, 0.05, rng), t0 + 0.08 * k + rng.uniform(0, 0.05),
+                   rng.uniform(0.5, 1.0))
+        hold = sum(glass_harm(nf(m), 2.4, 0.4, 1.4, rng, 0.02) for m in chord)
+        add_at(x, 0.12 * _pk(hold), t0 + 0.1)
+    return reverb(lp(x, 2200), 0.45, 3.0, 2000, 1.4, seed=282)
+
+
+# ---------------------------------------------------------------- music: instruments
+
+def _brass(m, d, rng, vel=0.5, attack=1.2, release=1.5, bright=0.5, vib=0.003, ens=3):
+    """Low brass-like pad voice: buzzy harmonic ensemble whose brightness follows the swell."""
+    f = mtof(m)
+    t = tt(d)
+    nh = int(max(1, min(28, NYQ * 0.85 / f)))
+    amps = [k ** -0.95 for k in range(1, nh + 1)]
+    out = np.zeros(len(t))
+    ve = np.clip(t / 1.5, 0, 1)
+    for e in range(ens):
+        det = (e - (ens - 1) / 2) * 0.003
+        ff = f * (1 + det) * (1 + vib * ve * np.sin(TWO_PI * (4.4 + 0.37 * e) * t + rng.uniform(0, TWO_PI))
+                              + 0.0012 * smooth_noise(d, 1.5, rng))
+        out += harmonic(ff, amps, rng)
+    out = _u(out)
+    env = env_swell(d, attack, release, 1.2)
+    dark = lp(out, 260 + 300 * bright, 2)
+    brt = lp(out, 700 + 1800 * bright, 2)
+    return (dark + (brt - dark) * env ** 2) * env * vel
+
+
+def _call_phrase(notes, rng, glide=0.32, vowels=("o", "a"), fscale=0.8, vib=0.011, bright=0.6):
+    """Portamento lead (a horn crossed with a dragon's voice).
+
+    notes: [(t, midi, dur, slur)] in seconds; slurred notes glide in without re-articulation."""
+    t0 = notes[0][0]
+    d = notes[-1][0] + notes[-1][2] - t0
+    t = tt(d)
+    fp, ap = [], [(0, 0.0)]
+    since = np.zeros(len(t))
+    prev = None
+    for k, (tn, m, du, slur) in enumerate(notes):
+        a = tn - t0
+        f = mtof(m)
+        if prev is None:
+            fp.append((a, f))
+            ap.append((min(0.25, du * 0.3), 1.0))
+        else:
+            g = min(glide, du * 0.5) if slur else 0.05
+            fp += [(a, prev), (a + g, f)]
+            if not slur:
+                ap += [(a - 0.06, 1.0), (a, 0.55), (a + 0.14, 1.0)]
+        i0 = ns(a)
+        since[i0:] = t[: len(t) - i0]
+        prev = f
+    fp.append((d, prev))
+    ap += [(d - min(1.2, 0.4 * notes[-1][2]), 1.0), (d, 0.0)]
+    f = curve(d, fp, log=True)
+    f = f * (1 + vib * np.clip((since - 0.35) / 0.8, 0, 1) * np.sin(TWO_PI * 4.6 * t + 0.4 * np.sin(TWO_PI * 0.3 * t)))
+    f = f * (1 + 0.002 * smooth_noise(d, 3, rng))
+    nh = int(min(40, NYQ * 0.8 / max(np.min(f), 30)))
+    src = harmonic(f, [k ** -1.05 for k in range(1, nh + 1)], rng)
+    src += 0.6 * harmonic(f * 1.004, [k ** -1.1 for k in range(1, nh + 1)], rng)
+    v1, v2 = vowels
+
+    def g(F, T):
+        w = 0.5 + 0.5 * np.sin(TWO_PI * T / max(d, 1.0) * 1.5)
+        return 0.35 + (1 - w) * formant_gain(F / fscale, v1, 1.0, 0.05) + w * formant_gain(F / fscale, v2, 1.0, 0.05)
+    y = stft_shape(_u(src), g, 2048)
+    y = lp(y, 900 + 2200 * bright, 2)
+    amp = np.clip(curve(d, ap), 0, 1)
+    return _u(y) * amp
+
+
+def _war_drum(rng, f=55.0):
+    d = 2.2
+    x = thump(d, f * 1.6, f, 0.5, 0.04, 0.004) + 0.3 * thump(d, f * 2.7, f * 2.3, 0.12, 0.03)
+    skin = lp(white(0.15, rng), 900) * env_ad(0.15, 0.002, 0.03) * 0.4
+    x[: len(skin)] += skin
+    return lp(x, 1200)
+
+
+def _airbell(m, vel=0.5, decay=2.2, rng=None):
+    """Airy glass bell for the Zenith: glass bar plus a faint bright octave."""
+    f = mtof(m)
+    x = glass_chime(f, vel, decay, rng, 0.08)
+    x2 = bell(f * 2, decay * 0.45, rng, 0.9) * vel * 0.1
+    return mixdown(x, x2)
+
+
+def _play_cells_with(song, cells, t0, spb, inst, shift=0, p=0.1, gain=1.0, rising=False, send=0.45, double=None):
+    for b, top in enumerate(cells):
+        notes = ladder_cell(top)
+        if rising:
+            notes = notes[::-1]
+        tb = t0 + b * 4 * spb
+        acc = 0.0
+        for k, (m, du) in enumerate(zip(notes, CELL_RHYTHM)):
+            v = 1.0 if k == 0 else 0.85
+            song.add(inst(m + shift, v, du * spb), tb + acc * spb, p, gain, send)
+            if double is not None:
+                song.add(double(m + shift, du * spb), tb + acc * spb, -p, gain, send + 0.2)
+            acc += du
+
+
+# ---------------------------------------------------------------- music: Warden (disc)
+
+WARDEN_V = {   # bass first, then the upper brass voicing
+    "D5": ["D2", "A2", "D3"], "Dm": ["D2", "A2", "D3", "F3"], "Bb": ["Bb1", "F2", "Bb2", "D3"],
+    "Gm": ["G1", "G2", "Bb2", "D3"], "A": ["A1", "A2", "C#3", "E3"], "F": ["F1", "A2", "C3", "F3"],
+    "C": ["C2", "G2", "C3", "E3"], "Dsus4": ["D2", "A2", "D3", "G3"], "D": ["D2", "A2", "D3", "F#3"],
+}
+
+
+@reg("music/warden", kind="music", level=-16.0)
+def mus_warden(rng, i):
+    bpm = 52.0
+    spb = 60.0 / bpm
+    bar = 4 * spb
+    song = Song(32 * bar, 12.0)
+    plan = [(0, "D5", 4), (4, "Dm", 2), (6, "Bb", 2), (8, "Gm", 2), (10, "A", 2),
+            (12, "Dm", 2), (14, "F", 2), (16, "C", 2), (18, "A", 2),
+            (20, "Bb", 2), (22, "C", 2), (24, "Dsus4", 1), (25, "D", 3), (28, "D", 4)]
+    for k, (b0, name, nb) in enumerate(plan):
+        notes = [nm(x) for x in WARDEN_V[name]]
+        tb = b0 * bar - (0.6 if b0 else 0.0)
+        dur = nb * bar + (2.0 if k < len(plan) - 1 else 4.0)
+        att = 3.5 if b0 == 0 else 1.6
+        rel = 6.0 if k == len(plan) - 1 else 2.2
+        swell = 1.15 if 12 <= b0 < 28 else 1.0
+        song.add(_brass(notes[0], dur, rng, 0.62 * swell, att, rel, 0.3), tb, 0.0, 1.0, 0.35)
+        for j, m in enumerate(notes[1:]):
+            song.add(_brass(m, dur, rng, 0.4 * swell, att + 0.2 * j, rel, 0.5), tb + 0.05 * j, -0.35 + 0.35 * j, 1.0, 0.45)
+        song.add(pad_note(mtof(notes[0] - 12), dur, "deep", att, rel, seed=300 + k), tb, 0.0, 0.25, 0.2)
+    song.add(bowed_metal(nf("D3"), 26.0, rng, 7.0, 8.0, 0.35), 0.0, 0.25, 0.07, 0.6)
+    song.add(bowed_metal(nf("A3"), 20.0, rng, 6.0, 8.0, 0.4), 26 * bar, -0.25, 0.05, 0.6)
+    # the dragon's call: (beat, note, beats, slur) -- a rising call answered by a stepwise fall
+    phrases = [
+        [(16.0, "A2", 1.5, 0), (17.5, "D3", 1.0, 1), (18.5, "A3", 4.5, 1), (23.0, "G3", 1.0, 0),
+         (24.0, "F3", 1.5, 1), (25.5, "G3", 0.5, 1), (26.0, "D3", 4.0, 1)],
+        [(32.0, "D3", 1.5, 0), (33.5, "G3", 1.0, 1), (34.5, "Bb3", 4.5, 1), (39.0, "A3", 1.0, 0),
+         (40.0, "G3", 1.0, 1), (41.0, "F3", 1.0, 1), (42.0, "E3", 2.0, 1), (44.0, "A2", 3.0, 1)],
+        [(48.0, "A3", 1.5, 0), (49.5, "D4", 1.0, 1), (50.5, "F4", 4.5, 1), (55.0, "E4", 1.0, 0),
+         (56.0, "D4", 1.0, 0), (57.0, "C4", 3.0, 1), (60.0, "A3", 2.0, 1)],
+        [(64.0, "G3", 1.5, 0), (65.5, "C4", 1.0, 1), (66.5, "E4", 4.5, 1), (71.0, "D4", 1.0, 0),
+         (72.0, "C#4", 2.0, 1), (74.0, "E4", 1.0, 1), (75.0, "A3", 4.0, 1)],
+        [(80.0, "D3", 1.5, 0), (81.5, "F3", 1.0, 1), (82.5, "D4", 4.5, 1), (87.0, "C4", 1.0, 0),
+         (88.0, "G3", 1.5, 0), (89.5, "C4", 1.0, 1), (90.5, "E4", 3.5, 1), (94.0, "F4", 2.0, 1),
+         (96.0, "G4", 4.0, 1), (100.0, "F#4", 6.0, 1)],
+        [(107.0, "A3", 1.0, 0), (108.0, "D4", 6.0, 1)],
+    ]
+    pans = [0.15, -0.1, 0.12, -0.12, 0.05, 0.0]
+    gains = [0.75, 0.75, 0.85, 0.85, 0.9, 0.75]
+    for k, ph in enumerate(phrases):
+        notes = [(b * spb, nm(n_), du * spb, bool(s)) for b, n_, du, s in ph]
+        y = _call_phrase(notes, rng, 0.32, ("o", "a") if k % 2 == 0 else ("a", "o"), 0.78, 0.011, 0.55)
+        song.add(y, notes[0][0], pans[k], gains[k], 0.55)
+    echo = _call_phrase([(0.0, nm("A3"), spb, False), (spb, nm("D4"), 4 * spb, True)], rng, 0.32, ("o", "u"), 0.78)
+    song.add(lp(echo, 1200), 120 * spb, -0.3, 0.2, 1.2)           # far away, the call once more
+    for b, g in ((2, 0.35), (4, 0.5), (8, 0.5), (12, 0.6), (16, 0.6), (18, 0.4), (18.5, 0.45), (19, 0.5),
+                 (19.25, 0.55), (19.5, 0.6), (19.75, 0.7), (20, 0.9), (24, 0.6), (25, 1.0), (28, 0.5), (30, 0.3)):
+        song.add(_war_drum(rng, 55.0 if b < 25 else nf("D2")), b * bar, 0.0, g * 0.55, 0.4)
+    for b, n_ in ((25, "A5"), (25.5, "D6"), (26.5, "F#5"), (28, "A5"), (29, "F#6"), (30, "D6")):   # the crystals, at peace
+        song.add(glass_chime(nf(n_), 0.25, 2.5, rng, 0.05), b * bar + 0.3, rng.uniform(-0.6, 0.6), 1.0, 0.7)
+    song.add(glass_harm(nf("A5"), 6 * bar, 4.0, 8.0, rng, 0.02), 25 * bar, 0.0, 0.05, 0.7)
+    return song.render(5.0, 3500, 1.7, seed=300)
+
+
+# ---------------------------------------------------------------- music: Ladders (the Zenith)
+
+@reg("music/ladders", kind="music", level=-16.0)
+def mus_ladders_zenith(rng, i):
+    bpm = 50.0
+    spb = 60.0 / bpm
+    bar = 4 * spb
+    nbars = 31
+    song = Song(nbars * bar, 14.0)
+    D = nbars * bar + 6.0
+    air = stereo_bed(D, rng, lambda F, T: band(F, 2600, 1.0) * tilt(F, -1.0, 2600) * (F > 300), 4096)
+    song.add(air / (np.std(air) + 1e-9) * env_swell(D, 8.0, 10.0)[:, None], 0.0, 0.0, 0.012, 0.3)
+
+    def bellv(m, v, du):
+        return _airbell(m, 0.5 * v, 1.6 + 0.4 * du, rng)
+
+    def gh(m, du):
+        return glass_harm(mtof(m + 12), du + 0.8, 0.15, 0.7, rng, 0.03) * 0.1
+
+    def pads(name, b0, nb, shift=0, g=0.2, kind="cold"):
+        notes = chord_m(name, shift)
+        hi = [m + 12 for m in notes[1:]]
+        song.add(pad_chord(hi, nb * bar + 3.0, kind, 2.0, 2.5, seed=310 + int(b0)), b0 * bar - 0.8, 0, g, 0.5)
+        song.add(pad_note(mtof(notes[0]), nb * bar + 3.0, "warm", 2.0, 2.5, seed=320 + int(b0)), b0 * bar - 0.8, 0,
+                 g * 0.9, 0.4)
+
+    # intro: high pads and a few pings in the open air
+    song.add(pad_chord([nm("A4"), nm("E5"), nm("B5")], 3 * bar + 3, "glass", 5.0, 4.0, seed=330), 0.0, 0, 0.3, 0.6)
+    pads("Am9", 0, 3, 0, 0.16)
+    for b, n_, p in ((0.5, "E6", 0.4), (1.3, "B6", -0.4), (2.2, "A6", 0.2), (2.7, "E7", -0.2)):
+        song.add(_airbell(nm(n_), 0.25, 2.5, rng), b * bar, p, 1.0, 0.7)
+    # S1: the first ladder, now climbing
+    _play_cells_with(song, LADDER_P1[::-1], 3 * bar, spb, bellv, 0, 0.12, 1.0, True)
+    for k, nmx in enumerate(P1_CHORDS[::-1]):
+        pads(nmx, 3 + k, 1)
+    pads("Am9", 7, 1, 0, 0.18)
+    song.add(_airbell(nm("E6"), 0.3, 2.5, rng), 7 * bar + 2 * spb, 0.35, 1.0, 0.8)
+
+    def landing(b0, shift, dbl):
+        cells = LADDER_P2[::-1]
+        _play_cells_with(song, cells[:3], b0 * bar, spb, bellv, shift, 0.1, 1.0, True, double=gh if dbl else None)
+        for k, nmx in enumerate(["Em9", "Cmaj7#11", "Gmaj7"]):
+            pads(nmx, b0 + k, 1, shift)
+        tb = (b0 + 3) * bar
+        for m, at_, du in ((nm("E5"), 0.0, 1.0), (nm("G#5"), 1.0, 0.5), (nm("A5"), 1.5, 4.5)):
+            song.add(bellv(m + shift, 1.05, du), tb + at_ * spb, 0.1, 1.0, 0.5)
+            song.add(gh(m + shift, du * spb), tb + at_ * spb, -0.1, 1.0 if dbl else 0.6, 0.6)
+        song.add(pad_chord([x + 12 for x in chord_m("E", shift)[1:]], 1.5 * spb + 0.6, "cold", 0.3, 0.6,
+                           seed=340 + shift), tb, 0, 0.2, 0.5)
+        song.add(pad_chord([x + 12 for x in chord_m("Amaj", shift)[1:]], 2.5 * spb + 5.0, "warm", 0.8, 4.0,
+                           seed=341 + shift), tb + 1.5 * spb, 0, 0.24, 0.5)
+        song.add(pad_note(mtof(chord_m("Amaj", shift)[0]), 4 * spb + 5.0, "warm", 0.8, 4.0, seed=342 + shift),
+                 tb + 1.5 * spb, 0, 0.2, 0.4)
+
+    # S2: the second ladder lands on A major
+    landing(8, 0, False)
+    for k, n_ in enumerate(["A5", "C#6", "E6", "A6"]):
+        song.add(_airbell(nm(n_), 0.3, 2.5, rng), 12 * bar + k * spb, -0.3 + 0.2 * k, 1.0, 0.6)
+    pads("Amaj", 12, 1, 0, 0.18, "warm")
+    song.add(pad_chord([nm(x) for x in ("D4", "F4", "A4", "C5", "E5")], bar + 3.0, "cold", 1.5, 2.5, seed=343),
+             13 * bar - 0.6, 0, 0.2, 0.5)
+    song.add(pad_note(nf("D3"), bar + 3.0, "warm", 1.5, 2.5, seed=344), 13 * bar - 0.6, 0, 0.18, 0.4)
+    song.add(_airbell(nm("A6"), 0.25, 2.5, rng), 13 * bar + 2 * spb, 0.3, 1.0, 0.7)
+    # S3/S4: the whole climb again, a fourth higher, and this time it resolves on D
+    _play_cells_with(song, LADDER_P1[::-1], 14 * bar, spb, bellv, 5, 0.12, 1.0, True, double=gh)
+    for k, nmx in enumerate(P1_CHORDS[::-1]):
+        pads(nmx, 14 + k, 1, 5)
+    pads("Am9", 18, 1, 5, 0.18)
+    landing(19, 5, True)
+    # coda: D major opening upward, bells climbing into the light
+    arp = ["D5", "F#5", "A5", "D6", "F#6", "A6", "D7"]
+    for k, n_ in enumerate(arp):
+        song.add(_airbell(nm(n_), 0.42 - 0.03 * k, 3.0, rng), 23 * bar + 2 * spb + k * 0.5 * spb, -0.45 + 0.15 * k, 1.0, 0.6)
+    song.add(pad_chord([nm(x) for x in ("D4", "F#4", "A4", "E5", "A5")], 7 * bar, "glass", 3.0, 8.0, seed=350),
+             23 * bar, 0, 0.3, 0.6)
+    song.add(pad_note(nf("D3"), 7 * bar, "warm", 3.0, 8.0, seed=351), 23 * bar, 0, 0.18, 0.4)
+    for m, at_, du in ((nm("A6"), 0.0, 1.0), (nm("C#7"), 1.0, 0.5), (nm("D7"), 1.5, 4.0)):   # the landing, an octave up
+        song.add(_airbell(m, 0.28, 3.0, rng), 26 * bar + at_ * spb, 0.2, 1.0, 0.85)
+    song.add(glass_harm(nf("D6"), 5 * bar, 3.0, 7.0, rng, 0.02), 25 * bar, 0.0, 0.07, 0.7)
+    return song.render(4.5, 7000, 1.5, seed=310)
+
+
+# ---------------------------------------------------------------- music: Undertow
+
+UNDERTOW_V = {
+    "Dm/A": ["D3", "F3", "A3"], "Fmaj7/A": ["C3", "E3", "F3", "A3"], "Gm9/A": ["Bb2", "D3", "F3", "G3"],
+    "Asus": ["D3", "E3", "A3"], "A": ["C#3", "E3", "A3"], "Bbmaj7": ["Bb2", "D3", "F3", "A3"],
+    "Dm": ["D3", "F3", "A3", "E4"],
+}
+UNDERTOW_BASS = {"Dm/A": "D2", "Fmaj7/A": "F2", "Gm9/A": "G2", "Asus": "A1", "A": "A1", "Bbmaj7": "Bb1", "Dm": "D2"}
+
+
+@reg("music/undertow", kind="music", level=-16.0)
+def mus_undertow(rng, i):
+    bpm = 40.0
+    spb = 60.0 / bpm
+    bar = 4 * spb
+    nbars = 25
+    D = nbars * bar
+    song = Song(D, 12.0)
+    t = tt(D)
+    # the tide's hum, from inside: A1 against a partner a semitone up; the partner sinks
+    # toward unison in the middle section, so the beating slows almost to stillness
+    partner = curve(D, [(0, 58.27), (11 * bar, 58.27), (13 * bar, 56.0), (18 * bar, 55.6), (19 * bar, 58.27),
+                        (D, 58.27)], log=True)
+    hum = (np.sin(TWO_PI * 55.0 * t) + 0.6 * np.sin(phase_of(partner)) + 0.45 * np.sin(TWO_PI * 110.4 * t + 0.3)
+           + 0.2 * np.sin(TWO_PI * 165.2 * t + 1.0) + 0.1 * np.sin(TWO_PI * 220.8 * t))
+    hum = lp(hum, 400) * curve(D, [(0, 0), (14, 1), (D - 14, 1), (D, 0)])
+    song.add(np.stack([hum, np.roll(hum, ns(0.019))], axis=1), 0.0, 0.0, 0.16, 0.25)
+    wash = stereo_bed(D, rng, lambda F, T: band(F, 220, 1.1) * (F > 40), 4096)
+    wash = wash / (np.std(wash) + 1e-9) * np.clip(1 + 0.5 * smooth_noise(D, 0.06, rng), 0.2, 2)[:, None]
+    song.add(wash * env_swell(D, 10.0, 12.0)[:, None], 0.0, 0.0, 0.035, 0.2)
+
+    def mpiano(m, vel, du):
+        return lp(piano(m, vel, du, bright=0.35, seed=int(m)), 850, 2)
+
+    plan = [(1, "Dm/A", 2), (3, "Dm/A", 2), (5, "Fmaj7/A", 2), (7, "Gm9/A", 2), (9, "Asus", 1), (10, "A", 1),
+            (11, "Bbmaj7", 2), (13, "Fmaj7/A", 2), (15, "Gm9/A", 2), (17, "Asus", 1), (18, "A", 1),
+            (19, "Dm/A", 2), (21, "Gm9/A", 2), (23, "Dm", 2)]
+    for k, (b0, name, nb) in enumerate(plan):
+        tc = b0 * bar
+        notes = [nm(x) for x in UNDERTOW_V[name]]
+        dur = nb * bar + 3.0 + (6.0 if k == len(plan) - 1 else 0.0)
+        pd = pad_chord(notes, dur, "deep", 2.5, 3.0, seed=360 + k)
+        song.add(lp(pd, 900), tc - 1.0, 0.0, 0.22, 0.4)
+        song.add(pad_note(nf(UNDERTOW_BASS[name]), dur, "deep", 2.5, 3.0, seed=370 + k), tc - 1.0, 0.0, 0.2, 0.3)
+        if k >= 1:
+            # inverted swell: the chord's reverberant tail played backwards, cresting at the change
+            fw = np.zeros(ns(0.6))
+            for j, m in enumerate(notes):
+                add_at(fw, piano(m + 12, 0.4, 0.5, bright=0.4, seed=j), 0.0)
+            rv = reverse(reverb(fw, 1.0, 3.5, 2500, 1.4, seed=380, dry=0.25))
+            rv = lp(fade(rv, 0.4, 0.004), 1200)
+            song.add(rv, tc - len(rv) / SR, 0.25 * (1 if k % 2 else -1), 0.9, 0.3)
+    # muffled piano melody (beat offsets from the phrase start)
+    phA = [(0, "A4", 1), (1, "Bb4", 1), (2, "A4", 2), (4, "D4", 4), (8, "F4", 1), (9, "E4", 1), (10, "C4", 2),
+           (12, "A3", 4), (16, "Bb3", 1), (17, "D4", 1), (18, "F4", 2), (20, "E4", 4), (24, "D4", 2), (26, "E4", 2),
+           (28, "C#4", 4)]
+    phB = [(0, "A4", 1), (1, "Bb4", 1), (2, "D5", 2), (4, "C5", 4), (8, "A4", 1), (9, "G4", 1), (10, "F4", 2),
+           (12, "E4", 4), (16, "D4", 1), (17, "F4", 1), (18, "A4", 2), (20, "G4", 4), (24, "Bb4", 1), (25, "A4", 1),
+           (26, "E4", 2), (28, "C#4", 4)]
+    phC = [(0, "A4", 1), (1, "Bb4", 1), (2, "A4", 2), (4, "D4", 4), (8, "Bb3", 1), (9, "D4", 1), (10, "F4", 2),
+           (12, "E4", 4), (16, "F4", 2), (18, "E4", 2), (20, "D4", 8)]
+    for b0, ph, vel in ((3, phA, 0.5), (11, phB, 0.55), (19, phC, 0.48)):
+        for beat, n_, du in ph:
+            v = vel * (1.0 if beat % 4 == 0 else 0.88)
+            song.add(mpiano(nm(n_), v, du * spb + 0.6), b0 * bar + beat * spb, 0.12, 1.0, 0.55)
+    # a low octave answer under the middle section
+    for b, n_ in ((11, "D3"), (13, "C3"), (15, "Bb2"), (17, "A2")):
+        song.add(mpiano(nm(n_), 0.35, 2 * bar), b * bar + 2 * spb, -0.15, 1.0, 0.5)
+    # slow bubble chords drifting up, far off
+    for b, chord in ((9.5, ("D4", "F4", "A4", "E5")), (17.5, ("C#4", "E4", "A4")), (24.0, ("D4", "F4", "A4"))):
+        bb = np.zeros(ns(3.0))
+        for k in range(8):
+            f1 = nf(chord[k % len(chord)])
+            add_at(bb, bubble(rng.uniform(0.08, 0.14), f1 * 0.72, f1, 0.05, rng), 0.09 * k + rng.uniform(0, 0.05),
+                   rng.uniform(0.5, 1.0))
+        song.add(lp(bb, 1500), b * bar, rng.uniform(-0.5, 0.5), 0.12, 0.8)
+    y = song.render(5.0, 1800, 1.6, seed=360)
+    return lp(y, 2400)
+
+
+# =============================================================================
 # Finalisation, encoding, driver
 # =============================================================================
 
@@ -3382,6 +4734,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--tmp", default=None, help="directory for temporary WAV files")
     ap.add_argument("--only", nargs="*", default=None, help="only render stems starting with these prefixes")
+    ap.add_argument("--stems", nargs="*", default=None, help="only render exactly these stems")
+    ap.add_argument("--missing", action="store_true", help="only render stems whose .ogg does not exist yet")
     ap.add_argument("--jobs", type=int, default=max(1, min(8, (os.cpu_count() or 2) - 2)))
     args = ap.parse_args()
 
@@ -3394,6 +4748,14 @@ def main():
         sys.exit("no recipe for: " + ", ".join(missing))
     if args.only:
         stems = [s for s in stems if any(s.startswith(p) for p in args.only)]
+    if args.stems:
+        unknown = [s for s in args.stems if s not in RECIPES]
+        if unknown:
+            sys.exit("unknown stem(s): " + ", ".join(unknown))
+        wanted = set(args.stems)
+        stems = [s for s in stems if s in wanted]
+    if args.missing:
+        stems = [s for s in stems if not os.path.isfile(os.path.join(OUT_DIR, s + ".ogg"))]
     own_tmp = args.tmp is None
     tmp_dir = args.tmp or tempfile.mkdtemp(prefix="worldsfall_audio_")
     os.makedirs(tmp_dir, exist_ok=True)

@@ -30,7 +30,7 @@ public final class DriftwreckGenerator {
         return bp;
     }
 
-    static void cache(Blueprint bp, BlockPos pos, String table, boolean pedestal) {
+    public static void cache(Blueprint bp, BlockPos pos, String table, boolean pedestal) {
         bp.set(pos, (pedestal ? WFBlocks.SIGIL_PEDESTAL : WFBlocks.DRIFT_CACHE).get().defaultBlockState());
         ResourceKey<LootTable> key = SpireGenerator.loot(table);
         bp.action(pos, level -> {
@@ -40,7 +40,7 @@ public final class DriftwreckGenerator {
         });
     }
 
-    static void rock(Blueprint bp, BlockPos c, float radius, RandomSource r) {
+    public static void rock(Blueprint bp, BlockPos c, float radius, RandomSource r) {
         float size = radius;
         for (int y = 0; size > 0.6f; y--) {
             for (int dx = (int) -radius - 1; dx <= radius + 1; dx++) {

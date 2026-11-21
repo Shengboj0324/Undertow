@@ -1,0 +1,153 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:ender_pearl",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.9
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:echo_tablet",
+          "weight": 1,
+          "modifier": [
+            {
+              "type": "worldsfall:random_tablet"
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.45
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:driftstone",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 4,
+                "max": 10
+              }
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.6
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:glowbulb",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.35
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:causeway_keystone",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:mirror_shard_fragment",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.25
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "worldsfall:drift_armor_trim_smithing_template",
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.12
+          }
+        }
+      ]
+    }
+  ],
+  "random_sequence": "worldsfall:vault/gapwreck"
+}

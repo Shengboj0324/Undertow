@@ -250,7 +250,9 @@ public class VoidSkate extends TamableAnimal {
             }
         }
         if (!isVehicle() && !level().isClientSide() && stamina() < MAX_STAMINA) {
-            entityData.set(STAMINA, Math.min(MAX_STAMINA, stamina() + STAMINA_REGEN));
+            // a Roost Post doubles the recovery of a perched Skate
+            boolean roost = isPerched() && level().getBlockState(blockPosition().below()).getBlock() instanceof dev.worldsfall.gap.RoostPostBlock;
+            entityData.set(STAMINA, Math.min(MAX_STAMINA, stamina() + STAMINA_REGEN * (roost ? 2 : 1)));
         }
     }
 

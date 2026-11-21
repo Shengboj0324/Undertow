@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "worldsfall:block/causeway_plaque"
+    },
+    "facing=east": {
+      "model": "worldsfall:block/causeway_plaque",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "worldsfall:block/causeway_plaque",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "worldsfall:block/causeway_plaque",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": "worldsfall:voidroot_fiber",
+    "G": "worldsfall:glowbulb",
+    "D": "worldsfall:driftstone"
+  },
+  "pattern": [
+    "F",
+    "G",
+    "D"
+  ],
+  "result": {
+    "id": "worldsfall:drift_buoy",
+    "count": 2
+  }
+}

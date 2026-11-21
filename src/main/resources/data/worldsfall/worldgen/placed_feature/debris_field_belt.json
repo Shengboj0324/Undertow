@@ -1,0 +1,29 @@
+{
+  "feature": "worldsfall:debris_field",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 2
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": 36
+        },
+        "max_inclusive": {
+          "absolute": 86
+        }
+      }
+    },
+    {
+      "type": "worldsfall:distance_from_origin",
+      "min": 500,
+      "max": 750
+    }
+  ]
+}

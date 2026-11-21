@@ -68,6 +68,7 @@ public final class WFEvents {
             Sundering.tick(level);
             NaturalSpawners.tickEnd(level);
             dev.worldsfall.warden.WardenFight.tick(level);
+            dev.worldsfall.gap.Causeway.tick(level);
         } else if (level.dimension() == WFDimensions.THE_FRACTURE) {
             FractureArena.tickDecay(level);
             FractureEnvironment.tick(level);

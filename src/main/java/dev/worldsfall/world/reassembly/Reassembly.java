@@ -35,8 +35,25 @@ public final class Reassembly {
 
     public static void start(ServerLevel level, BlockPos socket, ReassemblyPlan plan, ServerPlayer trigger) {
         level.playSound(null, socket, WFSounds.EVENT_REASSEMBLY_CHORD.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
+        Sequence seq = new Sequence(level, socket, plan);
+        seq.spire = true;
         synchronized (ACTIVE) {
-            ACTIVE.add(new Sequence(level, socket, plan));
+            ACTIVE.add(seq);
+        }
+    }
+
+    /**
+     * A Reassembly that is not a spire room (the Pilgrim's Causeway, the Orrery): {@code lantern} is the lantern placed at
+     * each lantern position and {@code onComplete} runs when the last block has landed and the last lantern is lit.
+     */
+    public static void start(ServerLevel level, BlockPos socket, ReassemblyPlan plan, BlockState lantern, Runnable onComplete) {
+        level.playSound(null, socket, WFSounds.EVENT_REASSEMBLY_CHORD.get(), SoundSource.BLOCKS, 2.0f, 1.0f);
+        Sequence seq = new Sequence(level, socket, plan);
+        seq.lantern = lantern;
+        seq.onComplete = onComplete;
+        seq.fromVoid = plan.rubble().isEmpty();
+        synchronized (ACTIVE) {
+            ACTIVE.add(seq);
         }
     }
 
@@ -78,6 +95,10 @@ public final class Reassembly {
         int launched;
         int lanternIndex;
         int endAge = -1;
+        boolean spire;
+        boolean fromVoid;
+        BlockState lantern;
+        Runnable onComplete = () -> { };
 
         Sequence(ServerLevel level, BlockPos socket, ReassemblyPlan plan) {
             this.level = level;
@@ -138,6 +159,10 @@ public final class Reassembly {
                     level.removeBlock(src, false);
                 }
                 from = Vec3.atBottomCenterOf(src);
+            } else if (fromVoid) {
+                // debris rises out of the void below the gap
+                var r = level.getRandom();
+                from = Vec3.atBottomCenterOf(dest).add(r.nextDouble() * 16 - 8, -12 - r.nextDouble() * 14, r.nextDouble() * 16 - 8);
             } else {
                 double ang = level.getRandom().nextDouble() * Math.PI * 2;
                 from = Vec3.atBottomCenterOf(socket).add(Math.cos(ang) * 10, -2 - level.getRandom().nextInt(4), Math.sin(ang) * 10);
@@ -154,8 +179,11 @@ public final class Reassembly {
         private void igniteLantern(BlockPos pos) {
             BlockState st = level.getBlockState(pos);
             if (st.isAir() || st.canBeReplaced()) {
-                level.setBlock(pos, WFBlocks.SPIRE_LANTERN.get().defaultBlockState().setValue(LanternBlock.HANGING,
-                    !level.getBlockState(pos.above()).isAir()), Block.UPDATE_ALL);
+                BlockState l = lantern != null ? lantern : WFBlocks.SPIRE_LANTERN.get().defaultBlockState();
+                if (l.hasProperty(LanternBlock.HANGING)) {
+                    l = l.setValue(LanternBlock.HANGING, !level.getBlockState(pos.above()).isAir());
+                }
+                level.setBlock(pos, l, Block.UPDATE_ALL);
             }
             level.playSound(null, pos, WFSounds.EVENT_REASSEMBLY_LANTERN.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
             level.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 10, 0.2, 0.2, 0.2, 0.02);
@@ -168,9 +196,16 @@ public final class Reassembly {
                     vault.unseal();
                 }
             });
-            for (ServerPlayer p : level.getPlayers(p -> p.blockPosition().closerThan(socket, 48))) {
-                Progress.award(p, "ladders_to_nowhere");
+            if (spire) {
+                ServerPlayer first = null;
+                for (ServerPlayer p : level.getPlayers(p -> p.blockPosition().closerThan(socket, 48))) {
+                    Progress.award(p, "ladders_to_nowhere");
+                    first = first == null ? p : first;
+                }
+                dev.worldsfall.restoration.Restoration.award(level.getServer(), first, dev.worldsfall.restoration.Restoration.Act.SPIRE_REASSEMBLY,
+                    socket.toShortString());
             }
+            onComplete.run();
         }
 
         void finishInstantly() {

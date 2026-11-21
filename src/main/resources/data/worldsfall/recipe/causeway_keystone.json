@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "worldsfall:weathered_purpur",
+    "D": "worldsfall:driftstone",
+    "L": "worldsfall:lumen_crystal_shard"
+  },
+  "pattern": [
+    "P",
+    "D",
+    "L"
+  ],
+  "result": {
+    "id": "worldsfall:causeway_keystone"
+  }
+}

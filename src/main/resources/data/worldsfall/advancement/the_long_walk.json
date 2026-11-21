@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:causeway_keystone"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.the_long_walk.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.the_long_walk.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:across_the_gap"
+}

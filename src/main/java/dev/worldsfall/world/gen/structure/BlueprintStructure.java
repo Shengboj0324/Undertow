@@ -46,6 +46,7 @@ public class BlueprintStructure extends Structure {
             case "hoard" -> hoard(ctx, x, z, dist, random);
             case "driftwreck" -> driftwreck(ctx, x, z, dist, random);
             case "root_hollow" -> rootHollow(ctx, x, z, dist, random);
+            case "gapwreck" -> gapwreck(ctx, x, z, dist, random);
             default -> Optional.empty();
         };
         return placement.map(p -> new GenerationStub(p.pos, builder -> builder.addPiece(new BlueprintPiece(generator, p.pos, p.variant, p.seed))));
@@ -100,6 +101,21 @@ public class BlueprintStructure extends Structure {
         int y = 8 + random.nextInt(21);
         int variant = random.nextInt(6) == 0 ? DriftwreckGenerator.TIDE_SHRINE : 1 + random.nextInt(3);
         return Optional.of(new Placement(new BlockPos(x, y, z), variant, random.nextLong()));
+    }
+
+    /** In the Debris Belt (500–750 blocks out), in open void, always above the highest tide. */
+    private static Optional<Placement> gapwreck(GenerationContext ctx, int x, int z, double dist, WorldgenRandom random) {
+        if (dist < 500 || dist > 750) {
+            return Optional.empty();
+        }
+        NoiseColumn col = ctx.chunkGenerator().getBaseColumn(x, z, ctx.heightAccessor(), ctx.randomState());
+        for (int y = 40; y < 90; y++) {
+            if (!col.getBlock(y).isAir()) {
+                return Optional.empty();
+            }
+        }
+        int y = 54 + random.nextInt(14);
+        return Optional.of(new Placement(new BlockPos(x, y, z), random.nextInt(3) == 0 ? 1 : 0, random.nextLong()));
     }
 
     private static Optional<Placement> rootHollow(GenerationContext ctx, int x, int z, double dist, WorldgenRandom random) {

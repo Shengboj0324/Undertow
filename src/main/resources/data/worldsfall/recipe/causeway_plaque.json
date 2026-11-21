@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "minecraft:purpur_slab"
+  },
+  "pattern": [
+    "PPP"
+  ],
+  "result": {
+    "id": "worldsfall:causeway_plaque"
+  }
+}

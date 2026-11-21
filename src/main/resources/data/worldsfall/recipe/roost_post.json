@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "M": "worldsfall:skate_membrane",
+    "P": "worldsfall:weathered_purpur"
+  },
+  "pattern": [
+    "M",
+    "P",
+    "P"
+  ],
+  "result": {
+    "id": "worldsfall:roost_post",
+    "count": 2
+  }
+}

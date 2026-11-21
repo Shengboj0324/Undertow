@@ -123,6 +123,11 @@ public final class WFItems {
     public static final DeferredItem<Item> MUSIC_DISC_WARDEN = simple("music_disc_warden", p -> p.stacksTo(1).rarity(Rarity.RARE)
         .jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, Identifier.fromNamespaceAndPath(Worldsfall.MODID, "warden"))));
 
+    // ================= Expansion 1.3: the Gap
+    public static final DeferredItem<Item> CAUSEWAY_KEYSTONE = simple("causeway_keystone", p -> p.stacksTo(16).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<dev.worldsfall.gap.DriftBuoyItem> DRIFT_BUOY = reg("drift_buoy",
+        p -> new dev.worldsfall.gap.DriftBuoyItem(WFBlocks.DRIFT_BUOY.get(), p), p -> p.useBlockDescriptionPrefix());
+
     private static final List<DeferredItem<Item>> SPAWN_EGGS = new ArrayList<>();
     public static final DeferredItem<Item> VOID_SKATE_SPAWN_EGG = egg("void_skate", WFEntities.VOID_SKATE);
     public static final DeferredItem<Item> CHORUS_GRAZER_SPAWN_EGG = egg("chorus_grazer", WFEntities.CHORUS_GRAZER);

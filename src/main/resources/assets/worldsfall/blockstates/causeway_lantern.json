@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "calm=false,hanging=false,waterlogged=false": {
+      "model": "worldsfall:block/causeway_lantern"
+    },
+    "calm=false,hanging=false,waterlogged=true": {
+      "model": "worldsfall:block/causeway_lantern"
+    },
+    "calm=false,hanging=true,waterlogged=false": {
+      "model": "worldsfall:block/causeway_lantern_hanging"
+    },
+    "calm=false,hanging=true,waterlogged=true": {
+      "model": "worldsfall:block/causeway_lantern_hanging"
+    },
+    "calm=true,hanging=false,waterlogged=false": {
+      "model": "worldsfall:block/causeway_lantern_calm"
+    },
+    "calm=true,hanging=false,waterlogged=true": {
+      "model": "worldsfall:block/causeway_lantern_calm"
+    },
+    "calm=true,hanging=true,waterlogged=false": {
+      "model": "worldsfall:block/causeway_lantern_calm_hanging"
+    },
+    "calm=true,hanging=true,waterlogged=true": {
+      "model": "worldsfall:block/causeway_lantern_calm_hanging"
+    }
+  }
+}

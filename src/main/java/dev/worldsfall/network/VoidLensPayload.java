@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import java.util.List;
 
 /** Server → client: Driftwreck bounds near a player who is looking through a Void Lens (§9.6). Sent about once a second while scoped. */
-public record VoidLensPayload(List<BoundingBox> wrecks) implements CustomPacketPayload {
+public record VoidLensPayload(List<BoundingBox> wrecks, List<net.minecraft.core.BlockPos> pillars) implements CustomPacketPayload {
     public static final Type<VoidLensPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Worldsfall.MODID, "void_lens"));
     private static final StreamCodec<RegistryFriendlyByteBuf, BoundingBox> BOX = StreamCodec.of(
         (buf, b) -> {
@@ -24,8 +24,9 @@ public record VoidLensPayload(List<BoundingBox> wrecks) implements CustomPacketP
             buf.writeVarInt(b.maxZ());
         },
         buf -> new BoundingBox(buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt()));
-    public static final StreamCodec<RegistryFriendlyByteBuf, VoidLensPayload> STREAM_CODEC =
-        BOX.apply(ByteBufCodecs.list(32)).map(VoidLensPayload::new, VoidLensPayload::wrecks);
+    public static final StreamCodec<RegistryFriendlyByteBuf, VoidLensPayload> STREAM_CODEC = StreamCodec.composite(
+        BOX.apply(ByteBufCodecs.list(32)), VoidLensPayload::wrecks,
+        net.minecraft.core.BlockPos.STREAM_CODEC.apply(ByteBufCodecs.list(16)), VoidLensPayload::pillars, VoidLensPayload::new);
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -33,6 +34,6 @@ public record VoidLensPayload(List<BoundingBox> wrecks) implements CustomPacketP
     }
 
     public static void handle(VoidLensPayload p, IPayloadContext ctx) {
-        ClientBridge.voidLens.accept(p.wrecks);
+        ClientBridge.voidLens.accept(p);
     }
 }

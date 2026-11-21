@@ -31,7 +31,14 @@ public final class VoidLensScan {
         if (player.tickCount % 20 != 0 || !player.isScoping() || !(player.getUseItem().getItem() instanceof VoidLensItem)) {
             return;
         }
-        WFNetwork.send(player, new VoidLensPayload(wrecksNear(player.level(), player.getBlockX(), player.getBlockZ())));
+        ServerLevel level = player.level();
+        java.util.List<net.minecraft.core.BlockPos> pillars = java.util.List.of();
+        if (level.dimension() == net.minecraft.world.level.Level.END
+            && player.getX() * player.getX() + player.getZ() * player.getZ() < dev.worldsfall.gap.PillarGlyphs.RANGE * dev.worldsfall.gap.PillarGlyphs.RANGE) {
+            pillars = dev.worldsfall.gap.PillarGlyphs.marks(level).stream().map(dev.worldsfall.gap.PillarGlyphs.Mark::top).toList();
+            dev.worldsfall.gap.PillarGlyphs.read(level, player);
+        }
+        WFNetwork.send(player, new VoidLensPayload(wrecksNear(level, player.getBlockX(), player.getBlockZ()), pillars));
     }
 
     public static List<BoundingBox> wrecksNear(ServerLevel level, int x, int z) {

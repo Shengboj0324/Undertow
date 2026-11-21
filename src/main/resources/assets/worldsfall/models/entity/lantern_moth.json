@@ -1,0 +1,36 @@
+{
+  "texture_size": [32, 32],
+  "parts": [
+    {
+      "name": "body", "parent": null,
+      "pivot": [0, 21, 0], "rotation": [0, 0, 0],
+      "cubes": [
+        {"origin": [-1, -1, -2], "size": [2, 2, 5], "uv": [0, 9], "inflate": 0, "mirror": false},
+        {"origin": [-1.5, -1.5, -3], "size": [3, 3, 2], "uv": [14, 9], "inflate": 0, "mirror": false},
+        {"origin": [-1, -1, -4], "size": [2, 2, 1], "uv": [24, 9], "inflate": 0, "mirror": false}
+      ]
+    },
+    {
+      "name": "antennae", "parent": "body",
+      "pivot": [0, -1, -4], "rotation": [-20, 0, 0],
+      "cubes": [
+        {"origin": [0, -3, 0], "size": [3, 3, 0], "uv": [24, 12], "inflate": 0, "mirror": false},
+        {"origin": [-3, -3, 0], "size": [3, 3, 0], "uv": [24, 12], "inflate": 0, "mirror": true}
+      ]
+    },
+    {
+      "name": "left_wing", "parent": "body",
+      "pivot": [1, -1, -1], "rotation": [0, 0, -12],
+      "cubes": [
+        {"origin": [0, 0, -3], "size": [7, 0, 9], "uv": [0, 0], "inflate": 0, "mirror": false}
+      ]
+    },
+    {
+      "name": "right_wing", "parent": "body",
+      "pivot": [-1, -1, -1], "rotation": [0, 0, 12],
+      "cubes": [
+        {"origin": [-7, 0, -3], "size": [7, 0, 9], "uv": [0, 0], "inflate": 0, "mirror": true}
+      ]
+    }
+  ]
+}

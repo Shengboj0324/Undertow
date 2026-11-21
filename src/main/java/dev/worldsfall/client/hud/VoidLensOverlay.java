@@ -41,8 +41,11 @@ public final class VoidLensOverlay {
 
     private VoidLensOverlay() {}
 
-    public static void acceptWrecks(List<BoundingBox> boxes) {
-        wrecks = List.copyOf(boxes);
+    private static List<net.minecraft.core.BlockPos> pillars = List.of();
+
+    public static void accept(dev.worldsfall.network.VoidLensPayload p) {
+        wrecks = List.copyOf(p.wrecks());
+        pillars = List.copyOf(p.pillars());
         wrecksAt = System.currentTimeMillis();
     }
 
@@ -99,6 +102,24 @@ public final class VoidLensOverlay {
         if (System.currentTimeMillis() - wrecksAt < 3000) {
             for (BoundingBox b : wrecks) {
                 drawBox(g, b, w, h, cx, cy, radius, ARGB.color((int) (210 * pulse), 120, 255, 236));
+            }
+        }
+        // pillar glyphs (the pillars remember): one Ascendant word per pillar top, read in order
+        if (System.currentTimeMillis() - wrecksAt < 3000 && !pillars.isEmpty()) {
+            int read = mc.player.getData(dev.worldsfall.registry.WFAttachments.PILLARS_READ);
+            for (int i = 0; i < pillars.size(); i++) {
+                var top = pillars.get(i);
+                float[] at = project(top.getX() + 0.5, top.getY() + 1.5, top.getZ() + 0.5, w, h);
+                if (at == null || !inside(at[0], at[1], cx, cy, radius * 0.95f)) {
+                    continue;
+                }
+                boolean done = i < read;
+                int col = done ? ARGB.color(255, 184, 255, 247) : i == read ? ARGB.color((int) (255 * pulse), 255, 220, 150) : ARGB.color(150, 160, 150, 190);
+                Component word = Component.translatable("pillar.worldsfall.glyph." + i);
+                g.centeredText(mc.font, word, (int) at[0], (int) at[1] - 4, col);
+                if (done || i == read) {
+                    g.centeredText(mc.font, Component.translatable("pillar.worldsfall.word." + i), (int) at[0], (int) at[1] + 8, col);
+                }
             }
         }
         // tide plane height

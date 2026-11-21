@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "used=false": {
+      "model": "worldsfall:block/causeway_socket"
+    },
+    "used=true": {
+      "model": "worldsfall:block/causeway_socket_used"
+    }
+  }
+}

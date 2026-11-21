@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "minecraft:the_end",
+  "features": [
+    "worldsfall:debris_field_belt"
+  ],
+  "step": "surface_structures"
+}

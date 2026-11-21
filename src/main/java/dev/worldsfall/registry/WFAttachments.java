@@ -33,6 +33,10 @@ public final class WFAttachments {
     public static final Supplier<AttachmentType<List<net.minecraft.world.item.ItemStack>>> STOLEN = ATTACHMENTS.register("stolen",
         () -> AttachmentType.<List<net.minecraft.world.item.ItemStack>>builder(() -> List.of())
             .serialize(net.minecraft.world.item.ItemStack.OPTIONAL_CODEC.listOf().fieldOf("items")).build());
+    /** How many pillar glyphs a player has read in order (0–10). */
+    public static final Supplier<AttachmentType<Integer>> PILLARS_READ = ATTACHMENTS.register("pillars_read",
+        () -> AttachmentType.builder(() -> 0).serialize(Codec.INT.fieldOf("read")).sync(net.minecraft.network.codec.ByteBufCodecs.VAR_INT)
+            .copyOnDeath().build());
     /** Wardensong lines a player has heard (bit per line, §1 of the Warden Cycle). */
     public static final Supplier<AttachmentType<Integer>> WARDENSONG = ATTACHMENTS.register("wardensong",
         () -> AttachmentType.builder(() -> 0).serialize(Codec.INT.fieldOf("lines")).copyOnDeath().build());

@@ -73,6 +73,14 @@ final class SkateGoals {
             if (skate.isVehicle() || skate.getRandom().nextInt(900) != 0) {
                 return false;
             }
+            // Drift Buoys mark routes across the Gap: Skates prefer to perch on one when it is near
+            if (skate.level() instanceof net.minecraft.server.level.ServerLevel sl) {
+                BlockPos buoy = dev.worldsfall.gap.DriftBuoyBlock.nearest(sl, skate.blockPosition(), 40);
+                if (buoy != null) {
+                    target = buoy;
+                    return true;
+                }
+            }
             target = findIslandNear(skate.level(), skate.blockPosition(), 20);
             return target != null;
         }

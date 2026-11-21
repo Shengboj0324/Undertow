@@ -71,7 +71,7 @@ public final class WorldsfallClient {
         RiderInput.clientProvider = p -> p instanceof LocalPlayer lp ? lp.input.keyPresses : net.minecraft.world.entity.player.Input.EMPTY;
         ClientBridge.sunderingFx = SunderingFx::start;
         ClientBridge.echoTablet = WFHud::showTablet;
-        ClientBridge.voidLens = dev.worldsfall.client.hud.VoidLensOverlay::acceptWrecks;
+        ClientBridge.voidLens = dev.worldsfall.client.hud.VoidLensOverlay::accept;
         NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent.AfterLevel e) -> dev.worldsfall.client.hud.VoidLensOverlay.captureCamera(e));
         modBus.addListener((net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent e) ->
             e.registerItem(dev.worldsfall.client.hud.VoidLensOverlay.itemExtensions(), dev.worldsfall.registry.WFItems.VOID_LENS.get()));

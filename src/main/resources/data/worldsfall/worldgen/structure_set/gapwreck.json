@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 44901731,
+    "separation": 9,
+    "spacing": 22,
+    "spread_type": "linear"
+  },
+  "structures": [
+    {
+      "structure": "worldsfall:gapwreck",
+      "weight": 1
+    }
+  ]
+}

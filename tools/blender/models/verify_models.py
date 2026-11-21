@@ -48,13 +48,63 @@ MODELS = {
     "void_capsule": (["cap_top", "glass", "cap_bottom", "strand"], ["void_capsule/void_capsule"], True, (64, 32)),
     "rift_hook": (["claw", "pearl", "prong_0", "prong_1", "prong_2"], ["rift_hook/rift_hook"], True, (32, 32)),
     "tether_pylon": (["crystal"], ["tether_pylon/tether_pylon"], True, (64, 64)),
+    # expansion (art/SPEC_EXPANSION.md section E)
+    "lumen_heart": (["core", "shard_1", "shard_2", "shard_3", "shard_4", "roots"], ["lumen_heart/lumen_heart"], True,
+                    (64, 64)),
+    "gale_harrier": (["body", "head", "beak", "left_wing", "left_wing_tip", "right_wing", "right_wing_tip", "tail",
+                      "left_leg", "right_leg"], ["gale_harrier/gale_harrier"], True, (64, 64)),
+    "leviathan_drifter": (["body", "head", "jaw", "left_fin", "left_fin_tip", "right_fin", "right_fin_tip", "tail_1",
+                           "tail_2", "tail_fluke", "back_ridge"], ["leviathan_drifter/leviathan_drifter"], True,
+                          (256, 256)),
+    "tide_eel": (["head", "jaw"] + ["body_%d" % i for i in range(1, 9)] + ["tail_fin"], ["tide_eel/tide_eel"], True,
+                 (128, 64)),
+    "drowned_ascendant": (["body", "robe", "head", "hood", "left_arm", "right_arm", "tablet"],
+                          ["drowned_ascendant/drowned_ascendant"], True, (64, 64)),
+    "glimmer": (["body", "tail"], ["glimmer/glimmer"], True, (32, 32)),
+    "lantern_moth": (["body", "left_wing", "right_wing", "antennae"], ["lantern_moth/lantern_moth"], True, (32, 32)),
+    "void_bell": (["shell", "core", "lamp", "hatch"], ["void_bell/void_bell"], True, (128, 128)),
 }
+# required parent links (spec E names the hierarchy; animations rely on it)
+PARENTS = {
+    "lumen_heart": {"core": None, "shard_1": "core", "shard_2": "core", "shard_3": "core", "shard_4": "core",
+                    "roots": "core"},
+    "gale_harrier": {"beak": "head", "left_wing_tip": "left_wing", "right_wing_tip": "right_wing"},
+    "leviathan_drifter": {"body": None, "jaw": "head", "left_fin_tip": "left_fin", "right_fin_tip": "right_fin",
+                          "tail_2": "tail_1", "tail_fluke": "tail_2", "back_ridge": "body"},
+    "tide_eel": dict([("head", None), ("jaw", "head"), ("body_1", "head"), ("tail_fin", "body_8")] +
+                     [("body_%d" % i, "body_%d" % (i - 1)) for i in range(2, 9)]),
+    "drowned_ascendant": {"robe": "body", "hood": "head", "tablet": "right_arm"},
+    "lantern_moth": {"antennae": "body"},
+    "void_bell": {"shell": None, "core": "shell", "lamp": "shell", "hatch": "shell"},
+}
+# texture variants that must share an existing skin's UV layout exactly (same opaque texels)
+SAME_LAYOUT = {
+    "wyrm/wyrm_hatchling_wardenborn.png": "wyrm/wyrm_hatchling.png",
+    "wyrm/wyrm_fledgling_wardenborn.png": "wyrm/wyrm_fledgling.png",
+    "wyrm/wyrm_drake_wardenborn.png": "wyrm/wyrm_drake.png",
+}
+# overlays drawn on top of an existing skin: transparent except the gear, which must sit on the base's texels
+OVERLAYS = {"wyrm/wyrm_drake_barding.png": "wyrm/wyrm_drake.png",
+            "wyrm/wyrm_drake_saddlebags.png": "wyrm/wyrm_drake.png"}
 TEXTURE_ONLY = {
     "wild_shulker/wild_shulker.png": (64, 64), "wild_shulker/wild_shulker_molted.png": (64, 64),
     "tidewisp/tidewisp.png": (32, 32), "the_unmade/core.png": (64, 64), "the_unmade/tendril.png": (16, 64),
     "equipment/wings/elytra_gale.png": (64, 32), "equipment/wings/elytra_still.png": (64, 32),
     "equipment/wings/elytra_hover.png": (64, 32),
+    # expansion (art/SPEC_EXPANSION.md section F)
+    "shulker_archivist.png": (64, 64),
+    "wyrm/wyrm_hatchling_wardenborn.png": (64, 64), "wyrm/wyrm_hatchling_wardenborn_emissive.png": (64, 64),
+    "wyrm/wyrm_fledgling_wardenborn.png": (128, 64), "wyrm/wyrm_fledgling_wardenborn_emissive.png": (128, 64),
+    "wyrm/wyrm_drake_wardenborn.png": (128, 128), "wyrm/wyrm_drake_wardenborn_emissive.png": (128, 128),
+    "wyrm/wyrm_drake_barding.png": (128, 128), "wyrm/wyrm_drake_saddlebags.png": (128, 128),
+    "equipment/wings/elytra_scaled.png": (64, 32), "equipment/wings/elytra_gale_scaled.png": (64, 32),
+    "equipment/wings/elytra_still_scaled.png": (64, 32), "equipment/wings/elytra_hover_scaled.png": (64, 32),
+    "equipment/wings/elytra_tempest.png": (64, 32), "equipment/wings/elytra_tempest_scaled.png": (64, 32),
+    "banner/warden.png": (64, 64), "shield/warden.png": (64, 64),
 }
+NEW_ELYTRA = ["equipment/wings/elytra_scaled.png", "equipment/wings/elytra_gale_scaled.png",
+              "equipment/wings/elytra_still_scaled.png", "equipment/wings/elytra_hover_scaled.png",
+              "equipment/wings/elytra_tempest.png", "equipment/wings/elytra_tempest_scaled.png"]
 
 
 def png_size(p):
@@ -144,6 +194,9 @@ def check_model(name, req, texs, emissive, want_size, errs, notes):
                     errs.append("%s: emissive map %s has no glowing texels" % (name, ep))
                 if glow > 0.9 * W * H:
                     errs.append("%s: emissive map %s is not mostly transparent" % (name, ep))
+    for child, par in PARENTS.get(name, {}).items():
+        if child in parts and parts[child]["parent"] != par:
+            errs.append("%s: part %s must be a child of %s (is %s)" % (name, child, par, parts[child]["parent"]))
     notes.append("%-17s %2d parts %3d cubes  tex %dx%d  %s" % (name, len(parts), ncubes, W, H, ", ".join(texs)))
 
 
@@ -159,16 +212,61 @@ def main():
             errs.append("%s is %s, expected %s" % (rel, png_size(p), size))
         else:
             notes.append("%-40s %dx%d ok" % (rel, size[0], size[1]))
+    # expansion variants: identical opaque layout to their base skin; overlays only on base texels, mostly clear
+    for rel, base in SAME_LAYOUT.items():
+        a, b = os.path.join(TD, rel), os.path.join(TD, base)
+        if os.path.exists(a) and os.path.exists(b):
+            if ((read_png(a)[:, :, 3] > 0) != (read_png(b)[:, :, 3] > 0)).any():
+                errs.append("%s does not match the UV/alpha layout of %s" % (rel, base))
+            em = a[:-4] + "_emissive.png"
+            if os.path.exists(em):
+                e = read_png(em)
+                if not (e[:, :, 3] > 0).any() or ((e[:, :, 3] > 0) & ~(read_png(a)[:, :, 3] > 0)).any():
+                    errs.append("%s: emissive map empty or glowing outside the skin" % em)
+    for rel, base in OVERLAYS.items():
+        a, b = os.path.join(TD, rel), os.path.join(TD, base)
+        if os.path.exists(a) and os.path.exists(b):
+            oa, ba = read_png(a)[:, :, 3] > 0, read_png(b)[:, :, 3] > 0
+            if not oa.any():
+                errs.append("%s is empty" % rel)
+            if (oa & ~ba).any():
+                errs.append("%s has %d opaque texels outside %s's UV islands" % (rel, int((oa & ~ba).sum()), base))
+            if oa.sum() > 0.5 * ba.sum():
+                errs.append("%s covers more than half of the base skin - overlay should be mostly transparent" % rel)
     # the wild shulker skins must keep vanilla's alpha layout exactly (same opaque texels)
     try:
         from mclib.paths import vanilla
         van = read_png(vanilla("textures/entity/shulker/shulker.png"))
-        for rel in ("wild_shulker/wild_shulker.png", "wild_shulker/wild_shulker_molted.png"):
+        for rel in ("wild_shulker/wild_shulker.png", "wild_shulker/wild_shulker_molted.png", "shulker_archivist.png"):
             w = read_png(os.path.join(TD, rel))
             if ((w[:, :, 3] > 0) != (van[:, :, 3] > 0)).any():
                 errs.append("%s does not match the vanilla shulker UV/alpha layout" % rel)
     except FileNotFoundError:
         notes.append("(vanilla shulker not available - layout comparison skipped)")
+    # new elytra skins keep the vanilla elytra alpha layout; pattern masks stay inside vanilla's pattern area
+    try:
+        from mclib.paths import vanilla
+        vel = read_png(vanilla("textures/entity/equipment/wings/elytra.png"))[:, :, 3] > 0
+        for rel in NEW_ELYTRA:
+            p = os.path.join(TD, rel)
+            if os.path.exists(p) and ((read_png(p)[:, :, 3] > 0) != vel).any():
+                errs.append("%s does not match the vanilla elytra UV/alpha layout" % rel)
+        for rel, base in (("banner/warden.png", "textures/entity/banner/base.png"),
+                          ("shield/warden.png", "textures/entity/shield/base.png")):
+            p = os.path.join(TD, rel)
+            if not os.path.exists(p):
+                continue
+            mk = read_png(p)
+            on = mk[:, :, 3] > 0
+            area = read_png(vanilla(base))[:, :, 3] > 0
+            if not on.any():
+                errs.append("%s is an empty pattern mask" % rel)
+            if (on & ~area).any():
+                errs.append("%s has texels outside vanilla's pattern area (%s)" % (rel, base))
+            if (on & ((mk[:, :, :3].min(-1) < 200))).any():
+                errs.append("%s must be near-white (the game tints it with the dye colour)" % rel)
+    except FileNotFoundError:
+        notes.append("(vanilla elytra/banner/shield not available - layout comparison skipped)")
     for n in notes:
         print("  " + n)
     if errs:

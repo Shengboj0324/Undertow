@@ -1,0 +1,63 @@
+{
+  "texture_size": [64, 64],
+  "parts": [
+    {
+      "name": "body", "parent": null,
+      "pivot": [0, -4, 0], "rotation": [0, 0, 0],
+      "cubes": [
+        {"origin": [-3.5, 2, -2], "size": [7, 8, 4], "uv": [42, 15], "inflate": 0, "mirror": false},
+        {"origin": [-4, 0, -2.5], "size": [8, 2, 5], "uv": [0, 47], "inflate": 0, "mirror": false}
+      ]
+    },
+    {
+      "name": "robe", "parent": "body",
+      "pivot": [0, 10, 0], "rotation": [0, 0, 0],
+      "cubes": [
+        {"origin": [-4, 0, -2.5], "size": [8, 10, 5], "uv": [28, 0], "inflate": 0, "mirror": false},
+        {"origin": [-4.5, 10, -3], "size": [9, 8, 6], "uv": [0, 15], "inflate": 0, "mirror": false}
+      ]
+    },
+    {
+      "name": "head", "parent": null,
+      "pivot": [0, -4, 0], "rotation": [0, 0, 0],
+      "cubes": [
+        {"origin": [-3, -7, -3], "size": [6, 7, 6], "uv": [0, 29], "inflate": 0, "mirror": false}
+      ]
+    },
+    {
+      "name": "hood", "parent": "head",
+      "pivot": [0, 0, 0], "rotation": [0, 0, 0],
+      "cubes": [
+        {"origin": [-3.5, -7.5, -3.5], "size": [7, 8, 7], "uv": [0, 0], "inflate": 0, "mirror": false},
+        {"origin": [-2.5, -8.5, -2], "size": [5, 1, 5], "uv": [40, 38], "inflate": 0, "mirror": false},
+        {"origin": [-1, -9.5, 0], "size": [2, 1, 3], "uv": [54, 0], "inflate": 0, "mirror": false},
+        {"origin": [-2.5, -5, 3.5], "size": [5, 6, 1], "uv": [52, 27], "inflate": 0, "mirror": false}
+      ]
+    },
+    {
+      "name": "right_arm", "parent": null,
+      "pivot": [-4.5, -3, 0], "rotation": [-55, -14, 0],
+      "cubes": [
+        {"origin": [-1.5, -1, -1.5], "size": [3, 11, 3], "uv": [30, 15], "inflate": 0, "mirror": false},
+        {"origin": [-2, 7, -2], "size": [4, 5, 4], "uv": [24, 38], "inflate": 0, "mirror": false},
+        {"origin": [-1, 11, -1], "size": [2, 2, 2], "uv": [54, 4], "inflate": 0, "mirror": false}
+      ]
+    },
+    {
+      "name": "left_arm", "parent": null,
+      "pivot": [4.5, -3, 0], "rotation": [-4, 0, -4],
+      "cubes": [
+        {"origin": [-1.5, -1, -1.5], "size": [3, 11, 3], "uv": [30, 15], "inflate": 0, "mirror": true},
+        {"origin": [-2, 7, -2], "size": [4, 5, 4], "uv": [24, 38], "inflate": 0, "mirror": true},
+        {"origin": [-1, 11, -1], "size": [2, 2, 2], "uv": [54, 4], "inflate": 0, "mirror": true}
+      ]
+    },
+    {
+      "name": "tablet", "parent": "right_arm",
+      "pivot": [1, 12, -1], "rotation": [70, 0, 10],
+      "cubes": [
+        {"origin": [-3, -1, -4], "size": [6, 1, 8], "uv": [24, 29], "inflate": 0, "mirror": false}
+      ]
+    }
+  ]
+}

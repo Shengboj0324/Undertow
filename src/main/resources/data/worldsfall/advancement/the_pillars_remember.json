@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:pact_glyph_depths"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.the_pillars_remember.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.the_pillars_remember.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:nothing_holds"
+}

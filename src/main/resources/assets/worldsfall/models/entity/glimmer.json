@@ -1,0 +1,23 @@
+{
+  "texture_size": [32, 32],
+  "parts": [
+    {
+      "name": "body", "parent": null,
+      "pivot": [0, 22, 0], "rotation": [0, 0, 0],
+      "cubes": [
+        {"origin": [-1, -1, -2], "size": [2, 2, 3], "uv": [0, 0], "inflate": 0, "mirror": false},
+        {"origin": [-0.5, -0.5, -3], "size": [1, 1, 1], "uv": [20, 2], "inflate": 0, "mirror": false},
+        {"origin": [-0.5, -1.5, -1], "size": [1, 1, 2], "uv": [14, 0], "inflate": 0, "mirror": false},
+        {"origin": [-2, 0, -2], "size": [4, 0, 2], "uv": [20, 0], "inflate": 0, "mirror": false}
+      ]
+    },
+    {
+      "name": "tail", "parent": "body",
+      "pivot": [0, 0, 1], "rotation": [0, 0, 0],
+      "cubes": [
+        {"origin": [-0.5, -0.5, 0], "size": [1, 1, 1], "uv": [24, 2], "inflate": 0, "mirror": false},
+        {"origin": [0, -1.5, 1], "size": [0, 3, 2], "uv": [10, 0], "inflate": 0, "mirror": false}
+      ]
+    }
+  ]
+}

@@ -21,7 +21,12 @@ PREVIEWS = os.path.join(REPO, "art", "previews")
 
 MODELS = ["void_skate", "chorus_grazer", "underside_lurker", "hoarder", "spire_warden", "echo",
           "wyrm_hatchling", "wyrm_fledgling", "wyrm_drake", "shardling", "unmade_shard", "void_capsule",
-          "rift_hook", "tether_pylon", "wild_shulker", "elytra_upgrades"]
+          "rift_hook", "tether_pylon", "wild_shulker", "elytra_upgrades",
+          # expansion (art/SPEC_EXPANSION.md E + F)
+          "lumen_heart", "gale_harrier", "leviathan_drifter", "tide_eel", "drowned_ascendant", "glimmer",
+          "lantern_moth", "void_bell", "wyrm_hatchling_wardenborn", "wyrm_fledgling_wardenborn",
+          "wyrm_drake_wardenborn", "wyrm_drake_gear", "elytra_scaled", "elytra_tempest", "shulker_archivist",
+          "warden_banner", "warden_shield"]
 
 
 def run_model(name, tmp, render=True):

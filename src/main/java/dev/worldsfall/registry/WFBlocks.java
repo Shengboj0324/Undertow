@@ -196,6 +196,21 @@ public final class WFBlocks {
         dev.worldsfall.warden.WardensLanternBlock::new, p -> p.mapColor(MapColor.COLOR_BLACK).strength(3.5f).sound(SPIRE_LANTERN_SOUND)
             .lightLevel(s -> 14).noOcclusion().pushReaction(PushReaction.POPPED)));
 
+    // ================= Expansion 1.3: the Gap
+    public static final DeferredBlock<dev.worldsfall.gap.CausewaySocketBlock> CAUSEWAY_SOCKET = item(BLOCKS.registerBlock("causeway_socket",
+        dev.worldsfall.gap.CausewaySocketBlock::new, p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(-1.0f, 3600000.0f).noLootTable()
+            .noOcclusion().lightLevel(s -> s.getValue(dev.worldsfall.gap.CausewaySocketBlock.USED) ? 4 : 8)));
+    public static final DeferredBlock<dev.worldsfall.gap.CausewayLanternBlock> CAUSEWAY_LANTERN = item(BLOCKS.registerBlock("causeway_lantern",
+        dev.worldsfall.gap.CausewayLanternBlock::new, p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(3.5f).sound(SPIRE_LANTERN_SOUND)
+            .lightLevel(s -> 13).noOcclusion().pushReaction(PushReaction.POPPED)));
+    public static final DeferredBlock<dev.worldsfall.gap.PlaqueBlock> CAUSEWAY_PLAQUE = item(BLOCKS.registerBlock("causeway_plaque",
+        dev.worldsfall.gap.PlaqueBlock::new, p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(1.5f, 6.0f).noOcclusion()));
+    public static final DeferredBlock<dev.worldsfall.gap.DriftBuoyBlock> DRIFT_BUOY = BLOCKS.registerBlock("drift_buoy",
+        dev.worldsfall.gap.DriftBuoyBlock::new, p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.5f).sound(SoundType.LANTERN)
+            .lightLevel(s -> 10).noOcclusion().pushReaction(PushReaction.POPPED));
+    public static final DeferredBlock<dev.worldsfall.gap.RoostPostBlock> ROOST_POST = item(BLOCKS.registerBlock("roost_post",
+        dev.worldsfall.gap.RoostPostBlock::new, p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(1.5f, 6.0f).noOcclusion()));
+
     public static final DeferredBlock<LiquidBlock> STILLWATER = BLOCKS.registerBlock("stillwater",
         p -> new dev.worldsfall.fluid.StillwaterBlock(WFFluids.STILLWATER.get(), p),
         p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision().strength(100.0f).pushReaction(PushReaction.POPPED)

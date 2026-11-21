@@ -57,7 +57,7 @@ public final class WFTests {
     private WFTests() {}
 
     /** 24 from 1.0 plus the expansion's (1.2 → 2.0). */
-    static final int EXPECTED_ADVANCEMENTS = 31;
+    static final int EXPECTED_ADVANCEMENTS = 33;
 
     static void collect(Map<String, Consumer<GameTestHelper>> out) {
         out.put("tide_cycle_math", WFTests::tideCycleMath);
@@ -88,6 +88,10 @@ public final class WFTests {
         out.put("warden_release_needs_the_heart", WFTests::releaseGate);
         out.put("elytra_styles_stack", WFTests::elytraStyles);
         out.put("wyrm_barding_and_temperament", WFTests::wyrmBarding);
+        // expansion 1.3: the Gap
+        out.put("causeway_plan_shape", WFTests::causewayPlan);
+        out.put("drift_buoy_needs_open_air", WFTests::buoyOpenAir);
+        out.put("pillar_glyphs_ring_in_order", WFTests::pillarGlyphs);
     }
 
     static int maxTicks(String name) {
@@ -503,6 +507,50 @@ public final class WFTests {
         wyrm.setTemperamentFromWorld(h.getLevel());
         h.assertTrue(wyrm.temperament() != dev.worldsfall.entity.Wyrm.Temperament.NONE, "a temperament is set at hatching");
         wyrm.discard();
+        h.succeed();
+    }
+
+    private static void causewayPlan(GameTestHelper h) {
+        var a = dev.worldsfall.gap.Causeway.plan(net.minecraft.util.RandomSource.create(42));
+        var b = dev.worldsfall.gap.Causeway.plan(net.minecraft.util.RandomSource.create(42));
+        h.assertTrue(a.equals(b), "the plan is deterministic per seed");
+        for (long seed = 0; seed < 40; seed++) {
+            var plan = dev.worldsfall.gap.Causeway.plan(net.minecraft.util.RandomSource.create(seed));
+            h.assertTrue(plan.size() >= 12 && plan.size() <= 30, "segment count " + plan.size());
+            h.assertTrue(plan.getFirst().r0() == dev.worldsfall.gap.Causeway.START_R, "starts at the main island's rim");
+            h.assertTrue(plan.getLast().r1() >= dev.worldsfall.gap.Causeway.END_R - 50, "reaches the outer islands: " + plan.getLast().r1());
+            h.assertTrue(plan.stream().filter(dev.worldsfall.gap.CausewayData.Segment::waystation).count() == 3, "three waystations");
+            for (int k = 0; k + 1 < plan.size(); k++) {
+                int gap = plan.get(k + 1).r0() - plan.get(k).r1();
+                h.assertTrue(gap >= 4 && gap <= 50, "a crossable gap between segments: " + gap);
+                h.assertTrue(plan.get(k).r1() - plan.get(k).r0() >= 10, "segments are at least 10 long");
+                h.assertTrue(Math.abs(plan.get(k).y() - 64) <= 5, "deck height stays near Y 64");
+            }
+        }
+        h.succeed();
+    }
+
+    private static void buoyOpenAir(GameTestHelper h) {
+        BlockPos at = h.absolutePos(new BlockPos(1, 6, 1));
+        h.assertTrue(dev.worldsfall.gap.DriftBuoyBlock.openAir(h.getLevel(), at), "open air above the test floor");
+        h.getLevel().setBlockAndUpdate(at.offset(2, 0, 0), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        h.assertTrue(!dev.worldsfall.gap.DriftBuoyBlock.openAir(h.getLevel(), at), "a block within three refuses the buoy");
+        h.getLevel().setBlockAndUpdate(at.offset(2, 0, 0), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        h.succeed();
+    }
+
+    private static void pillarGlyphs(GameTestHelper h) {
+        ServerLevel end = h.getLevel().getServer().getLevel(net.minecraft.world.level.Level.END);
+        h.assertTrue(end != null, "the End exists");
+        var marks = dev.worldsfall.gap.PillarGlyphs.marks(end);
+        h.assertTrue(marks.size() == dev.worldsfall.gap.PillarGlyphs.WORDS, "one glyph per pillar: " + marks.size());
+        double prev = -10;
+        for (var m : marks) {
+            double ang = Math.atan2(m.top().getZ(), m.top().getX());
+            ang = ang < -1e-6 ? ang + Math.PI * 2 : ang;
+            h.assertTrue(ang > prev, "glyphs run around the ring in order");
+            prev = ang;
+        }
         h.succeed();
     }
 }

@@ -1,0 +1,8 @@
+{
+  "type": "worldsfall:blueprint",
+  "generator": "gapwreck",
+  "biomes": "#worldsfall:has_structure/gapwreck",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "none"
+}
