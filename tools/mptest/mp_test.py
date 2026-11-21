@@ -158,6 +158,32 @@ time.sleep(2)
 check(shoot("Bob", "back"), "Bob's screenshot (Alice's wings)")
 check(shoot("Alice", "view"), "Alice's screenshot")
 
+# ---- the expansion (2.0) on a real server: its dimension, every new creature ticking on both clients, world events
+cmd("execute in worldsfall:the_undertow run forceload add 0 0")
+time.sleep(1)
+check(any("Marked chunk" in l and "worldsfall:the_undertow" in l for l in all_lines) or
+      any("Marked chunk" in l for l in all_lines[-20:]), "the Undertow dimension exists on the server")
+for e, pos in (("leviathan_drifter", "12 150 440"), ("gale_harrier", "-4 130 420"), ("void_bell", "4 121 410"), ("tide_eel", "-3 126 412"),
+               ("glimmer", "0 125 414"), ("drowned_ascendant", "6 120 400"), ("lantern_moth", "-5 122 400"), ("shulker_archivist", "-5 120 403"),
+               ("elder_warden", "0 160 470")):
+    cmd(f"execute in minecraft:the_end run summon worldsfall:{e} {pos}")
+time.sleep(3)
+# a Starfall needs an island top near a player to land on; the test platform floats over the Gap, so raise one
+cmd("execute in minecraft:the_end run forceload add 16 380 48 432")
+cmd("execute in minecraft:the_end run fill 18 112 384 46 117 428 minecraft:end_stone")
+time.sleep(1)
+cmd("worldsfall event starfall")
+time.sleep(14)
+check(any("World event 1 started" in l for l in all_lines), "a Starfall starts on the server")
+check(shoot("Bob", "expansion"), "Bob's screenshot (the expansion's creatures)")
+cmd("worldsfall event stop")
+cmd("worldsfall event eclipse")
+time.sleep(12)
+check(any("World event 3 started" in l for l in all_lines), "an Eclipse of Stillness starts on the server")
+check(shoot("Alice", "eclipse"), "Alice's screenshot (the Eclipse)")
+cmd("worldsfall event stop")
+time.sleep(2)
+
 # ---- shut down
 open(os.path.join(PROBE, "quit"), "w").close()
 for c in clients:

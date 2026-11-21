@@ -8,6 +8,7 @@
 An End expansion for <b>Minecraft: Java Edition 26.3</b> on <b>NeoForge</b>.<br>
 <a href="https://github.com/Shengboj0324/Undertow/releases/latest"><b>Download</b></a> ·
 <a href="https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/worldsfall_showcase_1.1.3.mp4"><b>Watch the 2-minute tour (1080p)</b></a> ·
+<a href="https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/worldsfall_expansion_2.0.mp4"><b>Watch the 2.0 expansion tour</b></a> ·
 <a href="#videos">All videos</a>
 </p>
 
@@ -35,6 +36,7 @@ Everything on this page was captured in the game, with default settings and no s
 - [Your Wyrm](#your-wyrm)
 - [Gear](#gear)
 - [The final boss: The Unmade](#the-final-boss-the-unmade)
+- [Beyond the fall: the 2.0 expansion](#beyond-the-fall-the-20-expansion)
 - [Videos](#videos)
 - [Settings and accessibility](#settings-and-accessibility)
 - [Playing on a server](#playing-on-a-server)
@@ -51,7 +53,7 @@ Everything on this page was captured in the game, with default settings and no s
 | Java | **25** (the official launcher already includes it) |
 
 1. Install NeoForge 26.3 for your launcher profile.
-2. Download `worldsfall-1.1.3.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
+2. Download `worldsfall-2.0.0.jar` from the [latest release](https://github.com/Shengboj0324/Undertow/releases/latest).
 3. Put it in the profile's `mods` folder and start the game.
 
 **Your existing worlds work.** The dragon fight, End Cities, Shulkers, Endermen and elytra are untouched. New content
@@ -324,6 +326,121 @@ Stillness** (your first Gravity Anchor), a music disc, and the ability to build 
 
 ---
 
+## Beyond the fall: the 2.0 expansion
+
+Version 2.0 keeps going after The Unmade: the dragon gets a story and a way out of its loop, the gap around the main
+island gets a road, End Cities and ships join the rest of the mod, the End starts to feel alive between your visits,
+a sky layer opens above the islands and a whole dimension waits under the tide. And everything you repair now counts.
+
+![Nine scenes from the 2.0 expansion](docs/images/expansion_grid.jpg)
+
+<p align="center"><a href="https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/worldsfall_expansion_2.0.mp4"><b>▶ Watch the expansion tour (1:57, 1080p)</b></a></p>
+
+### The dragon: the Warden Cycle
+
+<img src="docs/images/x_warden_cycle.jpg" width="520" align="right" alt="A Pact fight: the dragon over four Pact Crystals and a Lumen Heart">
+
+- **Your first fight tells a story.** Every pillar crystal you break reveals one line of the dragon's song, and the
+  island cracks as it weakens.
+- **Pacts** turn every later fight into a trial. Craft Pact Crystals (an End Crystal plus a Pact Glyph) and respawn the
+  dragon with them: the tide closes in, shards rain, Echoes hide among the crystals, Hoarders steal your drops, the
+  dragon learns your tricks... Stack pacts for **Weight**; heavier fights pay more **Dragon Scales**, plus a banner,
+  an egg fragment, a Wardenborn Seal and a music disc.
+- **The Pact of Depths** (found, not crafted: read the pillars through a Void Lens) takes the fight underground into a
+  hidden Gallery, then out into the Drift as the tide rises.
+- **The Release.** After The Unmade, four Stillness Crystals call a calm dragon. Keep them whole while it listens and it
+  bows to you and leaves to become the **Elder Warden**, who will fly you to any gateway for an offering of Roasted
+  Chorus Pods.
+- Dragon Scales make **barding** for your Drake, a **scaled elytra** look, the **Warden's Lantern** (no Enderman or
+  Echo teleports within 32 blocks) and the Tuning Fork.
+
+<br clear="right">
+
+### The Gap and the cities
+
+<img src="docs/images/x_causeway.jpg" width="520" align="right" alt="A span of the Pilgrim's Causeway over the tide">
+
+- **The Pilgrim's Causeway** is a broken floating road from the main island toward the Spires. Set a Causeway Keystone in
+  each socket to rebuild a missing span; your name goes on a plaque, and when the road is whole its lanterns burn silver.
+- **Drift Buoys** mark your own routes across the Gap (Skates like to perch on them), and **Gapwrecks** in the denser
+  Debris Belt are safe practice for the real wrecks.
+- **Shulker Archivists** live in End Cities: show one an Echo Tablet and it trades City Charts, shells, Pact Glyphs, or
+  the tablet you're missing.
+- A **Drift Helm** turns an End Ship into a **Mooring**; its **Ship's Bell** calls your Skates and Drakes aboard.
+- **The Gateway Lattice**: strike gateways with a Tuning Fork, then sneak into one to jump to any node you know.
+- **Void Charts** are maps made for the End: contours, a starry void, teal shading where the tide is.
+
+<br clear="right">
+
+### A living End
+
+<img src="docs/images/x_living_blocks.jpg" width="520" align="right" alt="Lantern Moths, a Wyrm on its roost, and the new building blocks">
+
+- **World events** you'll hear and see, never read about: a **Starfall** lands a glowing shard cluster nearby; a
+  **King Tide** floods the small islands and leaves Tidewrack behind; an **Eclipse of Stillness** freezes the tide, dims
+  the stars and lets memories walk; a **Skate Migration** crosses the sky, and its Dusk Skates are the only ones you can
+  tame.
+- **Fish the tide** at High Tide, or angle quietly in Stillwater.
+- Treat the **Hoarders** fairly and they'll trust you with **Courier Tokens**: a Hoarder carries a stack between two
+  caches every five minutes.
+- **Lantern Moths**, the **Wyrm Roost**, the redstone **Tide Bell**, the **Gravity Plate** jump pad, Anchor Frame lamps.
+
+<br clear="right">
+
+### The Zenith: the sky above the islands
+
+<img src="docs/images/x_zenith.jpg" width="520" align="right" alt="A Zenith Shoal, a Leviathan and a Sky Current">
+
+- Between Y 150 and 250 over the outer End: **Zenith Shoals** of pale Skystone and tide-lit **Halo Glass**.
+- **Sky Currents** carry you at 25 blocks a second, no rockets; **Downdrafts** push you down.
+- **Leviathans** drift along the currents with gardens on their backs. Land on one and ride it.
+- **Gale Harriers** dive at gliders to knock them out of the sky. Raise a shield or use the Still brake.
+- **The Orrery**: free its three jammed rings with Spire Keys at Low, Rising and High Tide. The lens focuses, you get a
+  **Star Chart**, and a new star appears in everyone's sky.
+
+<br clear="right">
+
+<p align="center">
+<img src="docs/images/x_orrery.jpg" width="440" alt="The Orrery with its rings jammed">
+<img src="docs/images/x_orrery_aligned.jpg" width="440" alt="The Orrery aligned, its lens shining">
+</p>
+
+### The Undertow: under the tide
+
+<img src="docs/images/x_undertow.jpg" width="520" align="right" alt="A Void Bell above a Sunken Archive in the Undertow">
+
+- At High Tide, **Tide Maws** open in the outer tide. Fall in and you're in **the Undertow**: endless teal haze where the
+  void eats you twice as fast.
+- Build a **Void Bell** (a Gravity Anchor in Stillglass, plus four Anchor Frames) to dive in safely with a friend and a
+  Skate. It flies where you look and runs on Stillness Fragments; a **Bell Winch** calls it home.
+- **Sunken Archives** hold six **Archive Codices** that finish the story. One is hidden; a Drowned Ascendant points the
+  way. Watch for **Tide Eels**: they love a lit lamp.
+- Rewards: the **Abyssal Anchor** (never used up), the **Undertow Pearl** (back to your last Void Capsule), Null Coral,
+  the **Archive Shelf**, and the things everyone has ever lost to the void, drifting by.
+
+<br clear="right">
+
+### The Restoration of the End
+
+<img src="docs/images/x_overmoon.jpg" width="520" align="right" alt="The Overmoon over the main island at Stillness">
+
+Everything you rebuild (Spires, Causeway spans, Moorings, Orreries, Codices, the Release...) raises one shared
+**Stillness** score for the whole world. Five stages change the End for everyone: lanterns return to the ruins and a
+sealed hall opens in the Undercroft, where a **mural** fills in as you go; loam and herds come back; the tide steadies;
+the currents brighten and a new constellation appears; and finally the **Overmoon** swells above the main island with
+the Leviathans gathered under it.
+
+<br clear="right">
+
+<p align="center">
+<img src="docs/images/x_restoration_mural.jpg" width="440" alt="The Restoration Mural, every panel lit">
+<img src="docs/images/x_trophy_hall.jpg" width="440" alt="The trophy hall">
+</p>
+
+<p align="center"><img src="docs/images/x_items.jpg" width="720" alt="The expansion's items"></p>
+
+---
+
 ## Videos
 
 Every clip was recorded in the game by an automated camera tour. Click a scene to watch it in full HD.
@@ -336,6 +453,22 @@ Every clip was recorded in the game by an automated camera tour. Click a scene t
 | [▶ Creatures](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_creatures.mp4) | [▶ Through the Void Lens](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_void_lens.mp4) | [▶ Egg Cradle and Wyrm](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_egg_cradle_wyrm.mp4) |
 | [▶ Gravity Anchor](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_gravity_anchor.mp4) | [▶ The items](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_items.mp4) | [▶ The Unmade](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_the_unmade.mp4) |
 | [▶ The Sundering](https://github.com/Shengboj0324/Undertow/releases/download/v1.1.3/clip_sundering.mp4) | | |
+
+
+**The 2.0 expansion**
+
+| | | |
+|---|---|---|
+| [▶ **2.0 tour** (1:57)](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/worldsfall_expansion_2.0.mp4) | [▶ A Pact fight](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_warden_cycle.mp4) | [▶ The Elder Warden](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_elder_warden.mp4) |
+| [▶ The Pilgrim's Causeway](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_causeway.mp4) | [▶ Charts, Archivist, Mooring](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_cities_and_charts.mp4) | [▶ Moths, roosts and new blocks](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_living_blocks.mp4) |
+| [▶ Starfall](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_starfall.mp4) | [▶ Eclipse of Stillness](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_eclipse.mp4) | [▶ Skate Migration](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_migration.mp4) |
+| [▶ The Zenith](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_zenith.mp4) | [▶ The Orrery](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_orrery.mp4) | [▶ The Orrery aligned](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_orrery_aligned.mp4) |
+| [▶ The Undertow](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_undertow.mp4) | [▶ The 2.0 items](https://github.com/Shengboj0324/Undertow/releases/download/v2.0.0/clip_x_items.mp4) |  |
+
+<p align="center">
+<img src="docs/media/x_zenith.webp" width="440" alt="The Zenith: a Leviathan over the Skystone shoals">
+<img src="docs/media/x_undertow.webp" width="440" alt="The Undertow: a Void Bell over a Sunken Archive">
+</p>
 
 <p align="center">
 <img src="docs/media/gravity_anchor.webp" width="440" alt="A Gravity Anchor's stable field">
@@ -403,7 +536,7 @@ The jar is written to `build/libs/`. Compilation runs with `-Xlint:all -Werror`.
 
 ```bash
 ./gradlew test --no-configuration-cache                 # JUnit (tide maths, region rules)
-./gradlew runGameTestServer --no-configuration-cache    # 23 in-world GameTests, exits non-zero on failure
+./gradlew runGameTestServer --no-configuration-cache    # 55 in-world GameTests, exits non-zero on failure
 ```
 
 **Multiplayer:** `python3 tools/mptest/mp_test.py <server dir> <jar>` starts a production NeoForge server (installed

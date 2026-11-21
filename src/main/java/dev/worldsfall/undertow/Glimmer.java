@@ -38,6 +38,10 @@ public class Glimmer extends AmbientCreature {
     @Override
     public void aiStep() {
         super.aiStep();
+        if (!canSimulateMovement()) {
+            // only the side that owns the entity moves it (the client just follows the server)
+            return;
+        }
         Vec3 v = getDeltaMovement().scale(0.9).add(current(getX(), getY(), getZ()).scale(0.2));
         // school: drift toward neighbours, scatter from a bell
         if (tickCount % 5 == getId() % 5) {

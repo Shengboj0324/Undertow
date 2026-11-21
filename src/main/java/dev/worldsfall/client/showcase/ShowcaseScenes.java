@@ -138,7 +138,7 @@ public final class ShowcaseScenes {
     }
 
     public static List<Scene> all() {
-        return List.of(
+        List<Scene> base = List.of(
             new Scene("chorus_reach", c -> biomeScene(c, WFBiomes.CHORUS_REACH, 30, 8, (s, p) -> {
                 ServerLevel l = c.end();
                 spawnAround(l, WFEntities.CHORUS_GRAZER.get(), p.target(), 3, 5, false);
@@ -206,6 +206,10 @@ public final class ShowcaseScenes {
             }),
             new Scene("sundering", ShowcaseScenes::sunderingScene)
         );
+        // the expansion's pictures (1.2 → 2.0) come after the Sundering, which several of them need
+        List<Scene> all = new ArrayList<>(base);
+        all.addAll(ExpansionScenes.all());
+        return List.copyOf(all);
     }
 
     // ---- scene builders -------------------------------------------------------------------------------------
@@ -404,12 +408,12 @@ public final class ShowcaseScenes {
         }).settle(40);
     }
 
-    private interface Studio {
+    interface Studio {
         Vec3[] build(ServerLevel level, Vec3 center);
     }
 
     /** A small floating stage in open void (where vanilla never generates terrain), lit with lanterns. */
-    private static Plan studioScene(Ctx c, BlockPos origin, boolean floor, Studio studio) {
+    static Plan studioScene(Ctx c, BlockPos origin, boolean floor, Studio studio) {
         tide(c, "rising");
         Vec3 center = Vec3.atBottomCenterOf(origin);
         return Plan.at(Level.END, center.add(-10, 6, -10), center).decorate((s, plan) -> {
@@ -488,7 +492,7 @@ public final class ShowcaseScenes {
         return new Vec3[] {center.add(-0.9, 1.9, 4.9), center.add(-0.6, 1.5, -0.4)};
     }
 
-    private static void buildStage(ServerLevel l, BlockPos o) {
+    static void buildStage(ServerLevel l, BlockPos o) {
         BlockState top = WFBlocks.POLISHED_STILLSTONE.get().defaultBlockState();
         BlockState rim = WFBlocks.STILLSTONE_BRICKS.get().defaultBlockState();
         BlockState under = WFBlocks.STILLSTONE.get().defaultBlockState();
@@ -604,7 +608,7 @@ public final class ShowcaseScenes {
 
     // ---- helpers --------------------------------------------------------------------------------------------
 
-    private static void tide(Ctx c, String phase) {
+    static void tide(Ctx c, String phase) {
         c.server().getCommands().performPrefixedCommand(c.server().createCommandSourceStack().withSuppressedOutput(), "worldsfall tide set " + phase);
     }
 

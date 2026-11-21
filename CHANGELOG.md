@@ -1,5 +1,93 @@
 # Changelog
 
+## 2.0.0: the Expansion
+
+The whole "Expansion & Dragon" proposal, in one release (it was planned as 1.2 → 2.0; every part is in).
+
+**The Warden Cycle (the dragon)**
+- **Wardensong**: the first fight now tells a story. Each pillar crystal you break reveals one line of the dragon's song;
+  the main island cracks at half and quarter health, and the exit portal hums before it opens.
+- **Crystal Pacts**: craft a Pact Crystal (End Crystal + Pact Glyph) and use it to respawn the dragon under a rule:
+  the Tide closes in, Shard volleys, disguised Echoes, Hoarder thieves, a dragon that learns your tactics, Stillness that
+  strips your buffs, the Lone Warden, or the Depths. Each pact adds Weight; heavier fights pay more Dragon Scales, a
+  banner pattern, an egg fragment, a Wardenborn Seal and the "Warden" music disc.
+- **The Descending Warden** (Pact of Depths): the fight dives through the Descent into a hidden Gallery under the
+  Undercroft, then breaks out into the Drift while the tide rises.
+- **The Release**: after The Unmade, four Stillness Crystals call a calm dragon. Keep them whole for a minute and it
+  bows, then flies to the tallest Fallen Spire to become the **Elder Warden**, who carries you to a gateway for an
+  offering of Roasted Chorus Pods. (Respawning ends in that world unless the server allows it.)
+- **Dragon Scales**: Wyrm barding (double Drake health), the Scaled elytra look (stacks with any upgrade), the Warden's
+  Lantern (no Enderman or Echo teleports within 32 blocks), the Tuning Fork. Wardenborn Wyrms hatch from sealed eggs;
+  Wyrms now have a temperament (Calm, Bold or Dreaming) and Drakes can carry saddlebags.
+
+**The Gap**
+- **The Pilgrim's Causeway**: a broken floating road from the main island toward the nearest Fallen Spires. Restore each
+  missing span with a Causeway Keystone; the restorer's name is set on a plaque, and the finished road's lanterns burn
+  silver. Waystations offer roost posts, a Hoard Cache and a Tide Gauge.
+- **The Debris Belt** and **Gapwrecks**: denser debris 500–750 blocks out, with small, safe wrecks above the tide.
+- **Drift Buoys**: floating route lights; Skates perch on them; the tide pops them.
+- **The pillars remember**: through a Void Lens each obsidian pillar shows a glyph; read all ten in order for the phrase
+  that unlocks the Pact of Depths.
+
+**Cities and navigation**
+- **Shulker Archivists**: peaceful Shulkers in End Cities that trade Echo Tablets for City Charts, Shulker Shells, Pact
+  Glyphs and the tablet you're missing.
+- **Moorings**: a Drift Helm turns an End Ship into a Mooring (its dragon head glows); its **Ship's Bell** calls your
+  Skates and Drakes aboard from 256 blocks.
+- **The Gateway Lattice**: strike gateways with a Tuning Fork, then sneak into one to travel to any node you know (one
+  ender pearl; not while the tide covers the destination).
+- **Void Charts**: maps of the End with height contours, a starry void, teal tide shading and icons for every place you
+  pass. City and Star Charts come pre-drawn.
+- **Sinking Bullets**: at High Tide, city Shulkers pull you down instead of up. End City chests gain a thread back into
+  the mod (tablets, glyphs, keystones, a Spire template, a City Chart).
+
+**Living systems**
+- **World events**, announced by sound and sky only: **Starfall** (a shard cluster lands nearby), **King Tide** (one tide
+  in eight climbs to Y 60 and leaves Tidewrack loot), **Eclipse of Stillness** (the tide freezes, stars go dark, and
+  harmless memories walk; they leave Eclipse Dust), **Skate Migration** (a flock with Dusk Skates, the only ones you can
+  tame).
+- **Casting the Tide**: fish on the tide plane at High Tide (Mirrorfish, Driftsilt, tablets, even lost things) and in
+  Stillwater (slow, safe, Mirror Shards and relics).
+- **Hoarder standing and Couriers**: fair barters raise your standing (better trades); at good standing, Courier Tokens
+  hire a Hoarder to carry a stack between two Courier Caches every five minutes. Theft cancels it.
+- **A food web you can see**: Lurkers eat Tidewisps, overgrazed islands go bare, Leviathans seed loam, Harriers hunt
+  Skatelings, Tide Eels follow Glimmer.
+- **Lantern Moths** around Fallen Spire lanterns (bottle them for light), the **Wyrm Roost**, the **Tide Bell** (a
+  redstone pulse each tide phase), the **Gravity Plate** (a low-gravity jump pad) and Anchor Frame lamps, slabs and stairs.
+
+**The Zenith (Y 150–250)**
+- **Zenith Shoals** of Skystone and Halo Glass (which glows with the tide). **Sky Currents** carry gliders at 25 blocks a
+  second; **Downdrafts** push them down. **Leviathan Drifters** carry gardens on their backs, and you can ride one;
+  they sing before every tide rise. **Gale Harriers** shove gliders out of the sky (a shield or the Still brake makes
+  them miss) and drop plumes for the **Current Vane** and the **Tempest** elytra upgrade.
+- **The Orrery**: free its three jammed rings with Spire Keys at Low, Rising and High Tide. The lens focuses, you get a
+  Star Chart, and a new star appears in the sky for everyone. The music track "Ladders".
+
+**The Undertow (a new dimension)**
+- At High Tide **Tide Maws** open in the outer tide plane and swallow anything that enters. Below lies the Undertow:
+  endless teal-white haze, dark drifting silhouettes, Void Erosion everywhere at double speed.
+- The **Void Bell**: a diving bell (Gravity Anchor + Stillglass + Anchor Frames) for two players and a Skate, inside a
+  Stable Field bubble; it flies where you look, runs on Stillness Fragments, and a **Bell Winch** recalls it.
+- **Sunken Archives** hold six **Archive Codices** that finish the story (and reveal the Overmoon); one is hidden where a
+  Drowned Ascendant points. **Tide Eels** drain lit bells; **Glimmer** shoals show the current. **Null Coral**, the
+  **Archive Shelf** (reads records aloud), the **Abyssal Anchor** (not consumed), the **Undertow Pearl** (return to your
+  last Void Capsule), "lost things" from every void death, and the track "Undertow".
+
+**The Restoration of the End**
+- Every act of repair raises one world-wide Stillness score. Five stages change the world for everyone: lanterns in the
+  ruins and a new Undercroft hall (with a mural that fills as you go), loam and herds returning, a steadier tide, brighter
+  currents and a new constellation, and finally the **Overmoon** swelling above the main island with Leviathans gathered
+  around it. A Skate stable and a trophy hall of everything your server has beaten open along the way.
+
+**Under the hood**
+- 55 GameTests (was 23), all passing; 72 new sound stems; every new model, texture and icon generated by the art pipeline.
+- **Tested on a real production server** with two clients: the Undertow dimension loads, every new creature ticks and
+  renders on both clients, Starfall and the Eclipse run, and the server and both clients log no errors.
+- Fixed during in-game testing: Glimmer shoals crashed the client (they moved themselves on the client side); the
+  Restoration Mural could stay dark when its panels were still being placed; Eclipse memories vanished in Peaceful.
+- New config keys for every system (`dragonPacts`, `causeway`, `latticeMaxNodes`, `sinkingBullets`, `tideFishing`,
+  `couriers`, the four events, `zenith`, `undertow`, `lostThingsCap`, the Restoration switches).
+
 ## 1.1.3
 
 - **Fixed:** the mod's HUD elements (tide indicator, Skate stamina arc, Echo Tablet text) stayed on screen when the HUD

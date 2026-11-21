@@ -62,7 +62,9 @@ public final class Charts {
         if (Tides.appliesTo(level) && Tides.isBelowTide(level, height - 0.5)) {
             return MapColor.WARPED_NYLIUM.getPackedId(b);
         }
-        MapColor c = top == null ? MapColor.SAND : top.getMapColor(level, BlockPos.ZERO);
+        // pre-drawn charts have no blocks to read: tint by height instead (low purple rims, pale end stone, white peaks)
+        MapColor c = top != null ? top.getMapColor(level, BlockPos.ZERO)
+            : height < 56 ? MapColor.TERRACOTTA_PURPLE : height < 72 ? MapColor.SAND : MapColor.TERRACOTTA_WHITE;
         if (c == MapColor.NONE) {
             c = MapColor.SAND;
         }

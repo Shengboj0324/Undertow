@@ -72,3 +72,27 @@ left room or where the platform forced a different route. Section numbers refer 
   volume (§6.2).
  `ShowcaseDirector` (dev only, enabled by a JVM property) builds a fresh world, stages
   each §18.10 picture and captures stills and orbit sequences. It never registers in a normal game.
+
+## The expansion (2.0)
+
+- **No mixins, still.** The Warden Cycle reads pacts from End Crystal attachments before the respawned dragon appears,
+  steers the vanilla dragon through its own charge phase, and cancels its griefing and damage with NeoForge events.
+  The Elder Warden is its own entity type (an `EnderDragon` subclass), so the vanilla fight never counts it.
+- **Everything that "always exists" is a pure function of the seed**: Sky Currents and Downdrafts (1,536-block regions),
+  Tide Maws (1,500-block regions), King Tides (one tide cycle in eight), the scheduled world events. Nothing is stored
+  until a player changes it, and old worlds get all of it.
+- **Lazy, player-near building** for things that must appear in existing worlds: the Pilgrim's Causeway builds each
+  floating segment the first time a player comes within 150 blocks; Sunken Archives build the first time someone comes
+  through their maw; the Restoration's rooms and lanterns appear near players. None of it overwrites player blocks.
+- **Charts are real maps.** Void, City and Star Charts are a `MapItem` subclass drawing their own colours (block colours
+  with five-block contour bands, a dark star field for the void, teal under the tide) and use registered map decoration
+  types for icons, so frames, cartography tables and the in-hand renderer all work unchanged. Pre-drawn charts sample
+  the terrain generator without generating chunks.
+- **Client-owned motion stays client-side.** Players move themselves, so Sky Currents, Downdrafts, Sinking and riding a
+  Leviathan's back are applied on the client (from synced data); the server applies the same rules to everything else.
+- **The Leviathan's back is an AABB.** Its collision box is a square platform on its back; the 45-block body is visual.
+  Standing on it moves you with it. This is the proposal's lower-risk path, and it plays well.
+- **The Undertow is a pocket dimension** (flat, empty, its own sky shader), entered through maws and left by rising past
+  its ceiling or sinking to its floor. The Void Bell's bubble is a moving Stable Field, re-registered as the bell moves.
+- **The Restoration changes behaviour, not chunks**: tide timing, event frequency and sky uniforms read the current
+  stage; the mural and rooms are placed near players. Stillness never goes down.

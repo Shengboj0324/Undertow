@@ -68,6 +68,11 @@ public class ElderWarden extends EnderDragon {
         data.setElderSpawned(true);
     }
 
+    /** Where the Elder rests; it hovers six blocks above. */
+    public void setPerch(BlockPos pos) {
+        perch = pos.immutable();
+    }
+
     @Override
     public void aiStep() {
         super.aiStep();

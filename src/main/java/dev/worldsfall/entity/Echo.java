@@ -103,6 +103,14 @@ public class Echo extends EnderCaste {
         }
     }
 
+    /** Memories belong to the Eclipse, not to the difficulty: they stay even in Peaceful, and fade when it ends. */
+    @Override
+    public void checkDespawn() {
+        if (!memory) {
+            super.checkDespawn();
+        }
+    }
+
     public boolean isMemory() {
         return memory;
     }

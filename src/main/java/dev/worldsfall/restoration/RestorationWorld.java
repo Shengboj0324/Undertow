@@ -307,6 +307,11 @@ public final class RestorationWorld extends SavedData {
             q.set(p, WFBlocks.CHISELED_STILLSTONE.get().defaultBlockState());
         }
         q.set(c.above(7), WFBlocks.HALO_GLASS.get().defaultBlockState());
+        for (int a = -4; a <= 4; a += 4) {
+            for (int b : new int[] {-3, 3}) {
+                q.set(c.relative(s, a).relative(l.inward(), b).above(7), WFBlocks.SPIRE_LANTERN.get().defaultBlockState().setValue(LanternBlock.HANGING, true));
+            }
+        }
         q.start();
     }
 
@@ -377,19 +382,25 @@ public final class RestorationWorld extends SavedData {
             return;
         }
         Direction s = side(l);
-        int k = 0;
+        int k = 0, found = 0;
         for (int y = 0; y < MURAL_H; y++) {
             for (int x = 0; x < MURAL_W; x++) {
                 BlockPos p = m.relative(s, x).above(y);
                 BlockState st = end.getBlockState(p);
                 if (st.is(WFBlocks.MURAL_PANEL.get())) {
-                    end.setBlock(p, st.setValue(MuralPanelBlock.LIT, k < lit), net.minecraft.world.level.block.Block.UPDATE_ALL);
+                    found++;
+                    if (st.getValue(MuralPanelBlock.LIT) != k < lit) {
+                        end.setBlock(p, st.setValue(MuralPanelBlock.LIT, k < lit), net.minecraft.world.level.block.Block.UPDATE_ALL);
+                    }
                 }
                 k++;
             }
         }
-        data.muralLit = lit;
-        data.setDirty();
+        // only remember the count once the whole mural stands (its panels are placed gradually)
+        if (found == MURAL_W * MURAL_H) {
+            data.muralLit = lit;
+            data.setDirty();
+        }
     }
 
     /** How many mural panels are lit for a fraction (one per 5%). */

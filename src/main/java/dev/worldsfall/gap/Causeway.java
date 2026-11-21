@@ -46,7 +46,7 @@ public final class Causeway {
 
     // ------------------------------------------------------------------ planning
 
-    static void ensurePlanned(ServerLevel end, CausewayData data) {
+    public static void ensurePlanned(ServerLevel end, CausewayData data) {
         if (data.planned()) {
             return;
         }
@@ -83,7 +83,7 @@ public final class Causeway {
     }
 
     /** Block position at radius {@code r} along the bearing, {@code lat} blocks to the side. */
-    static BlockPos at(double angle, double r, double lat, int y) {
+    public static BlockPos at(double angle, double r, double lat, int y) {
         double c = Math.cos(angle), s = Math.sin(angle);
         return BlockPos.containing(c * r - s * lat, y, s * r + c * lat);
     }

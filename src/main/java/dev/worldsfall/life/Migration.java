@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
  * Skate Migration (proposal "World events"): a distant chorus of Skate calls, then a flock of 15–25 Skates crosses the
  * sky. About a third are Dusk Skates, and a migrating Skate is the only Dusk Skate that can be tamed.
  */
-final class Migration {
+public final class Migration {
     static final double DISTANCE = 700, START_BEHIND = 90;
 
     private Migration() {}
@@ -40,7 +40,7 @@ final class Migration {
         }
     }
 
-    static void spawnFlock(ServerLevel end, WorldEventData data) {
+    public static void spawnFlock(ServerLevel end, WorldEventData data) {
         RandomSource r = end.getRandom();
         Vec3 centre = Vec3.atCenterOf(data.site());
         double a = r.nextDouble() * Math.PI * 2;
