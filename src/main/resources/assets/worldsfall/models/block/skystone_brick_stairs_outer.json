@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "worldsfall:block/skystone_bricks",
+    "top": "worldsfall:block/skystone_bricks",
+    "side": "worldsfall:block/skystone_bricks"
+  }
+}

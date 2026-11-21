@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:leviathan_barnacle"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.barnacle_scraper.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.barnacle_scraper.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:sky_highway"
+}

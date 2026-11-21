@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "focused=false": {
+      "model": "worldsfall:block/orrery_lens"
+    },
+    "focused=true": {
+      "model": "worldsfall:block/orrery_lens_focused"
+    }
+  }
+}

@@ -21,6 +21,8 @@ public final class WFSetup {
         e.put(WFEntities.SPIRE_WARDEN.get(), SpireWarden.createAttributes().build());
         e.put(WFEntities.ECHO.get(), Echo.createAttributes().build());
         e.put(WFEntities.WILD_SHULKER.get(), WildShulker.createWildAttributes().build());
+        e.put(WFEntities.LEVIATHAN_DRIFTER.get(), dev.worldsfall.zenith.LeviathanDrifter.createAttributes().build());
+        e.put(WFEntities.GALE_HARRIER.get(), dev.worldsfall.zenith.GaleHarrier.createAttributes().build());
         e.put(WFEntities.LANTERN_MOTH.get(), dev.worldsfall.life.LanternMoth.createAttributes().build());
         e.put(WFEntities.SHULKER_ARCHIVIST.get(), net.minecraft.world.entity.monster.Shulker.createAttributes().build());
         e.put(WFEntities.TIDEWISP.get(), Tidewisp.createAttributes().build());

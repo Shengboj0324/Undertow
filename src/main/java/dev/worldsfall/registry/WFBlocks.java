@@ -243,6 +243,30 @@ public final class WFBlocks {
     public static final DeferredBlock<StairBlock> ANCHOR_FRAME_STAIRS = item(BLOCKS.registerBlock("anchor_frame_stairs",
         p -> new StairBlock(ANCHOR_FRAME_LAMP.get().defaultBlockState(), p), p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(1.5f, 6.0f).sound(SoundType.METAL)));
 
+    // ================= Expansion 1.6: the Zenith
+    public static final DeferredBlock<Block> SKYSTONE = item(BLOCKS.registerSimpleBlock("skystone",
+        p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(2.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.CALCITE)));
+    public static final DeferredBlock<Block> POLISHED_SKYSTONE = item(BLOCKS.registerSimpleBlock("polished_skystone",
+        p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(2.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.CALCITE)));
+    public static final DeferredBlock<Block> SKYSTONE_BRICKS = item(BLOCKS.registerSimpleBlock("skystone_bricks",
+        p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(2.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.CALCITE)));
+    public static final DeferredBlock<Block> SKYSTONE_TILES = item(BLOCKS.registerSimpleBlock("skystone_tiles",
+        p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(2.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.CALCITE)));
+    public static final DeferredBlock<Block> CHISELED_SKYSTONE = item(BLOCKS.registerSimpleBlock("chiseled_skystone",
+        p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(2.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.CALCITE)));
+    public static final DeferredBlock<dev.worldsfall.zenith.HaloGlassBlock> HALO_GLASS = item(BLOCKS.registerBlock("halo_glass",
+        dev.worldsfall.zenith.HaloGlassBlock::new, p -> p.mapColor(MapColor.SNOW).strength(0.5f).sound(SoundType.GLASS).noOcclusion()
+            .lightLevel(dev.worldsfall.zenith.HaloGlassBlock::lightFor).isValidSpawn((s, l, pos, t) -> false).isRedstoneConductor((s, l, pos) -> false)
+            .isSuffocating((s, l, pos) -> false).isViewBlocking((s, l, pos, a) -> false)));
+    public static final DeferredBlock<Block> ORRERY_RING = item(BLOCKS.registerSimpleBlock("orrery_ring",
+        p -> p.mapColor(MapColor.COLOR_MAGENTA).strength(-1.0f, 3600000.0f).noLootTable().lightLevel(s -> 4)));
+    public static final DeferredBlock<dev.worldsfall.zenith.OrreryLensBlock> ORRERY_LENS = item(BLOCKS.registerBlock("orrery_lens",
+        dev.worldsfall.zenith.OrreryLensBlock::new, p -> p.mapColor(MapColor.COLOR_BLACK).strength(-1.0f, 3600000.0f).noLootTable()
+            .lightLevel(s -> s.getValue(dev.worldsfall.zenith.OrreryLensBlock.FOCUSED) ? 15 : 3)));
+    public static final DeferredBlock<dev.worldsfall.zenith.OrrerySocketBlock> ORRERY_SOCKET = item(BLOCKS.registerBlock("orrery_socket",
+        dev.worldsfall.zenith.OrrerySocketBlock::new, p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(-1.0f, 3600000.0f).noLootTable()
+            .lightLevel(s -> s.getValue(dev.worldsfall.zenith.OrrerySocketBlock.FREED) ? 12 : 6)));
+
     public static final DeferredBlock<LiquidBlock> STILLWATER = BLOCKS.registerBlock("stillwater",
         p -> new dev.worldsfall.fluid.StillwaterBlock(WFFluids.STILLWATER.get(), p),
         p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision().strength(100.0f).pushReaction(PushReaction.POPPED)
@@ -266,6 +290,10 @@ public final class WFBlocks {
         family("driftstone", DRIFTSTONE, true);
         family("polished_driftstone", POLISHED_DRIFTSTONE, true);
         family("driftstone_brick", DRIFTSTONE_BRICKS, true);
+        family("skystone", SKYSTONE, true);
+        family("polished_skystone", POLISHED_SKYSTONE, true);
+        family("skystone_brick", SKYSTONE_BRICKS, true);
+        family("skystone_tile", SKYSTONE_TILES, true);
     }
 
     private WFBlocks() {}

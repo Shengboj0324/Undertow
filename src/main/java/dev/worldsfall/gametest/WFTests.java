@@ -57,7 +57,7 @@ public final class WFTests {
     private WFTests() {}
 
     /** 24 from 1.0 plus the expansion's (1.2 → 2.0). */
-    static final int EXPECTED_ADVANCEMENTS = 44;
+    static final int EXPECTED_ADVANCEMENTS = 49;
 
     static void collect(Map<String, Consumer<GameTestHelper>> out) {
         out.put("tide_cycle_math", WFTests::tideCycleMath);
@@ -107,12 +107,19 @@ public final class WFTests {
         out.put("lost_things_and_fishing_tables", WFTests::lostThings);
         out.put("dusk_skates_only_while_migrating", WFTests::duskSkates);
         out.put("eclipse_memories_are_harmless", WFTests::eclipseMemory);
+        // expansion 1.6: the Zenith
+        out.put("sky_currents_carry_at_25", WFTests::skyCurrents);
+        out.put("orrery_rings_and_phases", WFTests::orreryGeometry);
+        out.put("orrery_aligns_and_focuses", WFTests::orreryAlign);
+        out.put("leviathan_back_is_solid_and_safe", WFTests::leviathan);
+        out.put("halo_glass_and_star_chart", WFTests::haloAndChart);
     }
 
     static int maxTicks(String name) {
         return switch (name) {
             case "stillwater_turns_water_to_stillstone" -> 200;
             case "egg_cradle_ritual_stages" -> 400;
+            case "orrery_aligns_and_focuses" -> 1200;
             default -> 100;
         };
     }
@@ -797,6 +804,107 @@ public final class WFTests {
         h.assertTrue(echo.isMemory() && !echo.isDisguised() && echo.hasGlowingTag(), "a memory walks openly and glows");
         h.assertTrue(!echo.hurtServer(h.getLevel(), h.getLevel().damageSources().generic(), 5), "and cannot be hurt");
         echo.discard();
+        h.succeed();
+    }
+
+    private static void skyCurrents(GameTestHelper h) {
+        long seed = 42L;
+        h.assertTrue(dev.worldsfall.zenith.SkyCurrents.currentsNear(seed, 0, 0).stream().flatMap(c -> c.points().stream())
+            .allMatch(p -> p.horizontalDistance() > 1000)
+            && dev.worldsfall.zenith.SkyCurrents.draftsNear(seed, 0, 0).stream().allMatch(d -> Math.hypot(d.x(), d.z()) > 1000),
+            "no currents or downdrafts over the main island or the Gap");
+        var found = new java.util.ArrayList<dev.worldsfall.zenith.SkyCurrents.Current>();
+        for (int rx = 2; rx < 12 && found.isEmpty(); rx++) {
+            var c = dev.worldsfall.zenith.SkyCurrents.currentOf(seed, rx, 3);
+            if (c != null) {
+                found.add(c);
+            }
+        }
+        h.assertTrue(!found.isEmpty(), "currents exist in the outer End");
+        var c = found.getFirst();
+        h.assertTrue(c.equals(dev.worldsfall.zenith.SkyCurrents.currentOf(seed, (int) (c.id() >> 32), (int) c.id())), "currents are deterministic");
+        h.assertTrue(c.points().stream().allMatch(p -> p.y >= 158 && p.y <= 232), "currents run in the Zenith band");
+        var on = c.points().get(2).lerp(c.points().get(3), 0.5);
+        var v = dev.worldsfall.zenith.SkyCurrents.carry(List.of(c), on, c.points().get(3).subtract(c.points().get(2)));
+        h.assertTrue(v != null && Math.abs(v.length() - dev.worldsfall.zenith.SkyCurrents.SPEED) < 0.05, "a current carries at 25 blocks a second");
+        h.assertTrue(dev.worldsfall.zenith.SkyCurrents.carry(List.of(c), on.add(0, 30, 0), v) == null, "outside it, nothing");
+        var d = new dev.worldsfall.zenith.SkyCurrents.Downdraft(10, 10, 6);
+        h.assertTrue(dev.worldsfall.zenith.SkyCurrents.inDraft(List.of(d), new net.minecraft.world.phys.Vec3(12, 200, 12))
+            && !dev.worldsfall.zenith.SkyCurrents.inDraft(List.of(d), new net.minecraft.world.phys.Vec3(12, 100, 12)), "downdrafts span Y 140-260");
+        h.succeed();
+    }
+
+    private static void orreryGeometry(GameTestHelper h) {
+        BlockPos c = new BlockPos(0, 225, 0);
+        for (int i = 0; i < 3; i++) {
+            var aligned = dev.worldsfall.world.gen.structure.OrreryGenerator.ring(c, i, true);
+            var jammed = dev.worldsfall.world.gen.structure.OrreryGenerator.ring(c, i, false);
+            h.assertTrue(aligned.stream().allMatch(p -> p.getY() == c.getY()), "an aligned ring is level with the lens");
+            h.assertTrue(jammed.stream().anyMatch(p -> Math.abs(p.getY() - c.getY()) > 4), "a jammed ring hangs at an angle");
+            int r = dev.worldsfall.world.gen.structure.OrreryGenerator.RADII[i];
+            h.assertTrue(aligned.stream().allMatch(p -> Math.abs(Math.sqrt(p.distSqr(c)) - r) < 1.5), "ring " + i + " has radius " + r);
+        }
+        h.assertTrue(dev.worldsfall.zenith.OrrerySocketBlock.phaseFor(0) == TideCycle.Phase.LOW
+            && dev.worldsfall.zenith.OrrerySocketBlock.phaseFor(1) == TideCycle.Phase.RISING
+            && dev.worldsfall.zenith.OrrerySocketBlock.phaseFor(2) == TideCycle.Phase.HIGH, "one ring each for Low, Rising and High");
+        h.succeed();
+    }
+
+    private static void orreryAlign(GameTestHelper h) {
+        ServerLevel level = h.getLevel();
+        ServerPlayer player = h.makeMockServerPlayerInLevel();
+        BlockPos lens = h.absolutePos(new BlockPos(1, 12, 1));
+        level.setBlockAndUpdate(lens, WFBlocks.ORRERY_LENS.get().defaultBlockState());
+        for (int i = 0; i < 3; i++) {
+            var jammed = dev.worldsfall.world.gen.structure.OrreryGenerator.ring(lens, i, false);
+            for (int k = 0; k < jammed.size(); k++) {
+                level.setBlockAndUpdate(jammed.get(k), dev.worldsfall.world.gen.structure.OrreryGenerator.ringBlock(k));
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            BlockPos socket = dev.worldsfall.world.gen.structure.OrreryGenerator.socketPos(lens, i);
+            level.setBlockAndUpdate(socket, WFBlocks.ORRERY_SOCKET.get().defaultBlockState().setValue(dev.worldsfall.zenith.OrrerySocketBlock.RING, i));
+            h.assertTrue(dev.worldsfall.zenith.Orreries.freeRing(level, socket, i, player), "ring " + i + " frees");
+            h.assertTrue(!dev.worldsfall.zenith.Orreries.freeRing(level, socket, i, player), "a ring frees only once");
+        }
+        h.succeedWhen(() -> {
+            h.assertTrue(level.getBlockState(lens).getValue(dev.worldsfall.zenith.OrreryLensBlock.FOCUSED), "the lens focuses once all rings are aligned");
+            for (int i = 0; i < 3; i++) {
+                for (BlockPos p : dev.worldsfall.world.gen.structure.OrreryGenerator.ring(lens, i, true)) {
+                    h.assertTrue(!level.getBlockState(p).isAir(), "aligned ring " + i + " is complete");
+                }
+            }
+            h.assertTrue(dev.worldsfall.zenith.Orreries.stars(level.getServer()).contains(lens.asLong()), "a new star is added to the sky");
+            h.assertTrue(player.getInventory().hasAnyMatching(st -> st.getItem() instanceof dev.worldsfall.nav.VoidChartItem
+                && "star".equals(dev.worldsfall.nav.VoidChartItem.kind(st))), "the aligner receives a Star Chart");
+        });
+    }
+
+    private static void leviathan(GameTestHelper h) {
+        var l = WFEntities.LEVIATHAN_DRIFTER.get().create(h.getLevel(), EntitySpawnReason.COMMAND);
+        h.assertTrue(l != null, "leviathan constructs");
+        BlockPos at = h.absolutePos(new BlockPos(1, 30, 1));
+        l.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0, 0);
+        h.getLevel().addFreshEntity(l);
+        h.assertTrue(l.canBeCollidedWith(null) && !l.isPushable(), "its back is solid");
+        h.assertTrue(!l.hurtServer(h.getLevel(), h.getLevel().damageSources().generic(), 50), "a Leviathan cannot be hunted");
+        Cow cow = h.spawn(net.minecraft.world.entity.EntityTypes.COW, new BlockPos(1, 30, 1));
+        cow.snapTo(l.getX(), l.getBoundingBox().maxY, l.getZ(), 0, 0);
+        h.assertTrue(l.carries(cow), "something standing on its back is carried");
+        h.assertTrue(l.barnacles() == dev.worldsfall.zenith.LeviathanDrifter.MAX_BARNACLES, "it starts with barnacles");
+        l.discard();
+        cow.discard();
+        h.succeed();
+    }
+
+    private static void haloAndChart(GameTestHelper h) {
+        h.assertTrue(dev.worldsfall.zenith.HaloGlassBlock.glowFor(h.getLevel()) == 1, "outside the End Halo Glass holds a steady glow");
+        h.assertTrue(dev.worldsfall.zenith.HaloGlassBlock.lightFor(WFBlocks.HALO_GLASS.get().defaultBlockState()
+            .setValue(dev.worldsfall.zenith.HaloGlassBlock.GLOW, 3)) == 15, "full glow is light 15 at High Tide");
+        ItemStack chart = dev.worldsfall.zenith.Orreries.starChart(h.getLevel(), h.absolutePos(BlockPos.ZERO));
+        h.assertTrue("star".equals(dev.worldsfall.nav.VoidChartItem.kind(chart)), "a Star Chart is a pre-drawn Void Chart");
+        var data = net.minecraft.world.item.MapItem.getSavedData(chart, h.getLevel());
+        h.assertTrue(data != null && data.scale == dev.worldsfall.zenith.Orreries.CHART_SCALE, "covering 2,048 blocks");
         h.succeed();
     }
 }

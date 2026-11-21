@@ -22,6 +22,7 @@ public final class WFFeatures {
         FEATURE_TYPES.register("wild_shulker_colony", () -> WildShulkerColonyFeature.CODEC);
         FEATURE_TYPES.register("echo_shrine", () -> EchoShrineFeature.CODEC);
         FEATURE_TYPES.register("chorus_pod_scatter", () -> ChorusPodScatterFeature.CODEC);
+        FEATURE_TYPES.register("zenith_shoal", () -> ZenithShoalFeature.CODEC);
         PLACEMENTS.register("distance_from_origin", () -> DistanceFilter.CODEC);
     }
 

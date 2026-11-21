@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:skystone_tiles",
+  "result": {
+    "id": "worldsfall:skystone_tile_stairs"
+  }
+}

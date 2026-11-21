@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "worldsfall:skystone",
+    "G": "minecraft:glass",
+    "L": "worldsfall:lumen_crystal_shard"
+  },
+  "pattern": [
+    "SGS",
+    "GLG",
+    "SGS"
+  ],
+  "result": {
+    "id": "worldsfall:halo_glass",
+    "count": 4
+  }
+}

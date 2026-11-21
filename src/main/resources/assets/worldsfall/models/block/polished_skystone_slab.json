@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "worldsfall:block/polished_skystone",
+    "top": "worldsfall:block/polished_skystone",
+    "side": "worldsfall:block/polished_skystone"
+  }
+}

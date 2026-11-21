@@ -64,6 +64,28 @@ public final class ClientWorldState {
     public int worldEvent() { return worldEvent; }
     public long worldEventStart() { return worldEventStart; }
     public java.util.List<Long> orreryStars() { return orreryStars; }
+    /** Azimuth/elevation pairs for up to three Orrery stars (elevation -2 when absent), stable per Orrery. */
+    public float[] orreryStarDirections() {
+        float[] out = {0, -2, 0, -2, 0, -2};
+        for (int i = 0; i < Math.min(3, orreryStars.size()); i++) {
+            net.minecraft.core.BlockPos p = net.minecraft.core.BlockPos.of(orreryStars.get(i));
+            long h = orreryStars.get(i) * 0x9E3779B97F4A7C15L;
+            out[i * 2] = (float) Math.atan2(p.getZ(), p.getX());
+            out[i * 2 + 1] = 0.35f + 0.45f * ((h >>> 40) & 0xFFFF) / 65535f;
+        }
+        return out;
+    }
+
+    /** The Overmoon: a faint point that swells into a pale disc at Stillness (Restoration stage 5). */
+    public float overmoonRadius() {
+        return restorationStage >= 5 ? 0.075f : 0.0045f;
+    }
+
+    /** The Ascendancy's constellation appears at Restoration stage 4. */
+    public float constellation() {
+        return restorationStage >= 4 ? 1f : 0f;
+    }
+
     /** 1 normally; fades to almost nothing over ten seconds of an Eclipse of Stillness. */
     public float starBrightness() { return stars; }
 

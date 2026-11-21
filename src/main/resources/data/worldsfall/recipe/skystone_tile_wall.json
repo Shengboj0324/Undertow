@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "worldsfall:skystone_tiles"
+  },
+  "pattern": [
+    "SSS",
+    "SSS"
+  ],
+  "result": {
+    "id": "worldsfall:skystone_tile_wall",
+    "count": 6
+  }
+}

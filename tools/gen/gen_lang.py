@@ -14,6 +14,8 @@ keystone_socket spire_vault drift_cache sigil_pedestal egg_cradle gravity_anchor
 tidewisp_jar stillwater stillwater_cauldron""".split()
 FAMS = ["stillstone", "polished_stillstone", "stillstone_brick", "weathered_purpur", "undershale", "polished_undershale", "undershale_brick",
         "undershale_tile", "driftstone", "polished_driftstone", "driftstone_brick"]
+import expansion as _expansion
+FAMS += list(_expansion.FAMILIES)
 WALLS = {f for f in FAMS if f != "weathered_purpur"}
 ITEMS = """skate_membrane glow_gland grazer_frill voidroot_fiber lumen_crystal_shard bottle_of_stillwater chorus_pod roasted_chorus_pod
 grazer_flank cooked_grazer_flank drift_stew stillwater_tea void_anchor cracked_void_anchor rift_tether gateway_compass shulker_satchel void_lens

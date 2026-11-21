@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "worldsfall:skystone"
+  },
+  "pattern": [
+    "SSS"
+  ],
+  "result": {
+    "id": "worldsfall:skystone_slab",
+    "count": 6
+  }
+}

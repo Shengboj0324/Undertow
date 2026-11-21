@@ -26,6 +26,7 @@ public final class WFNetwork {
         r.playToServer(ElytraActionPayload.TYPE, ElytraActionPayload.STREAM_CODEC, ElytraActionPayload::handle);
         r.playToClient(LatticeMenuPayload.TYPE, LatticeMenuPayload.STREAM_CODEC, LatticeMenuPayload::handle);
         r.playToServer(LatticeJumpPayload.TYPE, LatticeJumpPayload.STREAM_CODEC, LatticeJumpPayload::handle);
+        r.playToClient(ZenithPayload.TYPE, ZenithPayload.STREAM_CODEC, ZenithPayload::handle);
     }
 
     public static TideSyncPayload tidePayload(MinecraftServer server) {
@@ -70,6 +71,7 @@ public final class WFNetwork {
     }
 
     public static void syncPlayer(ServerPlayer player) {
+        dev.worldsfall.zenith.ZenithEvents.forget(player);
         send(player, restorationPayload(player.level().getServer()));
         send(player, tidePayload(player.level().getServer()));
         send(player, new SunderingStatePayload(SunderingData.get(player.level().getServer()).done()));

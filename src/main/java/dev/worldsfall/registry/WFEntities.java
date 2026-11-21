@@ -62,5 +62,13 @@ public final class WFEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.life.LanternMoth>> LANTERN_MOTH = ENTITIES.registerEntityType("lantern_moth",
         dev.worldsfall.life.LanternMoth::new, MobCategory.AMBIENT, b -> b.sized(0.4f, 0.3f).eyeHeight(0.15f).clientTrackingRange(8).noLootTable());
 
+    // ================= Expansion 1.6: the Zenith
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.zenith.LeviathanDrifter>> LEVIATHAN_DRIFTER = ENTITIES.registerEntityType(
+        "leviathan_drifter", dev.worldsfall.zenith.LeviathanDrifter::new, MobCategory.MISC, b -> b.sized(10.0f, 5.0f).clientTrackingRange(32)
+            .updateInterval(2).fireImmune());
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.zenith.GaleHarrier>> GALE_HARRIER = ENTITIES.registerEntityType(
+        "gale_harrier", dev.worldsfall.zenith.GaleHarrier::new, MobCategory.MONSTER, b -> b.sized(0.9f, 0.6f).eyeHeight(0.4f).clientTrackingRange(10)
+            .updateInterval(1));
+
     private WFEntities() {}
 }

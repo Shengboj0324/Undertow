@@ -145,11 +145,20 @@ public final class WFItems {
     public static final DeferredItem<Item> ECLIPSE_DUST = simple("eclipse_dust", p -> p.rarity(Rarity.UNCOMMON));
     public static final DeferredItem<dev.worldsfall.life.CourierTokenItem> COURIER_TOKEN = reg("courier_token", dev.worldsfall.life.CourierTokenItem::new,
         p -> p.stacksTo(16).rarity(Rarity.UNCOMMON));
+    // ================= Expansion 1.6: the Zenith
+    public static final DeferredItem<Item> HARRIER_PLUME = simple("harrier_plume", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> LEVIATHAN_BARNACLE = simple("leviathan_barnacle", p -> p.food(food(3, 2.4f), Consumables.defaultFood()
+        .onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 600))).build()));
+    public static final DeferredItem<Item> CURRENT_VANE = simple("current_vane", p -> p.stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> MUSIC_DISC_LADDERS = simple("music_disc_ladders", p -> p.stacksTo(1).rarity(Rarity.RARE)
+        .jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, Identifier.fromNamespaceAndPath(Worldsfall.MODID, "ladders"))));
     public static final DeferredItem<BlockItem> BOTTLED_LANTERN_MOTH = reg("bottled_lantern_moth", p -> new BlockItem(WFBlocks.LANTERN_MOTH_JAR.get(), p),
         UnaryOperator.identity());
 
     private static final List<DeferredItem<Item>> SPAWN_EGGS = new ArrayList<>();
     public static final DeferredItem<Item> VOID_SKATE_SPAWN_EGG = egg("void_skate", WFEntities.VOID_SKATE);
+    public static final DeferredItem<Item> GALE_HARRIER_SPAWN_EGG = egg("gale_harrier", WFEntities.GALE_HARRIER);
+    public static final DeferredItem<Item> LEVIATHAN_DRIFTER_SPAWN_EGG = egg("leviathan_drifter", WFEntities.LEVIATHAN_DRIFTER);
     public static final DeferredItem<Item> LANTERN_MOTH_SPAWN_EGG = egg("lantern_moth", WFEntities.LANTERN_MOTH);
     public static final DeferredItem<Item> SHULKER_ARCHIVIST_SPAWN_EGG = egg("shulker_archivist", WFEntities.SHULKER_ARCHIVIST);
     public static final DeferredItem<Item> CHORUS_GRAZER_SPAWN_EGG = egg("chorus_grazer", WFEntities.CHORUS_GRAZER);

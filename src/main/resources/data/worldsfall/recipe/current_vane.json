@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "P": "worldsfall:harrier_plume",
+    "C": "minecraft:compass",
+    "M": "worldsfall:mirror_shard_fragment"
+  },
+  "pattern": [
+    " P ",
+    "PCP",
+    " M "
+  ],
+  "result": {
+    "id": "worldsfall:current_vane"
+  }
+}

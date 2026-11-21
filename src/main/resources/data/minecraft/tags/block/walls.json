@@ -10,6 +10,10 @@
     "worldsfall:undershale_tile_wall",
     "worldsfall:driftstone_wall",
     "worldsfall:polished_driftstone_wall",
-    "worldsfall:driftstone_brick_wall"
+    "worldsfall:driftstone_brick_wall",
+    "worldsfall:skystone_wall",
+    "worldsfall:polished_skystone_wall",
+    "worldsfall:skystone_brick_wall",
+    "worldsfall:skystone_tile_wall"
   ]
 }

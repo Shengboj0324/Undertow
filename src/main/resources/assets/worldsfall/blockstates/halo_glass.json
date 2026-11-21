@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "glow=0": {
+      "model": "worldsfall:block/halo_glass"
+    },
+    "glow=1": {
+      "model": "worldsfall:block/halo_glass"
+    },
+    "glow=2": {
+      "model": "worldsfall:block/halo_glass"
+    },
+    "glow=3": {
+      "model": "worldsfall:block/halo_glass"
+    }
+  }
+}

@@ -61,6 +61,8 @@ gravity_anchor anchor_frame""".split()
 FAMILIES = {"stillstone": True, "polished_stillstone": True, "stillstone_brick": True, "weathered_purpur": False, "undershale": True,
             "polished_undershale": True, "undershale_brick": True, "undershale_tile": True, "driftstone": True, "polished_driftstone": True,
             "driftstone_brick": True}
+import expansion as _expansion
+FAMILIES.update({k: v[1] for k, v in _expansion.FAMILIES.items()})
 SILK_ONLY = {"rimglass": None, "stillglass": None, "stillglass_pane": None, "fracture_glass": None}
 
 def block_loot(name, pools):
@@ -280,6 +282,7 @@ def gen_recipes():
                "weathered_purpur": "weathered_purpur", "undershale": "undershale", "polished_undershale": "polished_undershale",
                "undershale_brick": "undershale_bricks", "undershale_tile": "undershale_tiles", "driftstone": "driftstone",
                "polished_driftstone": "polished_driftstone", "driftstone_brick": "driftstone_bricks"}
+    fam_src.update({k: v[0] for k, v in _expansion.FAMILIES.items()})
     for base, src in fam_src.items():
         s = i(src)
         shaped(f"{base}_slab", ["SSS"], {"S": s}, i(f"{base}_slab"), n=6, category="building")
@@ -292,7 +295,8 @@ def gen_recipes():
     for chain in (("stillstone", ["polished_stillstone", "stillstone_bricks", "chiseled_stillstone"]),
                   ("undershale", ["polished_undershale", "undershale_bricks", "undershale_tiles"]),
                   ("driftstone", ["polished_driftstone", "driftstone_bricks"]),
-                  ("weathered_purpur", ["weathered_purpur_pillar"])):
+                  ("weathered_purpur", ["weathered_purpur_pillar"]),
+                  ("skystone", ["polished_skystone", "skystone_bricks", "skystone_tiles", "chiseled_skystone"])):
         for target in chain[1]:
             stonecut(i(chain[0]), i(target))
     stonecut("minecraft:purpur_block", i("weathered_purpur"))
@@ -371,7 +375,7 @@ def gen_tags():
                                       "minecraft:end_stone", "minecraft:purpur_block", "minecraft:chorus_fruit"] + [i(n) for n in stone_like])
     tag("item", "minecraft", "brewing_potion_inputs", [i("bottle_of_stillwater")])
     tag("item", NS, "skate_food", [i("chorus_pod")])
-    tag("item", NS, "skate_breeding", [i("glowbulb")])
+    tag("item", NS, "skate_breeding", [i("glowbulb"), i("leviathan_barnacle")])
     tag("item", NS, "grazer_food", [i("chorus_pod")])
     tag("item", NS, "wyrm_food", [i("roasted_chorus_pod"), i("glow_gland")])
     tag("item", NS, "shulker_lure", [i("chorus_pod")])

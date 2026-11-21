@@ -24,6 +24,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public record ElytraActionPayload(int action) implements CustomPacketPayload {
     public static final int GALE = 0, STILL_SECOND = 1, HOVER = 2;
+    /** When each player last used the Still air brake (a Gale Harrier's dive misses a braking glider). */
+    public static final java.util.Map<java.util.UUID, Long> STILL_BRAKE = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public static boolean braking(ServerPlayer player, int withinTicks) {
+        Long t = STILL_BRAKE.get(player.getUUID());
+        return t != null && player.level().getGameTime() - t <= withinTicks;
+    }
     public static final Type<ElytraActionPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Worldsfall.MODID, "elytra_action"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ElytraActionPayload> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT, ElytraActionPayload::action, ElytraActionPayload::new);
@@ -64,6 +71,7 @@ public record ElytraActionPayload(int action) implements CustomPacketPayload {
                 level.sendParticles(WFParticles.SKATE_WAKE.get(), sp.getX(), sp.getY() + 0.5, sp.getZ(), 24, 0.6, 0.3, 0.6, 0.15);
             }
             case STILL_SECOND -> {
+                STILL_BRAKE.put(sp.getUUID(), level.getGameTime());
                 level.playSound(null, sp.blockPosition(), WFSounds.ITEM_ELYTRA_STILL.get(), SoundSource.PLAYERS, 0.8f, 1.0f);
                 level.sendParticles(WFParticles.STILL_RING.get(), sp.getX(), sp.getY() + 0.5, sp.getZ(), 1, 0, 0, 0, 0);
             }

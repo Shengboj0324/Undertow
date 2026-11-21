@@ -11,6 +11,10 @@
     "worldsfall:undershale_tile_slab",
     "worldsfall:driftstone_slab",
     "worldsfall:polished_driftstone_slab",
-    "worldsfall:driftstone_brick_slab"
+    "worldsfall:driftstone_brick_slab",
+    "worldsfall:skystone_slab",
+    "worldsfall:polished_skystone_slab",
+    "worldsfall:skystone_brick_slab",
+    "worldsfall:skystone_tile_slab"
   ]
 }

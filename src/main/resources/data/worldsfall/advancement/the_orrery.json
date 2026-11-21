@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:orrery_lens"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.the_orrery.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.the_orrery.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:orrery_ring"
+}

@@ -11,6 +11,10 @@
     "worldsfall:undershale_tile_stairs",
     "worldsfall:driftstone_stairs",
     "worldsfall:polished_driftstone_stairs",
-    "worldsfall:driftstone_brick_stairs"
+    "worldsfall:driftstone_brick_stairs",
+    "worldsfall:skystone_stairs",
+    "worldsfall:polished_skystone_stairs",
+    "worldsfall:skystone_brick_stairs",
+    "worldsfall:skystone_tile_stairs"
   ]
 }

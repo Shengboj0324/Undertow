@@ -82,6 +82,9 @@ public final class WFSkyRenderer implements CustomSkyboxRenderer {
             tex.m00(st.timeSeconds()).m01(st.tideGlow()).m02(st.calmed()).m03(st.underHaze());
             Vector3f cam = st.cameraPos();
             tex.m10(cam.x).m11(cam.y).m12(cam.z).m13(st.starBrightness());
+            float[] stars = st.orreryStarDirections();
+            tex.m20(stars[0]).m21(stars[1]).m22(stars[2]).m23(stars[3]);
+            tex.m30(stars[4]).m31(stars[5]).m32(st.overmoonRadius()).m33(st.constellation());
         }
         RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS);
         GpuBuffer indexBuffer = indices.getBuffer(36);

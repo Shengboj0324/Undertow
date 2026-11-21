@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "worldsfall:block/skystone_tile_slab"
+    },
+    "type=top": {
+      "model": "worldsfall:block/skystone_tile_slab_top"
+    },
+    "type=double": {
+      "model": "worldsfall:block/skystone_tiles"
+    }
+  }
+}

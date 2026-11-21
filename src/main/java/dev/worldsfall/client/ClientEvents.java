@@ -71,6 +71,7 @@ public final class ClientEvents {
         skateControls(mc, p, in);
         elytraUpgrades(p, in);
         fracturePhysics(mc, p);
+        dev.worldsfall.client.expansion.ZenithClient.tick(mc, p);
         if (p.hasEffect(dev.worldsfall.registry.WFEffects.SINKING) && !p.getAbilities().flying) {
             dev.worldsfall.effect.SinkingEffect.pull(p);
         }
@@ -280,6 +281,12 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void music(SelectMusicEvent event) {
         Minecraft mc = Minecraft.getInstance();
+        if (mc.level != null && mc.player != null && mc.level.dimension() == net.minecraft.world.level.Level.END
+            && mc.player.getY() > dev.worldsfall.client.expansion.ZenithClient.ZENITH_Y) {
+            // the Zenith: "Ladders", the Fallen Spires' melody resolved upward
+            event.setMusic(new Music(WFSounds.MUSIC_LADDERS, 1200, 6000, false));
+            return;
+        }
         if (mc.level == null || mc.player == null || mc.level.dimension() != WFDimensions.THE_FRACTURE) {
             return;
         }

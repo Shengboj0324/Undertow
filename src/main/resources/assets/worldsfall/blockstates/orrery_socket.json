@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "freed=false,ring=0": {
+      "model": "worldsfall:block/orrery_socket"
+    },
+    "freed=false,ring=1": {
+      "model": "worldsfall:block/orrery_socket"
+    },
+    "freed=false,ring=2": {
+      "model": "worldsfall:block/orrery_socket"
+    },
+    "freed=true,ring=0": {
+      "model": "worldsfall:block/orrery_socket"
+    },
+    "freed=true,ring=1": {
+      "model": "worldsfall:block/orrery_socket"
+    },
+    "freed=true,ring=2": {
+      "model": "worldsfall:block/orrery_socket"
+    }
+  }
+}

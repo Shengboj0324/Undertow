@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:current_vane"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.sky_highway.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.sky_highway.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:wings_revised"
+}

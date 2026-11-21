@@ -15,6 +15,7 @@ public final class Generators {
             case "driftwreck" -> DriftwreckGenerator.build(origin, variant, random);
             case "root_hollow" -> RootHollowGenerator.build(origin, variant, random);
             case "gapwreck" -> GapwreckGenerator.build(origin, variant, random);
+            case "orrery" -> OrreryGenerator.build(origin, variant, random);
             default -> new Blueprint();
         };
     }

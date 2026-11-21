@@ -47,6 +47,7 @@ public class BlueprintStructure extends Structure {
             case "driftwreck" -> driftwreck(ctx, x, z, dist, random);
             case "root_hollow" -> rootHollow(ctx, x, z, dist, random);
             case "gapwreck" -> gapwreck(ctx, x, z, dist, random);
+            case "orrery" -> orrery(dist, x, z, random);
             default -> Optional.empty();
         };
         return placement.map(p -> new GenerationStub(p.pos, builder -> builder.addPiece(new BlueprintPiece(generator, p.pos, p.variant, p.seed))));
@@ -116,6 +117,14 @@ public class BlueprintStructure extends Structure {
         }
         int y = 54 + random.nextInt(14);
         return Optional.of(new Placement(new BlockPos(x, y, z), random.nextInt(3) == 0 ? 1 : 0, random.nextLong()));
+    }
+
+    /** One per 5,000×5,000 area (the structure set's spacing), beyond 5,000 blocks out, hanging at Y 200–250. */
+    private static Optional<Placement> orrery(double dist, int x, int z, WorldgenRandom random) {
+        if (dist < 5000) {
+            return Optional.empty();
+        }
+        return Optional.of(new Placement(new BlockPos(x, 222 + random.nextInt(14), z), 0, random.nextLong()));
     }
 
     private static Optional<Placement> rootHollow(GenerationContext ctx, int x, int z, double dist, WorldgenRandom random) {

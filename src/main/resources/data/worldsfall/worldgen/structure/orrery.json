@@ -1,0 +1,8 @@
+{
+  "type": "worldsfall:blueprint",
+  "generator": "orrery",
+  "biomes": "#worldsfall:has_structure/orrery",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "none"
+}

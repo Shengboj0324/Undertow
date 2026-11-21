@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 70412233,
+    "separation": 120,
+    "spacing": 312,
+    "spread_type": "linear"
+  },
+  "structures": [
+    {
+      "structure": "worldsfall:orrery",
+      "weight": 1
+    }
+  ]
+}

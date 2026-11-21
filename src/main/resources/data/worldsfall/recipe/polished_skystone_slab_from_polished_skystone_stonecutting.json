@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "worldsfall:polished_skystone",
+  "result": {
+    "id": "worldsfall:polished_skystone_slab",
+    "count": 2
+  }
+}

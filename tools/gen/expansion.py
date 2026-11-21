@@ -6,6 +6,10 @@ import os
 
 from common import *  # noqa: F401,F403
 
+# Zenith building family (release 1.6): base name -> (source block, has wall)
+FAMILIES = {"skystone": ("skystone", True), "polished_skystone": ("polished_skystone", True), "skystone_brick": ("skystone_bricks", True),
+            "skystone_tile": ("skystone_tiles", True)}
+
 PACTS = ["tide", "shards", "echoes", "hoard", "memory", "stillness", "lone", "depths"]
 PACT_NAMES = {"tide": "Tide", "shards": "Shards", "echoes": "Echoes", "hoard": "the Hoard", "memory": "Memory",
               "stillness": "Stillness", "lone": "the Lone Warden", "depths": "Depths"}
@@ -20,14 +24,18 @@ ITEM_SPRITES = (
     + ["causeway_keystone"]
     + ["city_chart"]
     + ["mirrorfish", "cooked_mirrorfish", "driftsilt", "eclipse_dust", "courier_token"]
+    + ["harrier_plume", "leviathan_barnacle", "music_disc_ladders"]
 )
 EMISSIVE_ITEM_SPRITES = []
 
 # items whose names differ from the title-cased id
 ITEM_NAMES = {f"pact_glyph_{p}": f"Pact Glyph of {PACT_NAMES[p]}" for p in PACTS}
 ITEM_NAMES.update({f"pact_crystal_{p}": f"Pact Crystal of {PACT_NAMES[p]}" for p in PACTS})
-ITEM_NAMES.update({"music_disc_warden": "Music Disc", "warden_banner_pattern": "Banner Pattern"})
-BLOCK_NAMES = {"tide_bell": "Tide Bell", "wyrm_roost": "Wyrm Roost", "gravity_plate": "Gravity Plate", "courier_cache": "Courier Cache",
+ITEM_NAMES.update({"music_disc_warden": "Music Disc", "music_disc_ladders": "Music Disc", "warden_banner_pattern": "Banner Pattern"})
+BLOCK_NAMES = {"skystone": "Skystone", "polished_skystone": "Polished Skystone", "skystone_bricks": "Skystone Bricks",
+               "skystone_tiles": "Skystone Tiles", "chiseled_skystone": "Chiseled Skystone", "halo_glass": "Halo Glass", "orrery_ring": "Orrery Ring",
+               "orrery_lens": "Orrery Lens", "orrery_socket": "Orrery Socket",
+               "tide_bell": "Tide Bell", "wyrm_roost": "Wyrm Roost", "gravity_plate": "Gravity Plate", "courier_cache": "Courier Cache",
                "starfall_shard": "Starfall Shard", "tidewrack": "Tidewrack", "lantern_moth_jar": "Lantern Moth Jar",
                "anchor_frame_lamp": "Anchor Frame Lamp", "anchor_frame_slab": "Anchor Frame Slab", "anchor_frame_stairs": "Anchor Frame Stairs",
                "drift_helm": "Drift Helm", "ships_bell": "Ship's Bell", "wardens_lantern": "Warden's Lantern", "causeway_socket": "Causeway Socket", "causeway_lantern": "Causeway Lantern",
@@ -55,6 +63,11 @@ ADVANCEMENTS = [
     ("special_delivery", "fair_trade", "courier_token", "goal", False),
     ("tide_angler", "a_hole_full_of_stars", "mirrorfish", "task", False),
     ("still_angler", "tide_angler", "cooked_mirrorfish", "task", False),
+    ("sky_highway", "wings_revised", "current_vane", "goal", False),
+    ("knocked_out_of_the_sky", "sky_highway", "harrier_plume", "task", True),
+    ("barnacle_scraper", "sky_highway", "leviathan_barnacle", "task", False),
+    ("orrery_ring", "ladders_to_nowhere", "orrery_socket", "task", False),
+    ("the_orrery", "orrery_ring", "orrery_lens", "challenge", False),
 ]
 
 LANG = {
@@ -152,6 +165,19 @@ LANG = {
     "message.worldsfall.courier.too_far": "The caches must be within %s blocks of each other.",
     "message.worldsfall.courier.hired": "A Courier will carry one stack every five minutes from (%s, %s) to (%s, %s).",
     "message.worldsfall.courier.cancelled": "Your Courier contracts are cancelled. Hoarders don't work for thieves.",
+    # 1.6 the Zenith
+    "entity.worldsfall.leviathan_drifter": "Leviathan Drifter",
+    "entity.worldsfall.gale_harrier": "Gale Harrier",
+    "item.worldsfall.gale_harrier_spawn_egg": "Gale Harrier Spawn Egg",
+    "item.worldsfall.leviathan_drifter_spawn_egg": "Leviathan Drifter Spawn Egg",
+    "item.worldsfall.current_vane": "Current Vane",
+    "item.worldsfall.music_disc_ladders.desc": "Worldsfall — Ladders",
+    "jukebox_song.worldsfall.ladders": "Worldsfall — Ladders",
+    "message.worldsfall.orrery.wrong_phase": "This ring turns only at %s Tide (now %s).",
+    "message.worldsfall.orrery.overmoon.0": "The lens focuses. Far above the void, out of the tide's reach, a pale point answers it.",
+    "message.worldsfall.orrery.overmoon.1": "They called it the Overmoon. Every ladder they built was climbing toward it.",
+    "message.worldsfall.orrery.overmoon.2": "A new star burns in the End's sky, for everyone.",
+    "tooltip.worldsfall.upgrade.tempest": "Tempest",
     "message.worldsfall.pillars.phrase": "\"Where the Warden falls, follow it down through the dark.\" A glyph forms in your hand.",
 }
 _WORDS = ["Where", "the", "Warden", "falls,", "follow", "it", "down", "through", "the", "dark."]
@@ -192,6 +218,10 @@ DESC = {
     "gravity_plate": ("Step on it to open a small low-gravity zone for ten seconds (End only).", None),
     "courier_cache": ("A small chest: the endpoint of a Hoarder Courier contract.", None),
     "anchor_frame_lamp": ("A solid Anchor Frame panel with a glowing core.", None),
+    "halo_glass": ("Glows brighter as the tide rises: dim at Low Tide, blazing at High.", None),
+    "harrier_plume": ("Used for the Current Vane and the Tempest elytra upgrade (smithing with a Gale template).", None),
+    "leviathan_barnacle": ("Scraped from a Leviathan's back with shears. Grants 30 seconds of Slow Falling; Skates breed on it.", None),
+    "current_vane": ("Its needle points to the nearest Sky Current in the outer End.", "Glide into a current and it carries you at 25 blocks a second. Sneak to drop out."),
 }
 for _p in PACTS:
     DESC[f"pact_crystal_{_p}"] = ("Place on the exit portal (one of the four respawn crystals) to bind the next dragon to this pact.", None)
@@ -210,6 +240,11 @@ ADV_TEXT = {
     "attuned": ("Perfect Pitch", "Attune an End Gateway with a Tuning Fork"),
     "lattice_jump": ("Shortcut Through Nothing", "Travel through the Gateway Lattice"),
     "moored": ("All Hands", "Turn an End Ship into a Mooring with a Drift Helm"),
+    "sky_highway": ("Sky Highway", "Ride a Sky Current for ten seconds"),
+    "knocked_out_of_the_sky": ("Knocked Out of the Sky", "Get shoved out of the air by a Gale Harrier"),
+    "barnacle_scraper": ("Hull Cleaner", "Scrape a barnacle from a Leviathan's back"),
+    "orrery_ring": ("Clockwork Heavens", "Free a ring of an Orrery with a Spire Key"),
+    "the_orrery": ("What They Climbed Toward", "Align all three rings of an Orrery"),
     "high_water_mark": ("High Water Mark", "Be in the End when a King Tide reaches its height"),
     "starstruck": ("Starstruck", "Mine a shard that fell in a Starfall"),
     "a_quiet_hour": ("A Quiet Hour", "Meet a memory that walks during an Eclipse of Stillness"),
@@ -229,6 +264,7 @@ def assets(g):
     gap_assets(g)
     nav_assets(g)
     life_assets(g)
+    zenith_assets(g)
     # elytra looks: upgrade × Dragon Scale overlay
     for up in ("", "gale", "still", "hover", "tempest"):
         for scaled in (False, True):
@@ -414,6 +450,41 @@ def life_assets(g):
     g.item_def("wyrm_roost", roost)
 
 
+def zenith_assets(g):
+    from PIL import Image
+    for n in ("skystone", "polished_skystone", "skystone_bricks", "skystone_tiles", "chiseled_skystone", "orrery_ring"):
+        g.cube_all(n)
+    for base, (src, wall) in FAMILIES.items():
+        g.family(base, src, src, wall=wall)
+    halo = g.cube_with_emissive("halo_glass", g.b("halo_glass"), g.b("halo_glass_emissive"))
+    write(f"{g.BS}/halo_glass.json", {"variants": {f"glow={i}": {"model": halo} for i in range(4)}})
+    g.item_def("halo_glass", halo)
+    lens_dark = g.model("orrery_lens", "minecraft:block/cube_all", {"all": g.b("orrery_lens")})
+    lens_lit = g.cube_with_emissive("orrery_lens_focused", g.b("orrery_lens"), g.b("orrery_lens_emissive"))
+    write(f"{g.BS}/orrery_lens.json", {"variants": {"focused=false": {"model": lens_dark}, "focused=true": {"model": lens_lit}}})
+    g.item_def("orrery_lens", lens_dark)
+    faces = {"down": "#side", "up": "#top", "north": "#side", "south": "#side", "west": "#side", "east": "#side"}
+    sock = g.custom("orrery_socket", {"side": g.b("orrery_socket_side"), "top": g.b("orrery_socket_top"), "glow": g.b("orrery_socket_top_emissive"),
+                                      "particle": g.b("orrery_socket_side")}, [g.box((2, 0, 2), (14, 12, 14), faces), g.box((2, 0, 2), (14, 12, 14), {"up": "#glow"}, emission=15)])
+    variants = {f"freed={f},ring={r}": {"model": sock} for f in ("false", "true") for r in range(3)}
+    write(f"{g.BS}/orrery_socket.json", {"variants": variants})
+    g.item_def("orrery_socket", sock)
+    # Current Vane: a compass whose dial turns toward the nearest Sky Current (16 rotated frames of the vane)
+    src = Image.open(os.path.join(ASSETS, "textures/item/current_vane.png")).convert("RGBA")
+    big = src.resize((src.width * 8, src.height * 8), Image.NEAREST)
+    entries = []
+    for k in range(16):
+        frame = big.rotate(-k * 22.5, resample=Image.NEAREST).resize(src.size, Image.NEAREST)
+        frame.save(os.path.join(ASSETS, f"textures/item/current_vane_{k:02d}.png"))
+        write(f"{g.IM}/current_vane_{k:02d}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/current_vane_{k:02d}"}})
+        entries.append({"threshold": k - 0.5 if k else 0.0, "model": {"type": "minecraft:model", "model": f"{NS}:item/current_vane_{k:02d}"}})
+    entries.append({"threshold": 15.5, "model": {"type": "minecraft:model", "model": f"{NS}:item/current_vane_00"}})
+    write(f"{g.ITEMS}/current_vane.json", {"model": {"type": "minecraft:range_dispatch", "property": "minecraft:compass", "target": "lodestone",
+                                                     "scale": 16.0, "entries": entries}})
+    for egg in ("gale_harrier", "leviathan_drifter"):
+        g.item_sprite(f"{egg}_spawn_egg", [f"{NS}:item/{egg}_spawn_egg"])
+
+
 def lantern(g, name):
     tmpl = vanilla_json("assets/minecraft/models/block/template_lantern.json")
     tmplh = vanilla_json("assets/minecraft/models/block/template_hanging_lantern.json")
@@ -456,6 +527,7 @@ def data(d):
     gap_data(d)
     nav_data(d)
     life_data(d)
+    zenith_data(d)
     d.tag("worldgen/structure", NS, "lore", [d.i("fallen_spire"), d.i("sunken_archive")] if os.path.exists(
         os.path.join(D, "worldgen/structure/sunken_archive.json")) else [d.i("fallen_spire")])
 
@@ -552,9 +624,54 @@ def life_data(d):
          "block": d.i("anchor_frame_slab"), "properties": {"type": "double"}}]}, {"function": "minecraft:explosion_decay"}]}]}])
 
 
+def zenith_data(d):
+    D = d.D
+    d.shaped("halo_glass", ["SGS", "GLG", "SGS"], {"S": d.i("skystone"), "G": "minecraft:glass", "L": d.i("lumen_crystal_shard")}, d.i("halo_glass"), n=4,
+             category="building")
+    d.shaped("polished_skystone", ["SS", "SS"], {"S": d.i("skystone")}, d.i("polished_skystone"), n=4, category="building")
+    d.shaped("skystone_bricks", ["SS", "SS"], {"S": d.i("polished_skystone")}, d.i("skystone_bricks"), n=4, category="building")
+    d.shaped("skystone_tiles", ["SS", "SS"], {"S": d.i("skystone_bricks")}, d.i("skystone_tiles"), n=4, category="building")
+    d.shaped("chiseled_skystone", ["S", "S"], {"S": d.i("skystone_slab")}, d.i("chiseled_skystone"), category="building")
+    d.shaped("current_vane", [" P ", "PCP", " M "], {"P": d.i("harrier_plume"), "C": "minecraft:compass", "M": d.i("mirror_shard_fragment")},
+             d.i("current_vane"), category="equipment")
+    write(f"{D}/recipe/elytra_tempest_upgrade.json", {"type": "worldsfall:elytra_style", "template": d.i("gale_upgrade_template"),
+                                                      "addition": d.i("harrier_plume"), "style": "tempest"})
+    write(f"{D}/jukebox_song/ladders.json", {"comparator_output": 12, "description": {"translate": "jukebox_song.worldsfall.ladders"},
+                                             "length_in_seconds": 154.0, "sound_event": d.i("music_disc.ladders")})
+    write(f"{D}/loot_table/entities/gale_harrier.json", {"type": "minecraft:entity", "pools": [{"rolls": 1, "entries": [
+        {"type": "minecraft:item", "name": d.i("harrier_plume"), "functions": [
+            {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 1, "max": 2}},
+            {"function": "minecraft:enchanted_count_increase", "enchantment": "minecraft:looting", "count": {"type": "minecraft:uniform", "min": 0, "max": 1}}]}]}],
+        "random_sequence": d.i("entities/gale_harrier")})
+    d.chest("vault/orrery", [
+        {"rolls": 1, "entries": [{"type": "minecraft:item", "name": d.i("echo_tablet"), "functions": [
+            {"function": "minecraft:set_components", "components": {"worldsfall:tablet_index": 12}}]}]},
+        {"rolls": 1, "entries": [{"type": "minecraft:item", "name": d.i("music_disc_ladders")}]},
+        {"rolls": {"type": "minecraft:uniform", "min": 2, "max": 4}, "entries": [
+            dict(d.count(d.i("halo_glass"), 4, 12), weight=5), dict(d.count(d.i("skystone"), 8, 24), weight=5),
+            dict(d.count(d.i("lumen_crystal_shard"), 2, 6), weight=4), dict(d.count("minecraft:ender_pearl", 2, 4), weight=3),
+            dict({"type": "minecraft:item", "name": d.i("spire_key")}, weight=1)]}])
+    # Zenith Shoals: rare clusters of Skystone islets at Y 170-230 beyond 2,000 blocks
+    write(f"{D}/worldgen/feature/zenith_shoal.json", {"type": d.i("zenith_shoal")})
+    write(f"{D}/worldgen/placed_feature/zenith_shoal.json", {"feature": d.i("zenith_shoal"), "placement": [
+        {"type": "minecraft:rarity_filter", "chance": 90}, {"type": "minecraft:in_square"},
+        {"type": "minecraft:height_range", "height": {"type": "minecraft:uniform", "min_inclusive": {"absolute": 170}, "max_inclusive": {"absolute": 230}}},
+        {"type": d.i("distance_from_origin"), "min": 2000}]})
+    write(f"{D}/neoforge/biome_modifier/zenith_shoals.json", {"type": "neoforge:add_features", "biomes": "#minecraft:is_end",
+                                                              "features": [d.i("zenith_shoal")], "step": "surface_structures"})
+    # The Orrery: one per ~5,000x5,000 area, beyond 5,000 blocks
+    write(f"{D}/worldgen/structure/orrery.json", {"type": d.i("blueprint"), "generator": "orrery", "biomes": f"#{NS}:has_structure/orrery",
+                                                  "spawn_overrides": {}, "step": "surface_structures", "terrain_adaptation": "none"})
+    write(f"{D}/worldgen/structure_set/orrery.json", {"placement": {"type": "minecraft:random_spread", "salt": 70412233, "separation": 120,
+                                                                    "spacing": 312, "spread_type": "linear"},
+                                                      "structures": [{"structure": d.i("orrery"), "weight": 1}]})
+    d.tag("worldgen/biome", NS, "has_structure/orrery", ["#minecraft:is_end"])
+
+
 def block_loot(d):
     for n in ("wardens_lantern", "causeway_lantern", "causeway_plaque", "drift_buoy", "roost_post", "drift_helm", "ships_bell", "tide_bell",
-              "wyrm_roost", "gravity_plate", "courier_cache", "anchor_frame_lamp", "anchor_frame_stairs"):
+              "wyrm_roost", "gravity_plate", "courier_cache", "anchor_frame_lamp", "anchor_frame_stairs", "skystone", "polished_skystone",
+              "skystone_bricks", "skystone_tiles", "chiseled_skystone", "halo_glass"):
         d.drop_self(n)
 
 
@@ -568,7 +685,9 @@ def shovel_blocks():
 
 def pickaxe_blocks():
     return ["wardens_lantern", "causeway_lantern", "causeway_plaque", "roost_post", "ships_bell", "tide_bell", "gravity_plate", "courier_cache",
-            "anchor_frame_lamp", "anchor_frame_slab", "anchor_frame_stairs", "starfall_shard"]
+            "anchor_frame_lamp", "anchor_frame_slab", "anchor_frame_stairs", "starfall_shard", "skystone", "polished_skystone", "skystone_bricks",
+            "skystone_tiles", "chiseled_skystone", "orrery_ring", "orrery_lens", "orrery_socket"] + [f"{b}_{k}" for b in FAMILIES
+                                                                                                  for k in ("slab", "stairs", "wall")]
 
 
 def advancement_criteria(aid, i):

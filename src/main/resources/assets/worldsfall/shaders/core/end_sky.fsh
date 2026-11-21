@@ -10,7 +10,24 @@
 // TextureMat[1].xyz = camera position (for slight parallax of the near star layer), TextureMat[1].w = star brightness
 //   (1 normally; dims toward 0 during an Eclipse of Stillness)
 
+// TextureMat[2] = (orrery star 1 azimuth, elevation, star 2 azimuth, elevation); TextureMat[3] = (star 3 azimuth, elevation,
+//   Overmoon angular radius, constellation strength 0..1). An elevation below -1 hides a star.
+
 layout(location = 0) in vec3 skyDir;
+
+vec3 wf_skyDir(vec2 azEl) {
+    return vec3(cos(azEl.y) * cos(azEl.x), sin(azEl.y), cos(azEl.y) * sin(azEl.x));
+}
+
+// a bright point with a soft halo: an Orrery star or a constellation star
+vec3 wf_pointStar(vec3 d, vec2 azEl, float size, float t, float seed) {
+    if (azEl.y < -1.0) return vec3(0.0);
+    float a = acos(clamp(dot(d, wf_skyDir(azEl)), -1.0, 1.0));
+    float twinkle = 0.85 + 0.15 * sin(t * 1.7 + seed * 13.0);
+    float core = exp(-a * a / (size * size)) * 2.2;
+    float halo = exp(-a / (size * 9.0)) * 0.35;
+    return vec3(1.0, 0.93, 0.78) * (core + halo) * twinkle;
+}
 layout(location = 0) out vec4 fragColor;
 
 void main() {
@@ -53,6 +70,25 @@ void main() {
     float starFade = smoothstep(-0.25, 0.05, h);
     vec3 starCol = mix(vec3(0.80, 0.94, 0.99), vec3(1.0), wf_hash13(floor(d * 120.0)));
     col += starCol * s * starFade * (1.0 - glow * 0.35) * TextureMat[1].w;
+
+    // 3b. the expansion's sky: one permanent star per aligned Orrery, the Ascendancy's constellation (Restoration stage 4),
+    //     and the Overmoon above the main island (a faint point; a pale disc at Stillness). Eclipses never dim these.
+    col += wf_pointStar(d, TextureMat[2].xy, 0.0035, t, 1.0) + wf_pointStar(d, TextureMat[2].zw, 0.0035, t, 2.0)
+         + wf_pointStar(d, TextureMat[3].xy, 0.0035, t, 3.0);
+    float cons = TextureMat[3].w;
+    if (cons > 0.0) {
+        const vec2 C[7] = vec2[7](vec2(2.10, 0.62), vec2(2.22, 0.70), vec2(2.31, 0.66), vec2(2.40, 0.74), vec2(2.29, 0.82),
+                                  vec2(2.52, 0.71), vec2(2.60, 0.62));
+        for (int i = 0; i < 7; i++) {
+            col += wf_pointStar(d, C[i], 0.0022, t, float(i) + 7.0) * cons * 0.8;
+        }
+    }
+    vec3 moonDir = normalize(vec3(0.0, 640.0, 0.0) - cam);
+    float moonR = TextureMat[3].z;
+    float ma = acos(clamp(dot(d, moonDir), -1.0, 1.0));
+    float disc = smoothstep(moonR, moonR * 0.85, ma);
+    float limb = 0.75 + 0.25 * sqrt(max(0.0, 1.0 - (ma / max(moonR, 1e-4)) * (ma / max(moonR, 1e-4))));
+    col += vec3(0.86, 0.90, 0.98) * disc * limb * 0.9 + vec3(0.65, 0.75, 0.95) * exp(-ma / (moonR * 3.0 + 0.004)) * 0.25;
 
     // 4. distant islands: hazy floating masses ringing the horizon -- flat chorus-bumped tops, tapering
     //    rocky undersides, a rim of nebula light on top and atmospheric fade with distance

@@ -72,6 +72,7 @@ public final class WFEvents {
             dev.worldsfall.life.WorldEvents.tick(level);
             dev.worldsfall.life.Couriers.tick(level);
             dev.worldsfall.life.MothSpawning.tick(level);
+            dev.worldsfall.zenith.ZenithEvents.tick(level);
         } else if (level.dimension() == WFDimensions.THE_FRACTURE) {
             FractureArena.tickDecay(level);
             FractureEnvironment.tick(level);
