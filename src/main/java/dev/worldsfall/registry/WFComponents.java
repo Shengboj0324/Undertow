@@ -34,6 +34,9 @@ public final class WFComponents {
     /** A Courier Token's or Tuning Fork's remembered position. */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<net.minecraft.core.GlobalPos>> LINKED_POS = COMPONENTS.registerComponentType(
         "linked_pos", b -> b.persistent(net.minecraft.core.GlobalPos.CODEC).networkSynchronized(net.minecraft.core.GlobalPos.STREAM_CODEC));
+    /** A folded Void Bell's stored charge (ticks). */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> BELL_CHARGE = COMPONENTS.registerComponentType(
+        "bell_charge", b -> b.persistent(Codec.intRange(0, 1_000_000)).networkSynchronized(ByteBufCodecs.VAR_INT));
     /** Which Archive Codex (1–6). */
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> CODEX_INDEX = COMPONENTS.registerComponentType(
         "codex_index", b -> b.persistent(Codec.intRange(1, 6)).networkSynchronized(ByteBufCodecs.VAR_INT));

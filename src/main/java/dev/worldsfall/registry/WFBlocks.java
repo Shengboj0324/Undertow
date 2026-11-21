@@ -267,6 +267,29 @@ public final class WFBlocks {
         dev.worldsfall.zenith.OrrerySocketBlock::new, p -> p.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(-1.0f, 3600000.0f).noLootTable()
             .lightLevel(s -> s.getValue(dev.worldsfall.zenith.OrrerySocketBlock.FREED) ? 12 : 6)));
 
+    // ================= Expansion 2.0: the Undertow and the Restoration
+    public static final DeferredBlock<Block> ARCHIVE_TILES = item(BLOCKS.registerSimpleBlock("archive_tiles",
+        p -> p.mapColor(MapColor.COLOR_LIGHT_GRAY).strength(2.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE_TILES)));
+    public static final DeferredBlock<dev.worldsfall.undertow.ArchiveShelfBlock> ARCHIVE_SHELF = item(BLOCKS.registerBlock("archive_shelf",
+        dev.worldsfall.undertow.ArchiveShelfBlock::new, p -> p.mapColor(MapColor.COLOR_CYAN).strength(1.5f).sound(SoundType.CHISELED_BOOKSHELF).lightLevel(s -> 4)));
+    public static final DeferredBlock<Block> NULL_CORAL_BLOCK = item(BLOCKS.registerSimpleBlock("null_coral_block",
+        p -> p.mapColor(MapColor.COLOR_BLACK).strength(1.5f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.CORAL_BLOCK)));
+    public static final DeferredBlock<Block> NULL_CORAL_BRICKS = item(BLOCKS.registerSimpleBlock("null_coral_bricks",
+        p -> p.mapColor(MapColor.COLOR_BLACK).strength(2.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE_BRICKS)));
+    public static final DeferredBlock<Block> POLISHED_NULL_CORAL = item(BLOCKS.registerSimpleBlock("polished_null_coral",
+        p -> p.mapColor(MapColor.COLOR_BLACK).strength(2.0f, 6.0f).requiresCorrectToolForDrops().sound(SoundType.POLISHED_DEEPSLATE)));
+    public static final DeferredBlock<dev.worldsfall.undertow.NullCoralBlock> NULL_CORAL = item(BLOCKS.registerBlock("null_coral",
+        dev.worldsfall.undertow.NullCoralBlock::new, p -> p.mapColor(MapColor.COLOR_BLACK).instabreak().noCollision().sound(SoundType.CORAL_BLOCK)
+            .noOcclusion().pushReaction(PushReaction.POPPED)));
+    public static final DeferredBlock<dev.worldsfall.undertow.NullCoralBlock> NULL_CORAL_FAN = item(BLOCKS.registerBlock("null_coral_fan",
+        dev.worldsfall.undertow.NullCoralBlock::new, p -> p.mapColor(MapColor.COLOR_BLACK).instabreak().noCollision().sound(SoundType.CORAL_BLOCK)
+            .noOcclusion().pushReaction(PushReaction.POPPED)));
+    public static final DeferredBlock<dev.worldsfall.undertow.MuralPanelBlock> MURAL_PANEL = item(BLOCKS.registerBlock("mural_panel",
+        dev.worldsfall.undertow.MuralPanelBlock::new, p -> p.mapColor(MapColor.COLOR_PURPLE).strength(-1.0f, 3600000.0f).noLootTable()
+            .lightLevel(s -> s.getValue(dev.worldsfall.undertow.MuralPanelBlock.LIT) ? 6 : 0)));
+    public static final DeferredBlock<dev.worldsfall.undertow.BellWinchBlock> BELL_WINCH = item(BLOCKS.registerBlock("bell_winch",
+        dev.worldsfall.undertow.BellWinchBlock::new, p -> p.mapColor(MapColor.COLOR_GRAY).strength(3.0f, 6.0f).sound(SoundType.CHAIN)));
+
     public static final DeferredBlock<LiquidBlock> STILLWATER = BLOCKS.registerBlock("stillwater",
         p -> new dev.worldsfall.fluid.StillwaterBlock(WFFluids.STILLWATER.get(), p),
         p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision().strength(100.0f).pushReaction(PushReaction.POPPED)

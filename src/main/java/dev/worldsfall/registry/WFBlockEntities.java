@@ -25,6 +25,8 @@ public final class WFBlockEntities {
         "rift_frame", () -> new BlockEntityType<>(RiftFrameBlockEntity::new, WFBlocks.FRACTURE_RIFT_FRAME.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<dev.worldsfall.life.CourierCacheBlockEntity>> COURIER_CACHE = BLOCK_ENTITIES.register(
         "courier_cache", () -> new BlockEntityType<>(dev.worldsfall.life.CourierCacheBlockEntity::new, WFBlocks.COURIER_CACHE.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<dev.worldsfall.undertow.ArchiveShelfBlockEntity>> ARCHIVE_SHELF = BLOCK_ENTITIES.register(
+        "archive_shelf", () -> new BlockEntityType<>(dev.worldsfall.undertow.ArchiveShelfBlockEntity::new, WFBlocks.ARCHIVE_SHELF.get()));
 
     private WFBlockEntities() {}
 }

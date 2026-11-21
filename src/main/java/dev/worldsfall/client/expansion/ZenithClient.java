@@ -30,6 +30,7 @@ public final class ZenithClient {
     public static final double ZENITH_Y = 150;
     private static List<SkyCurrents.Current> currents = List.of();
     private static List<SkyCurrents.Downdraft> drafts = List.of();
+    private static List<Vec3> maws = List.of();
     private static boolean inCurrent;
     private static Vec3 lastLeviathan = null;
     private static int leviathanId = -1;
@@ -40,6 +41,7 @@ public final class ZenithClient {
     public static void accept(ZenithPayload p) {
         currents = List.copyOf(p.currents());
         drafts = List.copyOf(p.drafts());
+        maws = List.copyOf(p.maws());
     }
 
     public static List<SkyCurrents.Current> currents() {
@@ -107,13 +109,27 @@ public final class ZenithClient {
         Vec3 eye = player.getEyePosition();
         for (SkyCurrents.Current c : currents) {
             List<Vec3> pts = c.points();
-            for (int k = 0; k < 4; k++) {
+            int density = dev.worldsfall.client.ClientWorldState.get().restorationStage() >= 4 ? 8 : 4; // Lanterns of the Ascendancy: brighter currents
+            for (int k = 0; k < density; k++) {
                 int i = r.nextInt(pts.size() - 1);
                 Vec3 p = pts.get(i).lerp(pts.get(i + 1), r.nextDouble());
                 if (p.distanceToSqr(eye) < 96 * 96) {
                     Vec3 dir = pts.get(i + 1).subtract(pts.get(i)).normalize().scale(0.4);
                     mc.level.addParticle(WFParticles.SKY_CURRENT.get(), p.x + r.nextGaussian() * 1.5, p.y + r.nextGaussian(), p.z + r.nextGaussian() * 1.5,
                         dir.x, dir.y, dir.z);
+                }
+            }
+        }
+        // Tide Maws: slow whirlpools of light in the tide plane while the tide stands High
+        if (dev.worldsfall.world.tide.Tides.appliesTo(mc.level) && dev.worldsfall.world.tide.Tides.phase(mc.level) == dev.worldsfall.world.tide.TideCycle.Phase.HIGH) {
+            double tide = dev.worldsfall.world.tide.Tides.height(mc.level);
+            for (Vec3 m : maws) {
+                if (Math.hypot(m.x - player.getX(), m.z - player.getZ()) < 192) {
+                    for (int k = 0; k < 6; k++) {
+                        double a = r.nextDouble() * Math.PI * 2, rad = 1 + r.nextDouble() * dev.worldsfall.undertow.TideMaws.PULL_RADIUS;
+                        double x = m.x + Math.cos(a) * rad, z = m.z + Math.sin(a) * rad;
+                        mc.level.addParticle(WFParticles.MAW_SWIRL.get(), x, tide + 0.2 + r.nextDouble() * 0.6, z, -Math.sin(a) * 0.25, -0.02, Math.cos(a) * 0.25);
+                    }
                 }
             }
         }

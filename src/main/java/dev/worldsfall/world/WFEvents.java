@@ -63,6 +63,9 @@ public final class WFEvents {
         }
         Reassembly.tick(level);
         BlockQueue.tickAll(level);
+        if (level.dimension() == dev.worldsfall.registry.WFDimensions.THE_UNDERTOW) {
+            dev.worldsfall.undertow.UndertowEvents.tick(level);
+        }
         if (level.dimension() == Level.END) {
             TideEffects.tick(level);
             Sundering.tick(level);
@@ -73,6 +76,8 @@ public final class WFEvents {
             dev.worldsfall.life.Couriers.tick(level);
             dev.worldsfall.life.MothSpawning.tick(level);
             dev.worldsfall.zenith.ZenithEvents.tick(level);
+            dev.worldsfall.undertow.TideMaws.tick(level);
+            dev.worldsfall.restoration.RestorationWorld.tick(level);
         } else if (level.dimension() == WFDimensions.THE_FRACTURE) {
             FractureArena.tickDecay(level);
             FractureEnvironment.tick(level);
@@ -94,7 +99,8 @@ public final class WFEvents {
             }
         }
         if (entity instanceof LivingEntity living && (entity.tickCount + entity.getId()) % 5 == 0) {
-            boolean relevant = level.dimension() == Level.END || level.dimension() == WFDimensions.THE_FRACTURE;
+            boolean relevant = level.dimension() == Level.END || level.dimension() == WFDimensions.THE_FRACTURE
+                || level.dimension() == WFDimensions.THE_UNDERTOW;
             if (relevant || GravityZones.hasModifier(living)) {
                 GravityZones.Zone zone = GravityZones.update(level, living);
                 if (living instanceof ServerPlayer sp && zone == GravityZones.Zone.LIGHT && entity.tickCount % 40 == 0) {

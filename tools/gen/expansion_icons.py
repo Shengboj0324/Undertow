@@ -19,6 +19,7 @@ ICONS = {
     "gateway": ["...KK...", "..KTTK..", ".KTWWTK.", "KTWBBWTK", "KTWBBWTK", ".KTWWTK.", "..KTTK..", "...KK..."],
     "void_capsule": ["........", "..KKKK..", ".KTTWTK.", ".KTTTTK.", ".KMMMMK.", ".KMMMMK.", "..KKKK..", "........"],
     "orrery": ["...KK...", "..KGGK..", ".KG..GK.", "KG.WW.GK", "KG.WW.GK", ".KG..GK.", "..KGGK..", "...KK..."],
+    "overmoon": ["..KKKK..", ".KWWWWK.", "KWWSSWWK", "KWSWWSWK", "KWSWWSWK", "KWWSSWWK", ".KWWWWK.", "..KKKK.."],
     "sky_current": ["........", "....K...", "....KK..", "KKKKKSK.", "KSSSSSSK", "KKKKKSK.", "....KK..", "....K..."],
 }
 
@@ -70,14 +71,33 @@ def recolour_egg(src, path, light, dark):
     im.save(path)
 
 
+def bell_hull():
+    """The Bell Hull: the Void Bell's item sprite without its lit core, darker glass."""
+    src = os.path.join(ASSETS, "textures/item/void_bell.png")
+    if not os.path.exists(src):
+        return
+    im = Image.open(src).convert("RGBA")
+    px = im.load()
+    for y in range(im.height):
+        for x in range(im.width):
+            r, g, b, a = px[x, y]
+            if a and g > r + 30 and b > r + 20 and g > 150:  # the teal core
+                px[x, y] = (40, 52, 60, a)
+            elif a:
+                px[x, y] = (int(r * 0.8), int(g * 0.85), int(b * 0.9), a)
+    im.save(os.path.join(ASSETS, "textures/item/bell_hull.png"))
+
+
 def build():
     for name, rows in ICONS.items():
         grid(rows, os.path.join(ASSETS, f"textures/map/decorations/{name}.png"))
     grid(SINKING, os.path.join(ASSETS, "textures/mob_effect/sinking.png"))
+    bell_hull()
     egg = os.path.join(VANILLA, "assets/minecraft/textures/item/shulker_spawn_egg.png")
     if os.path.exists(egg):
         recolour_egg(egg, os.path.join(ASSETS, "textures/item/shulker_archivist_spawn_egg.png"), (224, 214, 196), (122, 74, 160))
-    for src, name, light, dark in (("bat", "lantern_moth", (236, 120, 214), (70, 30, 70)), ("phantom", "gale_harrier", (150, 170, 200), (220, 200, 120)),
+    for src, name, light, dark in (("guardian", "tide_eel", (214, 236, 230), (60, 150, 140)), ("drowned", "drowned_ascendant", (190, 230, 220), (40, 70, 72)),
+                                   ("tropical_fish", "glimmer", (200, 255, 240), (80, 200, 190)), ("bat", "lantern_moth", (236, 120, 214), (70, 30, 70)), ("phantom", "gale_harrier", (150, 170, 200), (220, 200, 120)),
                                    ("elder_guardian", "leviathan_drifter", (190, 205, 225), (120, 140, 170))):
         path = os.path.join(VANILLA, f"assets/minecraft/textures/item/{src}_spawn_egg.png")
         if os.path.exists(path):

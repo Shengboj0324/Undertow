@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:archive_codex"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.first_codex.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.first_codex.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:into_the_undertow"
+}

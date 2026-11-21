@@ -57,7 +57,7 @@ public final class WFTests {
     private WFTests() {}
 
     /** 24 from 1.0 plus the expansion's (1.2 → 2.0). */
-    static final int EXPECTED_ADVANCEMENTS = 49;
+    static final int EXPECTED_ADVANCEMENTS = 53;
 
     static void collect(Map<String, Consumer<GameTestHelper>> out) {
         out.put("tide_cycle_math", WFTests::tideCycleMath);
@@ -113,6 +113,13 @@ public final class WFTests {
         out.put("orrery_aligns_and_focuses", WFTests::orreryAlign);
         out.put("leviathan_back_is_solid_and_safe", WFTests::leviathan);
         out.put("halo_glass_and_star_chart", WFTests::haloAndChart);
+        // expansion 2.0: the Undertow and the Restoration
+        out.put("undertow_exists_and_maws_are_fixed", WFTests::undertowMaws);
+        out.put("void_bell_seats_and_shelters", WFTests::voidBell);
+        out.put("sunken_archive_holds_six_codices", WFTests::sunkenArchive);
+        out.put("codices_and_archive_shelf", WFTests::codices);
+        out.put("abyssal_anchor_is_not_consumed", WFTests::abyssalAnchor);
+        out.put("restoration_mural_and_trophies", WFTests::restorationWorld);
     }
 
     static int maxTicks(String name) {
@@ -120,6 +127,7 @@ public final class WFTests {
             case "stillwater_turns_water_to_stillstone" -> 200;
             case "egg_cradle_ritual_stages" -> 400;
             case "orrery_aligns_and_focuses" -> 1200;
+            case "sunken_archive_holds_six_codices" -> 200;
             default -> 100;
         };
     }
@@ -905,6 +913,130 @@ public final class WFTests {
         h.assertTrue("star".equals(dev.worldsfall.nav.VoidChartItem.kind(chart)), "a Star Chart is a pre-drawn Void Chart");
         var data = net.minecraft.world.item.MapItem.getSavedData(chart, h.getLevel());
         h.assertTrue(data != null && data.scale == dev.worldsfall.zenith.Orreries.CHART_SCALE, "covering 2,048 blocks");
+        h.succeed();
+    }
+
+    private static void undertowMaws(GameTestHelper h) {
+        var server = h.getLevel().getServer();
+        // the GameTest server creates only the vanilla levels, so check that the Undertow's stem ships and its type is registered
+        h.assertTrue(server.getResourceManager().getResource(Identifier.fromNamespaceAndPath("worldsfall", "dimension/the_undertow.json")).isPresent(),
+            "the Undertow's level stem ships with the mod");
+        h.assertTrue(server.registryAccess().lookupOrThrow(Registries.DIMENSION_TYPE).containsKey(Identifier.fromNamespaceAndPath("worldsfall", "the_undertow")),
+            "and its dimension type");
+        long seed = 7L;
+        h.assertTrue(dev.worldsfall.undertow.TideMaws.mawsNear(seed, 0, 0).stream().allMatch(m -> Math.hypot(m.x, m.z) > 1500),
+            "no maws near the main island");
+        var m = dev.worldsfall.undertow.TideMaws.mawOf(seed, 4, -3);
+        h.assertTrue(m != null && m.equals(dev.worldsfall.undertow.TideMaws.mawOf(seed, 4, -3)), "a maw is always in the same place");
+        h.assertTrue(Math.floorDiv((long) m.x, dev.worldsfall.undertow.TideMaws.REGION) == 4, "one maw per region");
+        h.assertTrue(!dev.worldsfall.undertow.TideMaws.open(h.getLevel()), "maws open only on the End's tide");
+        h.succeed();
+    }
+
+    private static void voidBell(GameTestHelper h) {
+        var bell = WFEntities.VOID_BELL.get().create(h.getLevel(), EntitySpawnReason.COMMAND);
+        h.assertTrue(bell != null, "bell constructs");
+        BlockPos at = h.absolutePos(new BlockPos(1, 3, 1));
+        bell.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0, 0);
+        h.getLevel().addFreshEntity(bell);
+        bell.addCharge(dev.worldsfall.undertow.VoidBell.CHARGE_PER_FRAGMENT);
+        h.assertTrue(bell.charge() == dev.worldsfall.undertow.VoidBell.CHARGE_PER_FRAGMENT, "one fragment is ten minutes of charge");
+        bell.addCharge(dev.worldsfall.undertow.VoidBell.MAX_CHARGE * 2);
+        h.assertTrue(bell.charge() == dev.worldsfall.undertow.VoidBell.MAX_CHARGE, "charge is capped");
+        ServerPlayer a = h.makeMockServerPlayerInLevel(), b = h.makeMockServerPlayerInLevel(), c = h.makeMockServerPlayerInLevel();
+        a.startRiding(bell, true, true);
+        b.startRiding(bell, true, true);
+        h.assertTrue(!c.startRiding(bell, false, true), "at most two players ride inside");
+        h.assertTrue(bell.getControllingPassenger() == a, "the first aboard pilots");
+        h.assertTrue(dev.worldsfall.undertow.VoidBell.sheltered(a), "riders are sheltered");
+        c.snapTo(bell.getX() + 3, bell.getY(), bell.getZ(), 0, 0);
+        h.assertTrue(dev.worldsfall.undertow.VoidBell.sheltered(c), "so is anyone inside the 5-block bubble");
+        c.snapTo(bell.getX() + 9, bell.getY(), bell.getZ(), 0, 0);
+        h.assertTrue(!dev.worldsfall.undertow.VoidBell.sheltered(c), "but not outside it");
+        a.stopRiding();
+        b.stopRiding();
+        bell.discard();
+        h.succeed();
+    }
+
+    private static void sunkenArchive(GameTestHelper h) {
+        ServerLevel level = h.getLevel();
+        BlockPos base = h.absolutePos(BlockPos.ZERO);
+        var maw = new net.minecraft.world.phys.Vec3(base.getX() + 400, 0, base.getZ() + 400);
+        dev.worldsfall.undertow.SunkenArchive.ensure(level, maw);
+        h.assertTrue(dev.worldsfall.undertow.SunkenArchive.get(level).isBuilt(dev.worldsfall.undertow.TideMaws.id(maw)), "the archive is recorded");
+        BlockPos c = dev.worldsfall.undertow.SunkenArchive.centre(maw);
+        int caches = 0;
+        java.util.Set<String> tables = new HashSet<>();
+        for (BlockPos p : BlockPos.betweenClosed(c.offset(-45, -30, -25), c.offset(45, 25, 25))) {
+            if (level.getBlockEntity(p) instanceof PerPlayerLootBlockEntity v) {
+                caches++;
+                tables.add(String.valueOf(v.lootTable()));
+            }
+        }
+        h.assertTrue(caches == 7, "five codex caches, the archive cache and the hidden alcove: " + caches);
+        for (int k = 1; k <= 6; k++) {
+            int kk = k;
+            h.assertTrue(tables.stream().anyMatch(t -> t.contains("archive_codex_" + kk)), "Codex " + k + " is somewhere in the archive");
+        }
+        var ascendants = level.getEntitiesOfClass(dev.worldsfall.undertow.DrownedAscendant.class, new AABB(c).inflate(48));
+        h.assertTrue(ascendants.size() == 3, "three Drowned Ascendants keep the archive");
+        h.assertTrue(ascendants.stream().anyMatch(a -> a.action() == dev.worldsfall.undertow.DrownedAscendant.POINTING && a.pointsAt() != null
+            && level.getBlockEntity(a.pointsAt().below()) instanceof PerPlayerLootBlockEntity), "one points at the hidden Codex");
+        ascendants.forEach(net.minecraft.world.entity.Entity::discard);
+        h.succeed();
+    }
+
+    private static void codices(GameTestHelper h) {
+        ServerPlayer p = h.makeMockServerPlayerInLevel();
+        for (int k = 1; k <= 6; k++) {
+            dev.worldsfall.undertow.ArchiveCodexItem.read(p, k);
+        }
+        h.assertTrue(dev.worldsfall.undertow.ArchiveCodexItem.readAll(p) && dev.worldsfall.world.Progress.has(p, "the_whole_story_truly"),
+            "reading all six Codices completes the story");
+        h.assertTrue(dev.worldsfall.undertow.ArchiveCodexItem.index(dev.worldsfall.undertow.ArchiveCodexItem.of(4)) == 4, "Codices are numbered");
+        BlockPos shelfPos = h.absolutePos(new BlockPos(1, 1, 1));
+        h.getLevel().setBlockAndUpdate(shelfPos, WFBlocks.ARCHIVE_SHELF.get().defaultBlockState());
+        var shelf = (dev.worldsfall.undertow.ArchiveShelfBlockEntity) h.getLevel().getBlockEntity(shelfPos);
+        for (int i = 0; i < 6; i++) {
+            h.assertTrue(shelf.insert(dev.worldsfall.undertow.ArchiveCodexItem.of(i + 1)), "a shelf holds six records");
+        }
+        h.assertTrue(!shelf.insert(EchoTabletItem.of(1)), "but no more");
+        h.assertTrue(dev.worldsfall.undertow.ArchiveCodexItem.index(shelf.nextToRead()) == 1
+            && dev.worldsfall.undertow.ArchiveCodexItem.index(shelf.nextToRead()) == 2, "it reads them in turn");
+        h.assertTrue(dev.worldsfall.undertow.ArchiveCodexItem.index(shelf.takeLast()) == 6 && shelf.count() == 5, "and gives the last one back");
+        h.getLevel().removeBlock(shelfPos, false);
+        h.succeed();
+    }
+
+    private static void abyssalAnchor(GameTestHelper h) {
+        ServerPlayer p = h.makeMockServerPlayerInLevel();
+        p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        p.getInventory().setItem(0, new ItemStack(WFItems.ABYSSAL_ANCHOR.get()));
+        p.getInventory().setItem(1, new ItemStack(Items.DIAMOND, 5));
+        boolean fired = dev.worldsfall.world.VoidAnchorHandler.onDeath(p, h.getLevel().damageSources().fellOutOfWorld());
+        h.assertTrue(fired, "an Abyssal Anchor seals a capsule");
+        h.assertTrue(p.getInventory().getItem(0).is(WFItems.ABYSSAL_ANCHOR.get()), "and is not consumed");
+        h.assertTrue(p.getCooldowns().isOnCooldown(p.getInventory().getItem(0)), "it recharges for twenty minutes");
+        h.assertTrue(p.getInventory().countItem(Items.DIAMOND) == 0, "the rest of the inventory is sealed");
+        h.assertTrue(p.getData(dev.worldsfall.registry.WFAttachments.LAST_CAPSULE).isPresent(), "the Undertow Pearl knows where the capsule is");
+        for (var cap : h.getLevel().getEntitiesOfClass(VoidCapsule.class, p.getBoundingBox().inflate(300))) {
+            cap.discard();
+        }
+        h.succeed();
+    }
+
+    private static void restorationWorld(GameTestHelper h) {
+        h.assertTrue(dev.worldsfall.restoration.RestorationWorld.panelsFor(0) == 0 && dev.worldsfall.restoration.RestorationWorld.panelsFor(0.5) == 10
+            && dev.worldsfall.restoration.RestorationWorld.panelsFor(1.0) == 20, "the mural fills one panel per 5%");
+        var l = dev.worldsfall.world.sundering.UndercroftBuilder.layout(new BlockPos(150, 70, 30));
+        var stands = dev.worldsfall.restoration.RestorationWorld.pedestals(l);
+        h.assertTrue(stands.size() == 10 && new HashSet<>(stands).size() == 10, "ten trophy pedestals");
+        h.assertTrue(dev.worldsfall.restoration.Restoration.stageFor(0.2) == 1 && dev.worldsfall.restoration.Restoration.stageFor(0.59) == 2
+            && dev.worldsfall.restoration.Restoration.stageFor(1.0) == 5, "five stages at 20% steps");
+        var base = TideCycle.DEFAULT;
+        h.assertTrue(dev.worldsfall.restoration.RestorationEffects.steady(h.getLevel().getServer(), base).lowTicks() == base.lowTicks()
+            || dev.worldsfall.restoration.RestorationEffects.stage(h.getLevel().getServer()) >= 3, "Low Tide is only lengthened from Steady Water on");
         h.succeed();
     }
 }

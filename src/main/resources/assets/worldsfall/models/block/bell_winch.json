@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "worldsfall:block/bell_winch_side",
+    "end": "worldsfall:block/bell_winch_top"
+  }
+}

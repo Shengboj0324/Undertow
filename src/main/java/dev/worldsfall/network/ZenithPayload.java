@@ -12,8 +12,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
-/** Server → client: the Sky Currents and Downdrafts around a player in the outer End (sent when they cross into a new region). */
-public record ZenithPayload(List<SkyCurrents.Current> currents, List<SkyCurrents.Downdraft> drafts) implements CustomPacketPayload {
+/** Server → client: the Sky Currents, Downdrafts and Tide Maws around a player in the outer End (sent when they cross into a new region). */
+public record ZenithPayload(List<SkyCurrents.Current> currents, List<SkyCurrents.Downdraft> drafts, List<Vec3> maws) implements CustomPacketPayload {
     private static final StreamCodec<RegistryFriendlyByteBuf, SkyCurrents.Current> CURRENT = StreamCodec.composite(
         ByteBufCodecs.VAR_LONG, SkyCurrents.Current::id, Vec3.STREAM_CODEC.apply(ByteBufCodecs.list(32)), SkyCurrents.Current::points,
         ByteBufCodecs.BOOL, SkyCurrents.Current::oneWay, SkyCurrents.Current::new);
@@ -22,7 +22,8 @@ public record ZenithPayload(List<SkyCurrents.Current> currents, List<SkyCurrents
         SkyCurrents.Downdraft::radius, SkyCurrents.Downdraft::new);
     public static final Type<ZenithPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Worldsfall.MODID, "zenith"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ZenithPayload> STREAM_CODEC = StreamCodec.composite(
-        CURRENT.apply(ByteBufCodecs.list(16)), ZenithPayload::currents, DRAFT.apply(ByteBufCodecs.list(64)), ZenithPayload::drafts, ZenithPayload::new);
+        CURRENT.apply(ByteBufCodecs.list(16)), ZenithPayload::currents, DRAFT.apply(ByteBufCodecs.list(64)), ZenithPayload::drafts,
+        Vec3.STREAM_CODEC.apply(ByteBufCodecs.list(16)), ZenithPayload::maws, ZenithPayload::new);
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

@@ -1,0 +1,50 @@
+{
+  "ambient_light": 0.55,
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "minecraft:ambient.underwater.loop.additions",
+        "tick_delay": 6000
+      }
+    },
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 2400,
+        "min_delay": 600,
+        "sound": "worldsfall:music.undertow",
+        "replace_current_music": true
+      }
+    },
+    "minecraft:gameplay/bed_rule": {
+      "can_set_spawn": "never",
+      "can_sleep": "never",
+      "destroy_on_use": true
+    },
+    "minecraft:gameplay/respawn_anchor_works": false,
+    "minecraft:gameplay/straw_bed_rule": {
+      "can_set_spawn": "never",
+      "can_sleep": "never",
+      "destroy_on_use": true
+    },
+    "minecraft:visual/ambient_light_color": "#9fe6dc",
+    "minecraft:visual/fog_color": "#8fd8cc",
+    "minecraft:visual/sky_color": "#cff3ec",
+    "minecraft:visual/sky_light_color": "#cff3ec",
+    "minecraft:visual/sky_light_factor": 0.0,
+    "neoforge:custom_skybox": "worldsfall:undertow_sky"
+  },
+  "coordinate_scale": 1.0,
+  "has_ceiling": false,
+  "has_ender_dragon_fight": false,
+  "has_fixed_time": true,
+  "has_skylight": false,
+  "height": 256,
+  "infiniburn": "#minecraft:infiniburn_end",
+  "logical_height": 256,
+  "min_y": 0,
+  "monster_spawn_block_light_limit": 0,
+  "monster_spawn_light_level": 15,
+  "skybox": "end"
+}

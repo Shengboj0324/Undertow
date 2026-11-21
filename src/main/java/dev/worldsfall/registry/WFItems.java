@@ -152,11 +152,27 @@ public final class WFItems {
     public static final DeferredItem<Item> CURRENT_VANE = simple("current_vane", p -> p.stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> MUSIC_DISC_LADDERS = simple("music_disc_ladders", p -> p.stacksTo(1).rarity(Rarity.RARE)
         .jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, Identifier.fromNamespaceAndPath(Worldsfall.MODID, "ladders"))));
+    // ================= Expansion 2.0: the Undertow
+    public static final DeferredItem<Item> BELL_HULL = simple("bell_hull", p -> p.stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<dev.worldsfall.undertow.VoidBellItem> VOID_BELL = reg("void_bell", dev.worldsfall.undertow.VoidBellItem::new,
+        p -> p.stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<dev.worldsfall.undertow.ArchiveCodexItem> ARCHIVE_CODEX = reg("archive_codex",
+        dev.worldsfall.undertow.ArchiveCodexItem::new, p -> p.stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<dev.worldsfall.undertow.AbyssalAnchorItem> ABYSSAL_ANCHOR = reg("abyssal_anchor",
+        dev.worldsfall.undertow.AbyssalAnchorItem::new, p -> p.stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<dev.worldsfall.undertow.UndertowPearlItem> UNDERTOW_PEARL = reg("undertow_pearl",
+        dev.worldsfall.undertow.UndertowPearlItem::new, p -> p.stacksTo(16).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> NULL_PIGMENT = simple("null_pigment");
+    public static final DeferredItem<Item> MUSIC_DISC_UNDERTOW = simple("music_disc_undertow", p -> p.stacksTo(1).rarity(Rarity.RARE)
+        .jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, Identifier.fromNamespaceAndPath(Worldsfall.MODID, "undertow"))));
     public static final DeferredItem<BlockItem> BOTTLED_LANTERN_MOTH = reg("bottled_lantern_moth", p -> new BlockItem(WFBlocks.LANTERN_MOTH_JAR.get(), p),
         UnaryOperator.identity());
 
     private static final List<DeferredItem<Item>> SPAWN_EGGS = new ArrayList<>();
     public static final DeferredItem<Item> VOID_SKATE_SPAWN_EGG = egg("void_skate", WFEntities.VOID_SKATE);
+    public static final DeferredItem<Item> TIDE_EEL_SPAWN_EGG = egg("tide_eel", WFEntities.TIDE_EEL);
+    public static final DeferredItem<Item> DROWNED_ASCENDANT_SPAWN_EGG = egg("drowned_ascendant", WFEntities.DROWNED_ASCENDANT);
+    public static final DeferredItem<Item> GLIMMER_SPAWN_EGG = egg("glimmer", WFEntities.GLIMMER);
     public static final DeferredItem<Item> GALE_HARRIER_SPAWN_EGG = egg("gale_harrier", WFEntities.GALE_HARRIER);
     public static final DeferredItem<Item> LEVIATHAN_DRIFTER_SPAWN_EGG = egg("leviathan_drifter", WFEntities.LEVIATHAN_DRIFTER);
     public static final DeferredItem<Item> LANTERN_MOTH_SPAWN_EGG = egg("lantern_moth", WFEntities.LANTERN_MOTH);

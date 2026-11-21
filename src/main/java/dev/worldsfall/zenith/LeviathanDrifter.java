@@ -48,6 +48,9 @@ public class LeviathanDrifter extends Mob {
     public static final int MAX_BARNACLES = 6, BARNACLE_REGROW = 2400, SONG_LEAD = 2400;
     private static final EntityDataAccessor<Integer> BARNACLES = SynchedEntityData.defineId(LeviathanDrifter.class, EntityDataSerializers.INT);
     private @Nullable Vec3 waypoint;
+    /** At Stillness some Leviathans circle the Overmoon above the main island instead of following currents (NaN: free). */
+    private double orbitPhase = Double.NaN;
+    public static final double ORBIT_RADIUS = 140;
     private int regrow;
 
     public LeviathanDrifter(EntityType<? extends LeviathanDrifter> type, Level level) {
@@ -153,8 +156,21 @@ public class LeviathanDrifter extends Mob {
     public void travel(Vec3 input) {
     }
 
+    public void circleOvermoon(double phase) {
+        orbitPhase = phase;
+        waypoint = null;
+    }
+
+    public boolean circlesOvermoon() {
+        return !Double.isNaN(orbitPhase);
+    }
+
     /** Follows the nearest Sky Current within 300 blocks; otherwise wanders in long straight legs at its altitude. */
     private Vec3 nextWaypoint(ServerLevel level) {
+        if (circlesOvermoon()) {
+            double a = Math.atan2(getZ(), getX()) + 0.35;
+            return new Vec3(Math.cos(a) * ORBIT_RADIUS, getY(), Math.sin(a) * ORBIT_RADIUS);
+        }
         List<SkyCurrents.Current> currents = SkyCurrents.currentsNear(level.getSeed(), getX(), getZ());
         SkyCurrents.Hit hit = SkyCurrents.nearest(currents, position());
         if (hit != null && hit.distance() < 300) {
@@ -233,6 +249,7 @@ public class LeviathanDrifter extends Mob {
         super.addAdditionalSaveData(out);
         out.putInt("barnacles", barnacles());
         out.putInt("regrow", regrow);
+        out.putDouble("orbit", orbitPhase);
     }
 
     @Override
@@ -240,5 +257,6 @@ public class LeviathanDrifter extends Mob {
         super.readAdditionalSaveData(in);
         entityData.set(BARNACLES, in.getIntOr("barnacles", MAX_BARNACLES));
         regrow = in.getIntOr("regrow", 0);
+        orbitPhase = in.getDoubleOr("orbit", Double.NaN);
     }
 }

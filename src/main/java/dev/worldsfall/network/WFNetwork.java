@@ -27,12 +27,13 @@ public final class WFNetwork {
         r.playToClient(LatticeMenuPayload.TYPE, LatticeMenuPayload.STREAM_CODEC, LatticeMenuPayload::handle);
         r.playToServer(LatticeJumpPayload.TYPE, LatticeJumpPayload.STREAM_CODEC, LatticeJumpPayload::handle);
         r.playToClient(ZenithPayload.TYPE, ZenithPayload.STREAM_CODEC, ZenithPayload::handle);
+        r.playToClient(CodexPayload.TYPE, CodexPayload.STREAM_CODEC, CodexPayload::handle);
     }
 
     public static TideSyncPayload tidePayload(MinecraftServer server) {
         var state = TideData.get(server).state();
-        var cycle = dev.worldsfall.life.KingTide.adjust(server, WFConfig.SERVER.tideCycle(), state.effectiveTime(server.overworld().getGameTime()),
-            state.calmed());
+        var steady = dev.worldsfall.restoration.RestorationEffects.steady(server, WFConfig.SERVER.tideCycle());
+        var cycle = dev.worldsfall.life.KingTide.adjust(server, steady, state.effectiveTime(server.overworld().getGameTime()), state.calmed());
         return TideSyncPayload.of(state, cycle, WFConfig.get(WFConfig.SERVER.tidesEnabled, true));
     }
 

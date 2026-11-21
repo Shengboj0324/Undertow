@@ -36,8 +36,8 @@ public final class Tides {
             return state(level).calmed() ? clientCycle.calmed() : clientCycle;
         }
         TideState state = state(level);
-        TideCycle base = dev.worldsfall.life.KingTide.adjust(server.getServer(), WFConfig.SERVER.tideCycle(), state.effectiveTime(level.getGameTime()),
-            state.calmed());
+        TideCycle steady = dev.worldsfall.restoration.RestorationEffects.steady(server.getServer(), WFConfig.SERVER.tideCycle());
+        TideCycle base = dev.worldsfall.life.KingTide.adjust(server.getServer(), steady, state.effectiveTime(level.getGameTime()), state.calmed());
         return state.calmed() ? base.calmed() : base;
     }
 

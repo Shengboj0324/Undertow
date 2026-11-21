@@ -70,5 +70,16 @@ public final class WFEntities {
         "gale_harrier", dev.worldsfall.zenith.GaleHarrier::new, MobCategory.MONSTER, b -> b.sized(0.9f, 0.6f).eyeHeight(0.4f).clientTrackingRange(10)
             .updateInterval(1));
 
+    // ================= Expansion 2.0: the Undertow
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.undertow.VoidBell>> VOID_BELL = ENTITIES.registerEntityType("void_bell",
+        dev.worldsfall.undertow.VoidBell::new, MobCategory.MISC, b -> b.sized(2.6f, 3.4f).clientTrackingRange(16).fireImmune());
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.undertow.TideEel>> TIDE_EEL = ENTITIES.registerEntityType("tide_eel",
+        dev.worldsfall.undertow.TideEel::new, MobCategory.MONSTER, b -> b.sized(1.0f, 0.8f).clientTrackingRange(10).updateInterval(1));
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.undertow.DrownedAscendant>> DROWNED_ASCENDANT = ENTITIES.registerEntityType(
+        "drowned_ascendant", dev.worldsfall.undertow.DrownedAscendant::new, MobCategory.MISC, b -> b.sized(0.6f, 2.2f).eyeHeight(1.9f).clientTrackingRange(10)
+            .noLootTable());
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.undertow.Glimmer>> GLIMMER = ENTITIES.registerEntityType("glimmer",
+        dev.worldsfall.undertow.Glimmer::new, MobCategory.AMBIENT, b -> b.sized(0.3f, 0.2f).clientTrackingRange(8).noLootTable());
+
     private WFEntities() {}
 }

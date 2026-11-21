@@ -126,6 +126,10 @@ public final class GravityZones {
                 }
             }
         }
+        if (level.dimension() == dev.worldsfall.registry.WFDimensions.THE_UNDERTOW) {
+            // the Undertow: everything drifts, as if in deep water
+            return Zone.WELL;
+        }
         if (level.dimension() != Level.END) {
             return Zone.NONE;
         }

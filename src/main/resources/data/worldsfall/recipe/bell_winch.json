@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "C": "minecraft:iron_chain",
+    "D": "worldsfall:driftstone",
+    "B": "minecraft:iron_block"
+  },
+  "pattern": [
+    " C ",
+    "DBD",
+    "DDD"
+  ],
+  "result": {
+    "id": "worldsfall:bell_winch"
+  }
+}

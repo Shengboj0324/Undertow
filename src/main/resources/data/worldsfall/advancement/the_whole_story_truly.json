@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:archive_codex"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.the_whole_story_truly.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.the_whole_story_truly.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:first_codex"
+}

@@ -239,6 +239,11 @@ public final class ClientEvents {
             volume = 0.4f;
             pitch = 0.8f;
         }
+        if (mc.level.dimension() == WFDimensions.THE_UNDERTOW) {
+            // the Undertow: heavy and muffled, like Stillwater everywhere
+            volume *= 0.6f;
+            pitch *= 0.85f;
+        }
         if (ClientWorldState.get().worldEvent() == dev.worldsfall.life.WorldEvents.ECLIPSE && mc.level.dimension() == net.minecraft.world.level.Level.END) {
             // an Eclipse of Stillness muffles the world
             volume *= 0.55f;

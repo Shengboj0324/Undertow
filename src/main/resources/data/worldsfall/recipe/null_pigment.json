@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "worldsfall:null_coral"
+  ],
+  "result": {
+    "id": "worldsfall:null_pigment",
+    "count": 2
+  }
+}

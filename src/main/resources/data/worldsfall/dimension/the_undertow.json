@@ -1,0 +1,13 @@
+{
+  "type": "worldsfall:the_undertow",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "worldsfall:the_undertow",
+      "features": true,
+      "lakes": false,
+      "layers": [],
+      "structure_overrides": []
+    }
+  }
+}

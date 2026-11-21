@@ -14,6 +14,7 @@ public final class ClientBridge {
     public static volatile java.util.function.Consumer<VoidLensPayload> voidLens = b -> {};
     public static volatile java.util.function.Consumer<LatticeMenuPayload> latticeMenu = p -> {};
     public static volatile java.util.function.Consumer<ZenithPayload> zenith = p -> {};
+    public static volatile IntConsumer codex = i -> {};
 
     private ClientBridge() {}
 }

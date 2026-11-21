@@ -216,6 +216,7 @@ public final class WardenFight {
         }
         WardenData data = WardenData.get(end.getServer());
         if (!data.active().isEmpty() && dragon.getUUID().equals(data.dragon())) {
+            dev.worldsfall.restoration.RestorationWorld.noteCleared(end.getServer(), data.active());
             WardenRewards.grant(end, data);
             finishFight(end, data);
         }

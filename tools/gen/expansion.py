@@ -25,14 +25,19 @@ ITEM_SPRITES = (
     + ["city_chart"]
     + ["mirrorfish", "cooked_mirrorfish", "driftsilt", "eclipse_dust", "courier_token"]
     + ["harrier_plume", "leviathan_barnacle", "music_disc_ladders"]
+    + ["bell_hull", "void_bell", "abyssal_anchor", "undertow_pearl", "null_pigment", "music_disc_undertow"]
 )
-EMISSIVE_ITEM_SPRITES = []
+EMISSIVE_ITEM_SPRITES = ["archive_codex"]
 
 # items whose names differ from the title-cased id
 ITEM_NAMES = {f"pact_glyph_{p}": f"Pact Glyph of {PACT_NAMES[p]}" for p in PACTS}
 ITEM_NAMES.update({f"pact_crystal_{p}": f"Pact Crystal of {PACT_NAMES[p]}" for p in PACTS})
-ITEM_NAMES.update({"music_disc_warden": "Music Disc", "music_disc_ladders": "Music Disc", "warden_banner_pattern": "Banner Pattern"})
-BLOCK_NAMES = {"skystone": "Skystone", "polished_skystone": "Polished Skystone", "skystone_bricks": "Skystone Bricks",
+ITEM_NAMES.update({"music_disc_warden": "Music Disc", "music_disc_ladders": "Music Disc", "music_disc_undertow": "Music Disc",
+                   "warden_banner_pattern": "Banner Pattern"})
+BLOCK_NAMES = {"archive_tiles": "Archive Tiles", "archive_shelf": "Archive Shelf", "null_coral_block": "Null Coral Block",
+               "null_coral_bricks": "Null Coral Bricks", "polished_null_coral": "Polished Null Coral", "null_coral": "Null Coral",
+               "null_coral_fan": "Null Coral Fan", "mural_panel": "Mural Panel", "bell_winch": "Bell Winch",
+               "skystone": "Skystone", "polished_skystone": "Polished Skystone", "skystone_bricks": "Skystone Bricks",
                "skystone_tiles": "Skystone Tiles", "chiseled_skystone": "Chiseled Skystone", "halo_glass": "Halo Glass", "orrery_ring": "Orrery Ring",
                "orrery_lens": "Orrery Lens", "orrery_socket": "Orrery Socket",
                "tide_bell": "Tide Bell", "wyrm_roost": "Wyrm Roost", "gravity_plate": "Gravity Plate", "courier_cache": "Courier Cache",
@@ -68,6 +73,10 @@ ADVANCEMENTS = [
     ("barnacle_scraper", "sky_highway", "leviathan_barnacle", "task", False),
     ("orrery_ring", "ladders_to_nowhere", "orrery_socket", "task", False),
     ("the_orrery", "orrery_ring", "orrery_lens", "challenge", False),
+    ("into_the_undertow", "below_the_bottom", "void_bell", "goal", False),
+    ("first_codex", "into_the_undertow", "archive_codex", "task", False),
+    ("the_whole_story_truly", "first_codex", "archive_codex", "challenge", False),
+    ("where_worlds_come_to_rest", "calm_waters", "minecraft:nether_star", "challenge", False),
 ]
 
 LANG = {
@@ -178,6 +187,34 @@ LANG = {
     "message.worldsfall.orrery.overmoon.1": "They called it the Overmoon. Every ladder they built was climbing toward it.",
     "message.worldsfall.orrery.overmoon.2": "A new star burns in the End's sky, for everyone.",
     "tooltip.worldsfall.upgrade.tempest": "Tempest",
+    # 2.0 the Undertow and the Restoration
+    "entity.worldsfall.void_bell": "Void Bell", "entity.worldsfall.tide_eel": "Tide Eel", "entity.worldsfall.drowned_ascendant": "Drowned Ascendant",
+    "entity.worldsfall.glimmer": "Glimmer",
+    "item.worldsfall.tide_eel_spawn_egg": "Tide Eel Spawn Egg", "item.worldsfall.drowned_ascendant_spawn_egg": "Drowned Ascendant Spawn Egg",
+    "item.worldsfall.glimmer_spawn_egg": "Glimmer Spawn Egg",
+    "item.worldsfall.archive_codex": "Archive Codex", "item.worldsfall.archive_codex.numbered": "Archive Codex %s",
+    "item.worldsfall.music_disc_undertow.desc": "Worldsfall — Undertow", "jukebox_song.worldsfall.undertow": "Worldsfall — Undertow",
+    "dimension.worldsfall.the_undertow": "The Undertow", "biome.worldsfall.the_undertow": "The Undertow",
+    "tooltip.worldsfall.bell_charge": "Charge: %s min %s s",
+    "message.worldsfall.void_bell.empty": "The Void Bell's charge is spent. Feed it a Stillness Fragment.",
+    "message.worldsfall.void_bell.charge": "The bell hums: %s minutes of charge.",
+    "message.worldsfall.winch.recalled": "The winch hauls in %s Void Bell(s).",
+    "message.worldsfall.winch.none": "No Void Bell of yours answers the winch.",
+    "message.worldsfall.undertow_pearl.only_end": "The pearl only knows the End.",
+    "message.worldsfall.undertow_pearl.no_capsule": "You have no Void Capsule for the pearl to find.",
+    "message.worldsfall.archive_shelf.full": "The shelf is full (six records).",
+    "message.worldsfall.archive_shelf.empty": "The shelf holds no records yet.",
+    "codex.worldsfall.1": "Record I: We measured the tide for a thousand turnings. It never rose the same way twice; it only remembered.",
+    "codex.worldsfall.2": "Record II: The Heart was not made to stop the tide. It was made to hold one breath, long enough for us to climb.",
+    "codex.worldsfall.3": "Record III: The towers were ladders. Above the void, beyond the tide's reach, a pale light waited. We named it the Overmoon.",
+    "codex.worldsfall.4": "Record IV: When the Heart failed the islands fell outward. From the last crystals we made a Warden and gave it ten lights to keep.",
+    "codex.worldsfall.5": "Record V: Those who stayed below kept the records. The tide took the shelves; it could not take the words.",
+    "codex.worldsfall.6": "Record VI: To whoever stills the End without force: the Overmoon is no place to flee to. It is the End, remembering it was whole.",
+    "message.worldsfall.restoration.stage.1": "First Light. Lanterns stir in the ruined Spires, and a sealed hall opens in the Undercroft.",
+    "message.worldsfall.restoration.stage.2": "Green Shoots. Pale Loam spreads on its own, and Grazers return to the Highlands.",
+    "message.worldsfall.restoration.stage.3": "Steady Water. The tide lies low longer, and King Tides grow rare.",
+    "message.worldsfall.restoration.stage.4": "Lanterns of the Ascendancy. The Sky Currents brighten and a new constellation burns overhead.",
+    "message.worldsfall.restoration.stage.5": "Stillness. The Overmoon swells above the main island, and the Leviathans gather to it.",
     "message.worldsfall.pillars.phrase": "\"Where the Warden falls, follow it down through the dark.\" A glyph forms in your hand.",
 }
 _WORDS = ["Where", "the", "Warden", "falls,", "follow", "it", "down", "through", "the", "dark."]
@@ -221,6 +258,15 @@ DESC = {
     "halo_glass": ("Glows brighter as the tide rises: dim at Low Tide, blazing at High.", None),
     "harrier_plume": ("Used for the Current Vane and the Tempest elytra upgrade (smithing with a Gale template).", None),
     "leviathan_barnacle": ("Scraped from a Leviathan's back with shears. Grants 30 seconds of Slow Falling; Skates breed on it.", None),
+    "void_bell": ("Use on a block to set down your diving bell. Seats two players and a tamed Skate inside a 5-block Stable Field; feed it Stillness Fragments for charge. Sneak-use toggles its lamp; sneak-hit folds it back up.",
+                  "Fly where you look; jump to rise. Tide Eels love a lit lamp."),
+    "bell_hull": ("Add four Anchor Frames to finish a Void Bell.", None),
+    "bell_winch": ("Use it to recall your Void Bells, from the End or the Undertow, to hang beside it.", None),
+    "archive_codex": ("A record of the Ascendancy, from the Sunken Archive. Use to read it.", None),
+    "archive_shelf": ("Holds six Echo Tablets and Archive Codices and reads them aloud, one per use. Sneak-use takes one back.", None),
+    "abyssal_anchor": ("A Void Anchor that is not consumed: after it seals a capsule it recharges for twenty minutes.", None),
+    "undertow_pearl": ("Use in the End to travel to your most recent Void Capsule.", None),
+    "null_pigment": ("A deep silver pigment ground from Null Coral.", None),
     "current_vane": ("Its needle points to the nearest Sky Current in the outer End.", "Glide into a current and it carries you at 25 blocks a second. Sneak to drop out."),
 }
 for _p in PACTS:
@@ -244,6 +290,10 @@ ADV_TEXT = {
     "knocked_out_of_the_sky": ("Knocked Out of the Sky", "Get shoved out of the air by a Gale Harrier"),
     "barnacle_scraper": ("Hull Cleaner", "Scrape a barnacle from a Leviathan's back"),
     "orrery_ring": ("Clockwork Heavens", "Free a ring of an Orrery with a Spire Key"),
+    "into_the_undertow": ("The Tide, From Inside", "Enter the Undertow through a Tide Maw"),
+    "first_codex": ("Drowned Records", "Read an Archive Codex"),
+    "the_whole_story_truly": ("The Whole Story, Truly", "Read all six Archive Codices"),
+    "where_worlds_come_to_rest": ("Where Worlds Come to Rest", "Help restore the End to Stillness"),
     "the_orrery": ("What They Climbed Toward", "Align all three rings of an Orrery"),
     "high_water_mark": ("High Water Mark", "Be in the End when a King Tide reaches its height"),
     "starstruck": ("Starstruck", "Mine a shard that fell in a Starfall"),
@@ -265,6 +315,7 @@ def assets(g):
     nav_assets(g)
     life_assets(g)
     zenith_assets(g)
+    undertow_assets(g)
     # elytra looks: upgrade × Dragon Scale overlay
     for up in ("", "gale", "still", "hover", "tempest"):
         for scaled in (False, True):
@@ -485,6 +536,28 @@ def zenith_assets(g):
         g.item_sprite(f"{egg}_spawn_egg", [f"{NS}:item/{egg}_spawn_egg"])
 
 
+def undertow_assets(g):
+    for n in ("archive_tiles", "null_coral_block", "null_coral_bricks", "polished_null_coral"):
+        g.cube_all(n)
+    shelf = g.oriented_box("archive_shelf", (0, 0, 0), (16, 16, 16), "archive_shelf_side", "archive_shelf_top", "archive_shelf_front",
+                           glow_front="archive_shelf_front_emissive")
+    write(f"{g.BS}/archive_shelf.json", {"variants": g.horizontal_variants({"": shelf})})
+    g.item_def("archive_shelf", shelf)
+    for n in ("null_coral", "null_coral_fan"):
+        m = g.cross_block(n, n)
+        g.simple_state(n, m)
+        g.item_sprite(n, [g.b(n)])
+    dark = g.model("mural_panel", "minecraft:block/cube_all", {"all": g.b("mural_panel_dark")})
+    lit = g.cube_with_emissive("mural_panel_lit", g.b("mural_panel_lit"), g.b("mural_panel_lit_emissive"))
+    write(f"{g.BS}/mural_panel.json", {"variants": {"lit=false": {"model": dark}, "lit=true": {"model": lit}}})
+    g.item_def("mural_panel", lit)
+    winch = g.model("bell_winch", "minecraft:block/cube_column", {"side": g.b("bell_winch_side"), "end": g.b("bell_winch_top")})
+    g.simple_state("bell_winch", winch)
+    g.item_def("bell_winch", winch)
+    for egg in ("tide_eel", "drowned_ascendant", "glimmer"):
+        g.item_sprite(f"{egg}_spawn_egg", [f"{NS}:item/{egg}_spawn_egg"])
+
+
 def lantern(g, name):
     tmpl = vanilla_json("assets/minecraft/models/block/template_lantern.json")
     tmplh = vanilla_json("assets/minecraft/models/block/template_hanging_lantern.json")
@@ -528,6 +601,7 @@ def data(d):
     nav_data(d)
     life_data(d)
     zenith_data(d)
+    undertow_data(d)
     d.tag("worldgen/structure", NS, "lore", [d.i("fallen_spire"), d.i("sunken_archive")] if os.path.exists(
         os.path.join(D, "worldgen/structure/sunken_archive.json")) else [d.i("fallen_spire")])
 
@@ -668,15 +742,59 @@ def zenith_data(d):
     d.tag("worldgen/biome", NS, "has_structure/orrery", ["#minecraft:is_end"])
 
 
+def undertow_data(d):
+    D = d.D
+    d.shaped("bell_hull", ["GGG", "GAG", "GGG"], {"G": d.i("stillglass"), "A": d.i("gravity_anchor")}, d.i("bell_hull"), category="equipment")
+    d.shapeless("void_bell", [d.i("bell_hull")] + [d.i("anchor_frame")] * 4, d.i("void_bell"), category="equipment")
+    d.shaped("bell_winch", [" C ", "DBD", "DDD"], {"C": "minecraft:iron_chain", "D": d.i("driftstone"), "B": "minecraft:iron_block"}, d.i("bell_winch"),
+             category="building")
+    d.shaped("archive_shelf", ["TTT", "EBE", "TTT"], {"T": d.i("archive_tiles"), "E": d.i("echo_dust"), "B": "minecraft:bookshelf"}, d.i("archive_shelf"),
+             category="building")
+    d.shaped("archive_tiles", ["SS", "SS"], {"S": d.i("polished_driftstone")}, d.i("archive_tiles"), n=4, category="building")
+    d.shaped("abyssal_anchor", ["NFN", "NVN", "NNN"], {"N": d.i("null_coral_block"), "F": d.i("stillness_fragment"), "V": d.i("void_anchor")},
+             d.i("abyssal_anchor"), category="equipment")
+    d.shaped("null_coral_bricks", ["CC", "CC"], {"C": d.i("null_coral_block")}, d.i("null_coral_bricks"), n=4, category="building")
+    d.shaped("polished_null_coral", ["CC", "CC"], {"C": d.i("null_coral_bricks")}, d.i("polished_null_coral"), n=4, category="building")
+    d.shapeless("null_pigment", [d.i("null_coral")], d.i("null_pigment"), n=2)
+    d.shapeless("null_pigment_from_fan", [d.i("null_coral_fan")], d.i("null_pigment"))
+    write(f"{D}/jukebox_song/undertow.json", {"comparator_output": 9, "description": {"translate": "jukebox_song.worldsfall.undertow"},
+                                              "length_in_seconds": 160.0, "sound_event": d.i("music_disc.undertow")})
+    for k in range(1, 7):
+        d.chest(f"vault/archive_codex_{k}", [
+            {"rolls": 1, "entries": [{"type": "minecraft:item", "name": d.i("archive_codex"),
+                                      "functions": [{"function": "minecraft:set_components", "components": {"worldsfall:codex_index": k}}]}]},
+            {"rolls": {"type": "minecraft:uniform", "min": 1, "max": 3}, "entries": [dict(d.count(d.i("null_coral"), 1, 4), weight=4),
+                                                                                    dict(d.count(d.i("echo_dust"), 2, 6), weight=4),
+                                                                                    dict({"type": "minecraft:item", "name": d.i("undertow_pearl")}, weight=2)]}])
+    d.chest("vault/sunken_archive", [
+        {"rolls": 1, "entries": [dict(d.count(d.i("undertow_pearl"), 1, 2))]},
+        d.chance(0.35, {"type": "minecraft:item", "name": d.i("music_disc_undertow")}),
+        d.chance(0.15, {"type": "minecraft:item", "name": d.i("abyssal_anchor")}),
+        {"rolls": {"type": "minecraft:uniform", "min": 2, "max": 4}, "entries": [dict(d.count(d.i("archive_tiles"), 4, 12), weight=5),
+                                                                                dict(d.count(d.i("null_coral_block"), 2, 8), weight=4),
+                                                                                dict(d.count(d.i("archive_shelf"), 1, 2), weight=2),
+                                                                                dict(d.count(d.i("stillness_fragment"), 1, 1), weight=1)]}])
+    write(f"{D}/loot_table/entities/tide_eel.json", {"type": "minecraft:entity", "pools": [
+        {"rolls": 1, "conditions": [{"condition": "minecraft:random_chance", "chance": 0.3}], "entries": [{"type": "minecraft:item", "name": d.i("undertow_pearl")}]},
+        {"rolls": 1, "entries": [{"type": "minecraft:item", "name": d.i("null_pigment"), "functions": [
+            {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 0, "max": 2}}]}]}],
+        "random_sequence": d.i("entities/tide_eel")})
+    write(f"{D}/worldgen/feature/null_coral_reef.json", {"type": d.i("null_coral_reef")})
+    write(f"{D}/worldgen/placed_feature/null_coral_reef.json", {"feature": d.i("null_coral_reef"), "placement": [
+        {"type": "minecraft:rarity_filter", "chance": 3}, {"type": "minecraft:in_square"},
+        {"type": "minecraft:height_range", "height": {"type": "minecraft:uniform", "min_inclusive": {"absolute": 30}, "max_inclusive": {"absolute": 230}}}]})
+
+
 def block_loot(d):
     for n in ("wardens_lantern", "causeway_lantern", "causeway_plaque", "drift_buoy", "roost_post", "drift_helm", "ships_bell", "tide_bell",
               "wyrm_roost", "gravity_plate", "courier_cache", "anchor_frame_lamp", "anchor_frame_stairs", "skystone", "polished_skystone",
-              "skystone_bricks", "skystone_tiles", "chiseled_skystone", "halo_glass"):
+              "skystone_bricks", "skystone_tiles", "chiseled_skystone", "halo_glass", "archive_tiles", "archive_shelf", "null_coral_block",
+              "null_coral_bricks", "polished_null_coral", "null_coral", "null_coral_fan", "bell_winch"):
         d.drop_self(n)
 
 
 def axe_blocks():
-    return ["drift_helm", "wyrm_roost"]
+    return ["drift_helm", "wyrm_roost", "archive_shelf"]
 
 
 def shovel_blocks():
@@ -686,7 +804,8 @@ def shovel_blocks():
 def pickaxe_blocks():
     return ["wardens_lantern", "causeway_lantern", "causeway_plaque", "roost_post", "ships_bell", "tide_bell", "gravity_plate", "courier_cache",
             "anchor_frame_lamp", "anchor_frame_slab", "anchor_frame_stairs", "starfall_shard", "skystone", "polished_skystone", "skystone_bricks",
-            "skystone_tiles", "chiseled_skystone", "orrery_ring", "orrery_lens", "orrery_socket"] + [f"{b}_{k}" for b in FAMILIES
+            "skystone_tiles", "chiseled_skystone", "orrery_ring", "orrery_lens", "orrery_socket", "archive_tiles", "null_coral_block",
+            "null_coral_bricks", "polished_null_coral", "bell_winch", "mural_panel"] + [f"{b}_{k}" for b in FAMILIES
                                                                                                   for k in ("slab", "stairs", "wall")]
 
 

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "N": "worldsfall:null_coral_block",
+    "F": "worldsfall:stillness_fragment",
+    "V": "worldsfall:void_anchor"
+  },
+  "pattern": [
+    "NFN",
+    "NVN",
+    "NNN"
+  ],
+  "result": {
+    "id": "worldsfall:abyssal_anchor"
+  }
+}

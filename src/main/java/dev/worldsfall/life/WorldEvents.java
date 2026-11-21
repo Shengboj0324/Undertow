@@ -94,7 +94,8 @@ public final class WorldEvents {
         long seed = server.overworld().getSeed();
         tryStart(end, data, now, seed, STARFALL, "starfall", STARFALL_PERIOD, STARFALL_TELEGRAPH + STARFALL_LIFE);
         tryStart(end, data, now, seed, ECLIPSE, "eclipse", ECLIPSE_PERIOD, ECLIPSE_DIM + ECLIPSE_LENGTH);
-        tryStart(end, data, now, seed, MIGRATION, "migration", MIGRATION_PERIOD, MIGRATION_TELEGRAPH + MIGRATION_LENGTH);
+        tryStart(end, data, now, seed, MIGRATION, "migration", dev.worldsfall.restoration.RestorationEffects.migrationPeriod(server),
+            MIGRATION_TELEGRAPH + MIGRATION_LENGTH);
     }
 
     private static void tryStart(ServerLevel end, WorldEventData data, long now, long seed, int event, String key, long period, int length) {
@@ -168,7 +169,8 @@ public final class WorldEvents {
         long index = KingTide.cycleIndex(cycle, time);
         long seed = end.getServer().overworld().getSeed();
         TideCycle.Phase phase = cycle.phase(time);
-        if (KingTide.isKing(seed, index) && data.kingTelegraphed() != index && phase == TideCycle.Phase.LOW
+        int oneIn = dev.worldsfall.restoration.RestorationEffects.kingTideOneIn(end.getServer());
+        if (KingTide.isKing(seed, index, oneIn) && data.kingTelegraphed() != index && phase == TideCycle.Phase.LOW
             && cycle.ticksUntilNextPhase(time) <= KING_TELEGRAPH) {
             data.setKingTelegraphed(index);
             for (ServerPlayer p : end.players()) {
@@ -189,7 +191,7 @@ public final class WorldEvents {
             }
             WFNetwork.syncTidesToAll(end.getServer());
         }
-        if (KingTide.isKing(seed, index) && phase == TideCycle.Phase.HIGH) {
+        if (KingTide.isKing(seed, index, oneIn) && phase == TideCycle.Phase.HIGH) {
             for (ServerPlayer p : end.players()) {
                 dev.worldsfall.world.Progress.award(p, "high_water_mark");
             }

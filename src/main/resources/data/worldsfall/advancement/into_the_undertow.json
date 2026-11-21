@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:void_bell"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.into_the_undertow.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.into_the_undertow.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:below_the_bottom"
+}

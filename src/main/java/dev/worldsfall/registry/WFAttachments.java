@@ -56,6 +56,14 @@ public final class WFAttachments {
     public static final Supplier<AttachmentType<Set<Integer>>> TABLETS_READ = ATTACHMENTS.register("tablets_read",
         () -> AttachmentType.<Set<Integer>>builder(() -> new HashSet<>())
             .serialize(Codec.INT.listOf().<Set<Integer>>xmap(HashSet::new, List::copyOf).fieldOf("tablets")).copyOnDeath().build());
+    /** Where this player's most recent Void Capsule was sealed (expansion 2.0: the Undertow Pearl). */
+    public static final Supplier<AttachmentType<Optional<net.minecraft.core.GlobalPos>>> LAST_CAPSULE = ATTACHMENTS.register("last_capsule",
+        () -> AttachmentType.<Optional<net.minecraft.core.GlobalPos>>builder(Optional::empty)
+            .serialize(net.minecraft.core.GlobalPos.CODEC.optionalFieldOf("pos")).copyOnDeath().build());
+    /** Archive Codices this player has read (1–6). */
+    public static final Supplier<AttachmentType<Set<Integer>>> CODICES_READ = ATTACHMENTS.register("codices_read",
+        () -> AttachmentType.<Set<Integer>>builder(() -> new HashSet<>())
+            .serialize(Codec.INT.listOf().<Set<Integer>>xmap(HashSet::new, List::copyOf).fieldOf("codices")).copyOnDeath().build());
     /** Standing with Hoarders, −100..100 (expansion 1.5). */
     public static final Supplier<AttachmentType<Integer>> HOARD_STANDING = ATTACHMENTS.register("hoard_standing",
         () -> AttachmentType.builder(() -> 0).serialize(Codec.INT.fieldOf("standing")).copyOnDeath().build());

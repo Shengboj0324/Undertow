@@ -37,7 +37,8 @@ public final class ZenithEvents {
             long region = ((long) Mth.floor(p.getX() / SkyCurrents.REGION) << 32) ^ (Mth.floor(p.getZ() / SkyCurrents.REGION) & 0xFFFFFFFFL);
             if (!Long.valueOf(region).equals(REGION.get(p.getUUID()))) {
                 REGION.put(p.getUUID(), region);
-                WFNetwork.send(p, new ZenithPayload(SkyCurrents.currentsNear(seed, p.getX(), p.getZ()), SkyCurrents.draftsNear(seed, p.getX(), p.getZ())));
+                WFNetwork.send(p, new ZenithPayload(SkyCurrents.currentsNear(seed, p.getX(), p.getZ()), SkyCurrents.draftsNear(seed, p.getX(), p.getZ()),
+                    dev.worldsfall.undertow.TideMaws.enabled() ? dev.worldsfall.undertow.TideMaws.mawsNear(seed, p.getX(), p.getZ()) : java.util.List.of()));
             }
             var currents = SkyCurrents.currentsNear(seed, p.getX(), p.getZ());
             boolean gliding = p.isFallFlying() || p.getVehicle() != null && p.getVehicle().getControllingPassenger() == p;

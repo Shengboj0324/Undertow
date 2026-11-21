@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "worldsfall:bell_hull",
+    "worldsfall:anchor_frame",
+    "worldsfall:anchor_frame",
+    "worldsfall:anchor_frame",
+    "worldsfall:anchor_frame"
+  ],
+  "result": {
+    "id": "worldsfall:void_bell"
+  }
+}

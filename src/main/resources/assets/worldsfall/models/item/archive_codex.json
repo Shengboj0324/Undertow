@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "worldsfall:item/archive_codex",
+    "layer1": {
+      "sprite": "worldsfall:item/archive_codex_emissive",
+      "neoforge_data": {
+        "light_emission": 15
+      }
+    }
+  }
+}

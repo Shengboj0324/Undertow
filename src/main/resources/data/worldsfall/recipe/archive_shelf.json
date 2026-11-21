@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "T": "worldsfall:archive_tiles",
+    "E": "worldsfall:echo_dust",
+    "B": "minecraft:bookshelf"
+  },
+  "pattern": [
+    "TTT",
+    "EBE",
+    "TTT"
+  ],
+  "result": {
+    "id": "worldsfall:archive_shelf"
+  }
+}

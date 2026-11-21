@@ -1,0 +1,48 @@
+{
+  "attributes": {
+    "minecraft:audio/ambient_sounds": {
+      "loop": "worldsfall:ambient.undertow.loop",
+      "additions": {
+        "sound": "worldsfall:ambient.undertow.additions",
+        "tick_chance": 0.0111
+      }
+    },
+    "minecraft:visual/fog_color": "#8FD8CC",
+    "minecraft:visual/sky_color": "#CFF3EC",
+    "minecraft:visual/ambient_light_color": "#9fe6dc",
+    "neoforge:custom_skybox": "worldsfall:undertow_sky",
+    "minecraft:visual/ambient_particles": {
+      "argument": [
+        {
+          "particle": {
+            "type": "worldsfall:maw_swirl"
+          },
+          "probability": 0.004
+        }
+      ],
+      "modifier": "append"
+    }
+  },
+  "carvers": [],
+  "downfall": 0.0,
+  "effects": {
+    "water_color": "#3f76e4"
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "worldsfall:null_coral_reef"
+    ],
+    [],
+    [],
+    []
+  ],
+  "has_precipitation": false,
+  "temperature": 0.5
+}

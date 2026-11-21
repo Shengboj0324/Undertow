@@ -76,7 +76,7 @@ public final class Wardensong {
     }
 
     /** Where the Descent will open (or has opened): the cracks trace exactly the paths the Sundering will take. */
-    static BlockPos descent(ServerLevel end) {
+    public static BlockPos descent(ServerLevel end) {
         SunderingData s = SunderingData.get(end.getServer());
         if (s.done() || !s.descent().equals(BlockPos.ZERO)) {
             return s.descent();

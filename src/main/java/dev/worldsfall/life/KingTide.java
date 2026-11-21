@@ -20,6 +20,10 @@ public final class KingTide {
     }
 
     public static boolean isKing(long seed, long index) {
+        return isKing(seed, index, ONE_IN);
+    }
+
+    public static boolean isKing(long seed, long index, int oneIn) {
         if (index <= 0) {
             return false;
         }
@@ -27,7 +31,7 @@ public final class KingTide {
         h ^= h >>> 31;
         h *= 0xBF58476D1CE4E5B9L;
         h ^= h >>> 29;
-        return Math.floorMod(h, ONE_IN) == 0;
+        return Math.floorMod(h, oneIn) == 0;
     }
 
     public static boolean enabled() {
@@ -36,7 +40,8 @@ public final class KingTide {
 
     /** The cycle with the King Tide's High applied when the cycle at {@code time} is a King cycle (never once the tide is calmed). */
     public static TideCycle adjust(MinecraftServer server, TideCycle base, long time, boolean calmed) {
-        if (calmed || !enabled() || !isKing(server.overworld().getSeed(), cycleIndex(base, time))) {
+        if (calmed || !enabled() || !isKing(server.overworld().getSeed(), cycleIndex(base, time),
+            dev.worldsfall.restoration.RestorationEffects.kingTideOneIn(server))) {
             return base;
         }
         return new TideCycle(base.lowY(), Math.max(base.highY(), HIGH_Y), base.lowTicks(), base.risingTicks(), base.highTicks(), base.fallingTicks());

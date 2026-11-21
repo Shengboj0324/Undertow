@@ -162,6 +162,10 @@ public final class Charts {
         for (LatticeData.Node n : lattice.knownBy(holder.getUUID())) {
             mark(chart, data, half, n.pos(), "node_" + n.pos().asLong(), n.kind() == LatticeData.MOORING ? WFMapDecorations.MOORING : WFMapDecorations.GATEWAY);
         }
+        // the last Codex reveals where the Overmoon hangs: above the main island
+        if (holder instanceof net.minecraft.server.level.ServerPlayer sp && dev.worldsfall.undertow.ArchiveCodexItem.readAll(sp)) {
+            mark(chart, data, half, BlockPos.ZERO, "overmoon", WFMapDecorations.OVERMOON);
+        }
         for (VoidCapsule capsule : level.getEntitiesOfClass(VoidCapsule.class, new AABB(holder.blockPosition()).inflate(256),
             c -> holder.getUUID().equals(c.owner()))) {
             mark(chart, data, half, capsule.blockPosition(), "capsule_" + capsule.getUUID(), WFMapDecorations.CAPSULE);

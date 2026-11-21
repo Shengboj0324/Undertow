@@ -45,6 +45,19 @@ public final class WFPipelines {
         .withCull(false)
         .build();
 
+    public static final RenderPipeline UNDERTOW_SKY = RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+        .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+        .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
+        .withLocation(id("pipeline/undertow_sky"))
+        .withVertexShader(id("core/end_sky"))
+        .withFragmentShader(id("core/undertow_sky"))
+        .withColorTargetState(ColorTargetState.DEFAULT)
+        .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
+        .withVertexBinding(0, DefaultVertexFormat.POSITION)
+        .withPrimitiveTopology(PrimitiveTopology.QUADS)
+        .withCull(false)
+        .build();
+
     public static final RenderPipeline TIDE_PLANE = RenderPipeline.builder(RenderPipelines.MATRICES_FOG_SNIPPET)
         .withLocation(id("pipeline/tide_plane"))
         .withVertexShader(id("core/tide_plane"))
@@ -61,6 +74,7 @@ public final class WFPipelines {
     public static void register(RegisterRenderPipelinesEvent event) {
         event.registerPipeline(END_SKY);
         event.registerPipeline(FRACTURE_SKY);
+        event.registerPipeline(UNDERTOW_SKY);
         event.registerPipeline(TIDE_PLANE);
     }
 }

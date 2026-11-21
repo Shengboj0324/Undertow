@@ -23,6 +23,7 @@ public final class WFFeatures {
         FEATURE_TYPES.register("echo_shrine", () -> EchoShrineFeature.CODEC);
         FEATURE_TYPES.register("chorus_pod_scatter", () -> ChorusPodScatterFeature.CODEC);
         FEATURE_TYPES.register("zenith_shoal", () -> ZenithShoalFeature.CODEC);
+        FEATURE_TYPES.register("null_coral_reef", () -> NullCoralReefFeature.CODEC);
         PLACEMENTS.register("distance_from_origin", () -> DistanceFilter.CODEC);
     }
 

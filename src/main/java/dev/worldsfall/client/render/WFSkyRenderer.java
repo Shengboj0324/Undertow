@@ -32,9 +32,20 @@ import java.util.OptionalDouble;
  */
 public final class WFSkyRenderer implements CustomSkyboxRenderer {
     private final boolean fracture;
+    private final boolean undertow;
     private @Nullable GpuBuffer cube;
 
     public WFSkyRenderer(boolean fracture) {
+        this(fracture, false);
+    }
+
+    /** The Undertow's sky: teal-white haze with drifting silhouettes and caustic light (expansion 2.0). */
+    public static WFSkyRenderer undertow() {
+        return new WFSkyRenderer(false, true);
+    }
+
+    private WFSkyRenderer(boolean fracture, boolean undertow) {
+        this.undertow = undertow;
         this.fracture = fracture;
     }
 
@@ -69,7 +80,13 @@ public final class WFSkyRenderer implements CustomSkyboxRenderer {
         Matrix4f tex = new Matrix4f();
         Vector4f colorMod;
         RenderPipeline pipeline;
-        if (fracture) {
+        if (undertow) {
+            pipeline = WFPipelines.UNDERTOW_SKY;
+            tex.m00(st.timeSeconds());
+            Vector3f cam = st.cameraPos();
+            tex.m10(cam.x).m11(cam.y).m12(cam.z);
+            colorMod = new Vector4f(1, 1, 1, 1);
+        } else if (fracture) {
             pipeline = WFPipelines.FRACTURE_SKY;
             tex.m00(st.timeSeconds()).m01(st.bossPulse()).m02(st.bossCalm()).m03(0);
             Vector3f core = st.coreDirection();

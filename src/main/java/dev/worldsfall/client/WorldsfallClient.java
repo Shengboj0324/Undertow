@@ -111,6 +111,7 @@ public final class WorldsfallClient {
     private static void sky(RegisterCustomEnvironmentEffectRendererEvent e) {
         e.registerSkyboxRenderer(EndSkyBiomeModifier.SKY, new WFSkyRenderer(false));
         e.registerSkyboxRenderer(Identifier.fromNamespaceAndPath(Worldsfall.MODID, "fracture_sky"), new WFSkyRenderer(true));
+        e.registerSkyboxRenderer(Identifier.fromNamespaceAndPath(Worldsfall.MODID, "undertow_sky"), WFSkyRenderer.undertow());
     }
 
     private static void fluids(RegisterFluidModelsEvent e) {

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "worldsfall:block/mural_panel"
+    },
+    "lit=true": {
+      "model": "worldsfall:block/mural_panel_lit"
+    }
+  }
+}

@@ -23,6 +23,7 @@ public final class WFMapDecorations {
     public static final DeferredHolder<MapDecorationType, MapDecorationType> CAPSULE = reg("void_capsule");
     public static final DeferredHolder<MapDecorationType, MapDecorationType> ORRERY = reg("orrery");
     public static final DeferredHolder<MapDecorationType, MapDecorationType> CURRENT = reg("sky_current");
+    public static final DeferredHolder<MapDecorationType, MapDecorationType> OVERMOON = reg("overmoon");
 
     private WFMapDecorations() {}
 

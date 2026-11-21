@@ -1,0 +1,8 @@
+{
+  "comparator_output": 9,
+  "description": {
+    "translate": "jukebox_song.worldsfall.undertow"
+  },
+  "length_in_seconds": 160.0,
+  "sound_event": "worldsfall:music_disc.undertow"
+}
