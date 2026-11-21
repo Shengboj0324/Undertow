@@ -14,6 +14,7 @@ import zlib
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'textures'))
 import numpy as np  # noqa: E402
 import pix  # noqa: E402
+import expansion_names as XN  # noqa: E402  (art/SPEC_EXPANSION.md: 1.2 -> 2.0 textures)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 TEX = os.path.join(ROOT, 'src/main/resources/assets/worldsfall/textures')
@@ -63,8 +64,17 @@ GUI = {'gui/advancements/backgrounds/worldsfall': (16, 16),
        'gui/sprites/boss_bar/unmade_background': (182, 5), 'gui/sprites/boss_bar/unmade_progress': (182, 5)}
 ENV = {'environment/tide_plane': (256, 256), 'environment/nebula_noise': (256, 256)}
 
+# expansion set (art/SPEC_EXPANSION.md A-D), same rules as the 1.x set
+BLOCKS += XN.BLOCKS
+ITEMS += XN.ITEMS
+PARTICLE_SIZES = {p: (8, 8) for p in PARTICLES}
+PARTICLE_SIZES.update(XN.PARTICLES)
+PARTICLES += list(XN.PARTICLES)
+GUI.update(XN.GUI)
+ENV_NOT_TILED = dict(XN.ENV)   # the overmoon is a sky disc, not a tiling map
+
 TILEABLE = """pale_loam_top stillstone stillstone_bricks undershale undershale_bricks undershale_tiles driftstone
-driftstone_bricks null_obsidian ash_stone lumen_crystal_block weathered_purpur purpur_rubble""".split()
+driftstone_bricks null_obsidian ash_stone lumen_crystal_block weathered_purpur purpur_rubble""".split() + XN.TILEABLE
 
 fails, reports = [], []
 
@@ -168,7 +178,7 @@ def main():
         if (a[..., 3] > 0).mean() < 0.08:
             fails.append('EMPTY    item/%s is almost empty' % it)
     for p in PARTICLES:
-        a = check('particle/' + p, (8, 8), 'particle')
+        a = check('particle/' + p, PARTICLE_SIZES[p], 'particle')
         if a is not None and not (a[..., 3] > 0).any():
             fails.append('EMPTY    particle/%s' % p)
     for rel, sz in list(GUI.items()) + list(ENV.items()):
@@ -178,9 +188,13 @@ def main():
             reports.append('seam     %s seam ratio %.2f' % (rel, s))
             if s > 1.6:
                 fails.append('SEAM     %s does not tile (ratio %.2f)' % (rel, s))
+    for rel, sz in ENV_NOT_TILED.items():
+        a = check(rel, sz, 'env')
+        if a is not None and not (a[..., 3] > 0).any():
+            fails.append('EMPTY    %s' % rel)
     # stray files we did not expect (informational)
     expected = set(['block/' + b for b in BLOCKS] + ['block/' + b for b in ANIMATED] + ['item/' + i for i in ITEMS]
-                   + ['particle/' + p for p in PARTICLES] + list(GUI) + list(ENV))
+                   + ['particle/' + p for p in PARTICLES] + list(GUI) + list(ENV) + list(ENV_NOT_TILED))
     for d in ('block', 'item', 'particle', 'gui', 'environment'):
         for dp, _, fs in os.walk(os.path.join(TEX, d)):
             for f in fs:
@@ -189,7 +203,7 @@ def main():
                     if rel not in expected:
                         reports.append('extra    %s (not in spec)' % rel)
 
-    total = len(BLOCKS) + len(ANIMATED) + len(ITEMS) + len(PARTICLES) + len(GUI) + len(ENV)
+    total = len(BLOCKS) + len(ANIMATED) + len(ITEMS) + len(PARTICLES) + len(GUI) + len(ENV) + len(ENV_NOT_TILED)
     print('Worldsfall texture verification: %d spec\'d files' % total)
     bn = [v for k, v in counts.items() if not k.startswith('item/')]
     inn = [v for k, v in counts.items() if k.startswith('item/')]

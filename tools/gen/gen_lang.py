@@ -202,6 +202,8 @@ def build():
         L[f"upgrade.{NS}.{up}_upgrade"] = f"{title(up)} Upgrade"
     sub = json.load(open(os.path.join(ROOT, "tools/gen/sound_lang.json")))
     L.update(sub)
+    import expansion
+    expansion.lang(L, title)
     write(os.path.join(ASSETS, "lang/en_us.json"), dict(sorted(L.items())))
 
 if __name__ == "__main__":

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "worldsfall:block/wardens_lantern"
+    },
+    "hanging=true": {
+      "model": "worldsfall:block/wardens_lantern_hanging"
+    }
+  }
+}

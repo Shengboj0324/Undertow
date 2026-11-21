@@ -5,6 +5,8 @@
 #   tools/blender/build_textures.sh                 # everything
 #   tools/blender/build_textures.sh blocks items    # some groups
 #   tools/blender/build_textures.sh block/stillstone item/void_anchor   # single textures (prefix match)
+#   tools/blender/build_textures.sh expansion       # only the art/SPEC_EXPANSION.md set (xblocks xitems xparticles
+#                                                   #   xgui xenvironment are its single groups)
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
@@ -23,6 +25,7 @@ if [ "${WF_SHEETS:-1}" = "1" ]; then
   done
   python3 "$HERE/contact_sheet.py" block "$ROOT/art/previews/textures_block_animated.png" --anim >/dev/null
   python3 "$HERE/contact_sheet.py" compare >/dev/null 2>&1 || true
+  python3 "$HERE/contact_sheet.py" expansion >/dev/null
   echo "contact sheets -> $ROOT/art/previews/textures_*.png"
 fi
 # temp renders are small, but clean them up

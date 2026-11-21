@@ -44,6 +44,7 @@ public final class WFStates {
 
     public static class Wyrm extends LivingEntityRenderState {
         public int stage;
+        public int look;
         public boolean flying, sitting;
     }
 

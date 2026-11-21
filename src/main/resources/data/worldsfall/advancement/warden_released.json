@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:stillness_crystal"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.warden_released.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.warden_released.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:calm_waters"
+}

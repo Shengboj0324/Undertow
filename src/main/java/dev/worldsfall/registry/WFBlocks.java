@@ -191,6 +191,11 @@ public final class WFBlocks {
             .lightLevel(s -> 9).pushReaction(PushReaction.POPPED));
 
     // ================= Fluid
+    // ================= Expansion 1.2: the Warden Cycle
+    public static final DeferredBlock<dev.worldsfall.warden.WardensLanternBlock> WARDENS_LANTERN = item(BLOCKS.registerBlock("wardens_lantern",
+        dev.worldsfall.warden.WardensLanternBlock::new, p -> p.mapColor(MapColor.COLOR_BLACK).strength(3.5f).sound(SPIRE_LANTERN_SOUND)
+            .lightLevel(s -> 14).noOcclusion().pushReaction(PushReaction.POPPED)));
+
     public static final DeferredBlock<LiquidBlock> STILLWATER = BLOCKS.registerBlock("stillwater",
         p -> new dev.worldsfall.fluid.StillwaterBlock(WFFluids.STILLWATER.get(), p),
         p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision().strength(100.0f).pushReaction(PushReaction.POPPED)

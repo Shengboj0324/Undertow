@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "worldsfall:echo_dust",
+    "worldsfall:mirror_shard_fragment",
+    "worldsfall:echo_tablet"
+  ],
+  "result": {
+    "id": "worldsfall:pact_glyph_memory"
+  }
+}

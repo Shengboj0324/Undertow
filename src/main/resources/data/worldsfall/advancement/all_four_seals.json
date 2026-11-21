@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:music_disc_warden"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.all_four_seals.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.all_four_seals.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:warden_trial"
+}

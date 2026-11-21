@@ -104,6 +104,54 @@
       }
     ]
   },
+  "ambient.undertow.additions": {
+    "sounds": [
+      "worldsfall:ambient/undertow_loop_add1",
+      "worldsfall:ambient/undertow_loop_add2"
+    ],
+    "subtitle": "subtitles.worldsfall.ambient.undertow.additions"
+  },
+  "ambient.undertow.loop": {
+    "sounds": [
+      {
+        "name": "worldsfall:ambient/undertow_loop",
+        "stream": true
+      }
+    ]
+  },
+  "ambient.zenith.additions": {
+    "sounds": [
+      "worldsfall:ambient/zenith_add1",
+      "worldsfall:ambient/zenith_add2"
+    ],
+    "subtitle": "subtitles.worldsfall.ambient.zenith.additions"
+  },
+  "ambient.zenith.loop": {
+    "sounds": [
+      {
+        "name": "worldsfall:ambient/zenith_loop",
+        "stream": true
+      }
+    ]
+  },
+  "block.archive_shelf.read": {
+    "sounds": [
+      "worldsfall:block/archive_read"
+    ],
+    "subtitle": "subtitles.worldsfall.block.archive_shelf.read"
+  },
+  "block.causeway.restore": {
+    "sounds": [
+      "worldsfall:event/causeway_restore"
+    ],
+    "subtitle": "subtitles.worldsfall.block.causeway.restore"
+  },
+  "block.drift_buoy.pop": {
+    "sounds": [
+      "worldsfall:block/drift_buoy_pop"
+    ],
+    "subtitle": "subtitles.worldsfall.block.drift_buoy.pop"
+  },
   "block.driftstone.break": {
     "sounds": [
       "worldsfall:block/driftstone/break1",
@@ -205,6 +253,12 @@
       "worldsfall:block/glowbulb/step3"
     ],
     "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "block.gravity_plate.lift": {
+    "sounds": [
+      "worldsfall:block/gravity_plate"
+    ],
+    "subtitle": "subtitles.worldsfall.block.gravity_plate.lift"
   },
   "block.lumen_crystal.break": {
     "sounds": [
@@ -308,6 +362,18 @@
     ],
     "subtitle": "subtitles.block.generic.footsteps"
   },
+  "block.orrery.align": {
+    "sounds": [
+      "worldsfall:block/orrery_align"
+    ],
+    "subtitle": "subtitles.worldsfall.block.orrery.align"
+  },
+  "block.orrery.turn": {
+    "sounds": [
+      "worldsfall:block/orrery_turn"
+    ],
+    "subtitle": "subtitles.worldsfall.block.orrery.turn"
+  },
   "block.pale_loam.break": {
     "sounds": [
       "worldsfall:block/pale_loam/break1",
@@ -341,6 +407,12 @@
       "worldsfall:block/pale_loam/step3"
     ],
     "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "block.ships_bell.ring": {
+    "sounds": [
+      "worldsfall:block/ships_bell"
+    ],
+    "subtitle": "subtitles.worldsfall.block.ships_bell.ring"
   },
   "block.spire_lantern.break": {
     "sounds": [
@@ -423,6 +495,12 @@
     ],
     "subtitle": "subtitles.worldsfall.block.stillwater.xp_drain"
   },
+  "block.tide_bell.ring": {
+    "sounds": [
+      "worldsfall:block/tide_bell"
+    ],
+    "subtitle": "subtitles.worldsfall.block.tide_bell.ring"
+  },
   "block.voidroot.break": {
     "sounds": [
       "worldsfall:block/voidroot/break1",
@@ -484,6 +562,13 @@
     ],
     "subtitle": "subtitles.worldsfall.entity.chorus_grazer.hurt"
   },
+  "entity.drowned_ascendant.whisper": {
+    "sounds": [
+      "worldsfall:mob/drowned_ascendant/whisper1",
+      "worldsfall:mob/drowned_ascendant/whisper2"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.drowned_ascendant.whisper"
+  },
   "entity.echo.death": {
     "sounds": [
       "worldsfall:mob/echo/death"
@@ -513,6 +598,38 @@
       "worldsfall:mob/echo/unfold"
     ],
     "subtitle": "subtitles.worldsfall.entity.echo.unfold"
+  },
+  "entity.elder_warden.call": {
+    "sounds": [
+      "worldsfall:mob/elder_warden/call1",
+      "worldsfall:mob/elder_warden/call2"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.elder_warden.call"
+  },
+  "entity.gale_harrier.death": {
+    "sounds": [
+      "worldsfall:mob/gale_harrier/death"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.gale_harrier.death"
+  },
+  "entity.gale_harrier.dive": {
+    "sounds": [
+      "worldsfall:mob/gale_harrier/dive"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.gale_harrier.dive"
+  },
+  "entity.gale_harrier.hurt": {
+    "sounds": [
+      "worldsfall:mob/gale_harrier/hurt"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.gale_harrier.hurt"
+  },
+  "entity.gale_harrier.screech": {
+    "sounds": [
+      "worldsfall:mob/gale_harrier/screech1",
+      "worldsfall:mob/gale_harrier/screech2"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.gale_harrier.screech"
   },
   "entity.hoarder.ambient": {
     "sounds": [
@@ -551,6 +668,37 @@
     ],
     "subtitle": "subtitles.worldsfall.entity.hoarder.hurt"
   },
+  "entity.lantern_moth.flutter": {
+    "sounds": [
+      "worldsfall:mob/lantern_moth/flutter"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.lantern_moth.flutter"
+  },
+  "entity.leviathan.ambient": {
+    "sounds": [
+      "worldsfall:mob/leviathan/ambient1",
+      "worldsfall:mob/leviathan/ambient2"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.leviathan.ambient"
+  },
+  "entity.leviathan.song": {
+    "sounds": [
+      "worldsfall:mob/leviathan/song"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.leviathan.song"
+  },
+  "entity.lumen_heart.break": {
+    "sounds": [
+      "worldsfall:mob/lumen_heart/break"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.lumen_heart.break"
+  },
+  "entity.lumen_heart.pulse": {
+    "sounds": [
+      "worldsfall:mob/lumen_heart/pulse"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.lumen_heart.pulse"
+  },
   "entity.shardling.burst": {
     "sounds": [
       "worldsfall:mob/shardling/burst"
@@ -568,6 +716,18 @@
       "worldsfall:mob/shardling/hum"
     ],
     "subtitle": "subtitles.worldsfall.entity.shardling.hum"
+  },
+  "entity.shulker_archivist.read": {
+    "sounds": [
+      "worldsfall:mob/shulker_archivist/read"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.shulker_archivist.read"
+  },
+  "entity.shulker_archivist.trade": {
+    "sounds": [
+      "worldsfall:mob/shulker_archivist/trade"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.shulker_archivist.trade"
   },
   "entity.spire_warden.breathe": {
     "sounds": [
@@ -698,6 +858,31 @@
     ],
     "subtitle": "subtitles.worldsfall.entity.the_unmade.void_pulse_inhale"
   },
+  "entity.tide_eel.ambient": {
+    "sounds": [
+      "worldsfall:mob/tide_eel/ambient1",
+      "worldsfall:mob/tide_eel/ambient2"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.tide_eel.ambient"
+  },
+  "entity.tide_eel.death": {
+    "sounds": [
+      "worldsfall:mob/tide_eel/death"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.tide_eel.death"
+  },
+  "entity.tide_eel.drain": {
+    "sounds": [
+      "worldsfall:mob/tide_eel/drain"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.tide_eel.drain"
+  },
+  "entity.tide_eel.hurt": {
+    "sounds": [
+      "worldsfall:mob/tide_eel/hurt"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.tide_eel.hurt"
+  },
   "entity.tidewisp.pulse": {
     "sounds": [
       "worldsfall:mob/tidewisp/pulse1",
@@ -748,6 +933,25 @@
       "worldsfall:mob/lurker/snare"
     ],
     "subtitle": "subtitles.worldsfall.entity.underside_lurker.snare"
+  },
+  "entity.void_bell.creak": {
+    "sounds": [
+      "worldsfall:mob/void_bell/creak1",
+      "worldsfall:mob/void_bell/creak2"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.void_bell.creak"
+  },
+  "entity.void_bell.lamp": {
+    "sounds": [
+      "worldsfall:mob/void_bell/lamp"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.void_bell.lamp"
+  },
+  "entity.void_bell.move": {
+    "sounds": [
+      "worldsfall:mob/void_bell/move"
+    ],
+    "subtitle": "subtitles.worldsfall.entity.void_bell.move"
   },
   "entity.void_skate.ambient": {
     "sounds": [
@@ -821,6 +1025,24 @@
     ],
     "subtitle": "subtitles.worldsfall.entity.wyrm.warn"
   },
+  "event.courier.deliver": {
+    "sounds": [
+      "worldsfall:event/courier_deliver"
+    ],
+    "subtitle": "subtitles.worldsfall.event.courier.deliver"
+  },
+  "event.eclipse.begin": {
+    "sounds": [
+      "worldsfall:event/eclipse_begin"
+    ],
+    "subtitle": "subtitles.worldsfall.event.eclipse.begin"
+  },
+  "event.eclipse.end": {
+    "sounds": [
+      "worldsfall:event/eclipse_end"
+    ],
+    "subtitle": "subtitles.worldsfall.event.eclipse.end"
+  },
   "event.egg.crack": {
     "sounds": [
       "worldsfall:event/egg_crack"
@@ -851,6 +1073,36 @@
     ],
     "subtitle": "subtitles.worldsfall.event.gravity_anchor.hum"
   },
+  "event.king_tide.rise": {
+    "sounds": [
+      "worldsfall:event/king_tide"
+    ],
+    "subtitle": "subtitles.worldsfall.event.king_tide.rise"
+  },
+  "event.lattice.jump": {
+    "sounds": [
+      "worldsfall:event/lattice_jump"
+    ],
+    "subtitle": "subtitles.worldsfall.event.lattice.jump"
+  },
+  "event.maw.open": {
+    "sounds": [
+      "worldsfall:event/maw_open"
+    ],
+    "subtitle": "subtitles.worldsfall.event.maw.open"
+  },
+  "event.maw.pull": {
+    "sounds": [
+      "worldsfall:event/maw_pull"
+    ],
+    "subtitle": "subtitles.worldsfall.event.maw.pull"
+  },
+  "event.migration.calls": {
+    "sounds": [
+      "worldsfall:event/migration_calls"
+    ],
+    "subtitle": "subtitles.worldsfall.event.migration.calls"
+  },
   "event.reassembly.chord": {
     "sounds": [
       "worldsfall:event/reassembly_chord"
@@ -877,6 +1129,12 @@
     ],
     "subtitle": "subtitles.worldsfall.event.reassembly.lantern"
   },
+  "event.restoration.stage": {
+    "sounds": [
+      "worldsfall:event/restoration_stage"
+    ],
+    "subtitle": "subtitles.worldsfall.event.restoration.stage"
+  },
   "event.rift.close": {
     "sounds": [
       "worldsfall:event/rift_close"
@@ -889,11 +1147,29 @@
     ],
     "subtitle": "subtitles.worldsfall.event.rift.open"
   },
+  "event.sky_current.enter": {
+    "sounds": [
+      "worldsfall:event/sky_current"
+    ],
+    "subtitle": "subtitles.worldsfall.event.sky_current.enter"
+  },
   "event.socket.hum": {
     "sounds": [
       "worldsfall:event/socket_hum"
     ],
     "subtitle": "subtitles.worldsfall.event.socket.hum"
+  },
+  "event.starfall.land": {
+    "sounds": [
+      "worldsfall:event/starfall_land"
+    ],
+    "subtitle": "subtitles.worldsfall.event.starfall.land"
+  },
+  "event.starfall.streak": {
+    "sounds": [
+      "worldsfall:event/starfall_streak"
+    ],
+    "subtitle": "subtitles.worldsfall.event.starfall.streak"
   },
   "event.sundering.crack": {
     "sounds": [
@@ -924,6 +1200,91 @@
       "worldsfall:event/tide_stir"
     ],
     "subtitle": "subtitles.worldsfall.event.tide.stir"
+  },
+  "event.tide_fishing.bite": {
+    "sounds": [
+      "worldsfall:event/tide_bite"
+    ],
+    "subtitle": "subtitles.worldsfall.event.tide_fishing.bite"
+  },
+  "event.warden.bow": {
+    "sounds": [
+      "worldsfall:event/warden/bow"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.bow"
+  },
+  "event.warden.breach": {
+    "sounds": [
+      "worldsfall:event/warden/breach"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.breach"
+  },
+  "event.warden.cracks": {
+    "sounds": [
+      "worldsfall:event/warden/cracks"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.cracks"
+  },
+  "event.warden.crystal_echo": {
+    "sounds": [
+      "worldsfall:event/warden/crystal_echo1",
+      "worldsfall:event/warden/crystal_echo2"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.crystal_echo"
+  },
+  "event.warden.dive": {
+    "sounds": [
+      "worldsfall:event/warden/dive"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.dive"
+  },
+  "event.warden.dive_warning": {
+    "sounds": [
+      "worldsfall:event/warden/dive_warning"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.dive_warning"
+  },
+  "event.warden.gale": {
+    "sounds": [
+      "worldsfall:event/warden/gale"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.gale"
+  },
+  "event.warden.learn": {
+    "sounds": [
+      "worldsfall:event/warden/learn"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.learn"
+  },
+  "event.warden.portal_hum": {
+    "sounds": [
+      "worldsfall:event/warden/portal_hum"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.portal_hum"
+  },
+  "event.warden.release_chime": {
+    "sounds": [
+      "worldsfall:event/warden/release_chime"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.release_chime"
+  },
+  "event.warden.shard_charge": {
+    "sounds": [
+      "worldsfall:event/warden/shard_charge"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.shard_charge"
+  },
+  "event.warden.tide_creep": {
+    "sounds": [
+      "worldsfall:event/warden/tide_creep"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.tide_creep"
+  },
+  "event.warden.tide_recede": {
+    "sounds": [
+      "worldsfall:event/warden/tide_recede"
+    ],
+    "subtitle": "subtitles.worldsfall.event.warden.tide_recede"
   },
   "item.bucket.empty_stillwater": {
     "sounds": [
@@ -985,6 +1346,12 @@
     ],
     "subtitle": "subtitles.worldsfall.item.glowbulb.harvest"
   },
+  "item.mirrorfish.flop": {
+    "sounds": [
+      "worldsfall:mob/mirrorfish_flop"
+    ],
+    "subtitle": "subtitles.worldsfall.item.mirrorfish.flop"
+  },
   "item.rift_tether.detach": {
     "sounds": [
       "worldsfall:item/tether_detach"
@@ -1021,6 +1388,12 @@
     ],
     "subtitle": "subtitles.worldsfall.item.satchel.open"
   },
+  "item.tuning_fork.strike": {
+    "sounds": [
+      "worldsfall:item/tuning_fork"
+    ],
+    "subtitle": "subtitles.worldsfall.item.tuning_fork.strike"
+  },
   "item.void_anchor.trigger": {
     "sounds": [
       "worldsfall:item/void_anchor_trigger"
@@ -1039,6 +1412,14 @@
     "sounds": [
       {
         "name": "worldsfall:music/hold_still",
+        "stream": true
+      }
+    ]
+  },
+  "music.ladders": {
+    "sounds": [
+      {
+        "name": "worldsfall:music/ladders",
         "stream": true
       }
     ]
@@ -1083,6 +1464,14 @@
       }
     ]
   },
+  "music.undertow": {
+    "sounds": [
+      {
+        "name": "worldsfall:music/undertow",
+        "stream": true
+      }
+    ]
+  },
   "music.unmade_1": {
     "sounds": [
       {
@@ -1107,10 +1496,42 @@
       }
     ]
   },
+  "music.warden": {
+    "sounds": [
+      {
+        "name": "worldsfall:music/warden",
+        "stream": true
+      }
+    ]
+  },
+  "music_disc.ladders": {
+    "sounds": [
+      {
+        "name": "worldsfall:music/ladders",
+        "stream": true
+      }
+    ]
+  },
+  "music_disc.undertow": {
+    "sounds": [
+      {
+        "name": "worldsfall:music/undertow",
+        "stream": true
+      }
+    ]
+  },
   "music_disc.unmade": {
     "sounds": [
       {
         "name": "worldsfall:music/stillness",
+        "stream": true
+      }
+    ]
+  },
+  "music_disc.warden": {
+    "sounds": [
+      {
+        "name": "worldsfall:music/warden",
         "stream": true
       }
     ]

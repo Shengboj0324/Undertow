@@ -51,6 +51,26 @@ public final class WFConfig {
         public final ModConfigSpec.EnumValue<AdditiveMode> additiveMode;
         public final ModConfigSpec.BooleanValue vanillaBiomeAdditions;
         public final ModConfigSpec.BooleanValue hintToasts;
+        // expansion 1.2–2.0
+        public final ModConfigSpec.BooleanValue dragonPacts;
+        public final ModConfigSpec.BooleanValue dragonDescent;
+        public final ModConfigSpec.BooleanValue dragonRelease;
+        public final ModConfigSpec.BooleanValue dragonRespawnAfterRelease;
+        public final ModConfigSpec.BooleanValue causeway;
+        public final ModConfigSpec.IntValue latticeMaxNodes;
+        public final ModConfigSpec.BooleanValue sinkingBullets;
+        public final ModConfigSpec.BooleanValue tideFishing;
+        public final ModConfigSpec.BooleanValue couriers;
+        public final ModConfigSpec.BooleanValue eventStarfall;
+        public final ModConfigSpec.BooleanValue eventKingTide;
+        public final ModConfigSpec.BooleanValue eventEclipse;
+        public final ModConfigSpec.BooleanValue eventMigration;
+        public final ModConfigSpec.BooleanValue zenith;
+        public final ModConfigSpec.BooleanValue undertow;
+        public final ModConfigSpec.IntValue lostThingsCap;
+        public final ModConfigSpec.BooleanValue restorationEnabled;
+        public final ModConfigSpec.IntValue restorationPointsFor100;
+        public final ModConfigSpec.BooleanValue restorationStageEffects;
 
         Server(ModConfigSpec.Builder b) {
             b.push("sundering");
@@ -93,6 +113,32 @@ public final class WFConfig {
             additiveMode = b.comment("Additive worldgen with other End mods").defineEnum("additiveMode", AdditiveMode.AUTO);
             vanillaBiomeAdditions = b.comment("Light-touch additions to vanilla End biomes").define("vanillaBiomeAdditions", true);
             hintToasts = b.comment("One-time onboarding hints").define("hintToasts", true);
+            b.pop().push("dragon");
+            dragonPacts = b.comment("Pact Crystals turn repeat dragon fights into trials").define("pacts", true);
+            dragonDescent = b.comment("The Pact of Depths (the Descending Warden)").define("descent", true);
+            dragonRelease = b.comment("Stillness Crystals can release the dragon for good").define("release", true);
+            dragonRespawnAfterRelease = b.comment("Allow respawning the dragon after the Release").define("respawnAfterRelease", false);
+            b.pop().push("gap");
+            causeway = b.comment("The Pilgrim's Causeway generates and can be restored").define("causeway", true);
+            b.pop().push("navigation");
+            latticeMaxNodes = b.comment("Gateway Lattice nodes per world").defineInRange("latticeMaxNodes", 32, 2, 256);
+            sinkingBullets = b.comment("City Shulkers fire Sinking Bullets at High Tide").define("sinkingBullets", true);
+            b.pop().push("living");
+            tideFishing = b.comment("Fishing on the tide plane and in Stillwater").define("tideFishing", true);
+            couriers = b.comment("Hoarder Couriers move stacks between Courier Caches").define("couriers", true);
+            eventStarfall = b.define("starfall", true);
+            eventKingTide = b.define("kingTide", true);
+            eventEclipse = b.define("eclipseOfStillness", true);
+            eventMigration = b.define("skateMigration", true);
+            b.pop().push("zenith");
+            zenith = b.comment("The Zenith sky layer (Y 150–250)").define("enabled", true);
+            b.pop().push("undertow");
+            undertow = b.comment("Tide Maws and the Undertow dimension").define("enabled", true);
+            lostThingsCap = b.comment("Void-destroyed items remembered for the Undertow and tide fishing").defineInRange("lostThingsCap", 500, 0, 5000);
+            b.pop().push("restoration");
+            restorationEnabled = b.define("enabled", true);
+            restorationPointsFor100 = b.defineInRange("pointsFor100", 200, 10, 100000);
+            restorationStageEffects = b.comment("Stage effects (spreading loam, longer low tides, sky changes)").define("stageEffects", true);
             b.pop();
         }
 

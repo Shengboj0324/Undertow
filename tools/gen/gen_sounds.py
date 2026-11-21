@@ -25,12 +25,15 @@ def build():
         lang[key] = {"chorus_reach": "Glass chimes ring", "stillwater_basins": "Something drips far away",
                      "fallen_spires": "Stone settles", "the_hoard": "A familiar sound, wrong",
                      "the_underside": "A drip falls upward", "the_drift": "A distant call",
-                     "fracture_ring": "Shards grind"}[biome]
+                     "fracture_ring": "Shards grind", "zenith": "High wind sings",
+                     "undertow": "The tide creaks around you"}[biome]
         events[f"ambient.{biome}.additions"] = {"sounds": [f"worldsfall:{a}" for a in adds], "subtitle": key}
     for eid, (stem, _n) in S.MUSIC.items():
         events[eid] = {"sounds": [{"name": f"worldsfall:{stem}", "stream": True}], "subtitle": None}
     # music disc uses the full Unmade layer 3 + stillness? Disc plays "stillness".
     events["music_disc.unmade"] = {"sounds": [{"name": "worldsfall:music/stillness", "stream": True}], "subtitle": None}
+    for disc in ("warden", "ladders", "undertow"):
+        events[f"music_disc.{disc}"] = {"sounds": [{"name": f"worldsfall:music/{disc}", "stream": True}], "subtitle": None}
     return events, lang
 
 def main():

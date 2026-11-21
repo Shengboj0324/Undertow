@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "worldsfall:gateway_compass"
+    },
+    "title": {
+      "translate": "advancements.worldsfall.elder_passage.title"
+    },
+    "description": {
+      "translate": "advancements.worldsfall.elder_passage.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "worldsfall:warden_released"
+}

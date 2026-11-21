@@ -1,5 +1,5 @@
 """Generates blockstates, block models, item model definitions, item models and particle definitions."""
-import copy, json, os, re
+import copy, json, os, re, sys
 from common import *
 
 BS = os.path.join(ASSETS, "blockstates")
@@ -448,15 +448,21 @@ def gen_items():
 
 PARTICLES = {"pollen_mote": 4, "pod_pop": 4, "still_ring": 4, "stillfall_mist": 4, "dust_fall": 2, "socket_spark": 4, "up_mote": 4,
              "up_drip": 2, "skate_wake": 4, "tide_crest": 4, "erosion_static": 4, "ash_inflow": 4, "shard_spark": 4, "tidewisp_trail": 4,
-             "shell_fragment": 4}
+             "shell_fragment": 4,
+             # expansion
+             "wardensong_glyph": 4, "sky_current": 3, "downdraft_dust": 3, "starfall_spark": 2, "maw_swirl": 4, "eclipse_mote": 1}
+SINGLE_FRAME = {"eclipse_mote"}
 
 def gen_particles():
     for name, n in PARTICLES.items():
-        write(os.path.join(ASSETS, f"particles/{name}.json"), {"textures": [f"{NS}:{name}_{i}" for i in range(n)]})
+        tex = [f"{NS}:{name}"] if name in SINGLE_FRAME else [f"{NS}:{name}_{i}" for i in range(n)]
+        write(os.path.join(ASSETS, f"particles/{name}.json"), {"textures": tex})
     # mod particle textures live in textures/particle and must be on the particle atlas
     write(os.path.join(ASSETS, "../minecraft/atlases/particles.json"),
           {"sources": [{"type": "minecraft:directory", "source": "particle", "prefix": ""}]}) if False else None
 
 if __name__ == "__main__":
     gen_blocks(); gen_items(); gen_particles(); gen_equipment(); gen_trim_icons()
+    import expansion
+    expansion.assets(sys.modules[__name__])
     print(f"assets written: {len(WRITTEN)}")

@@ -93,6 +93,36 @@ public final class WFItems {
     public static final DeferredItem<BlockItem> BOTTLED_TIDEWISP = reg("bottled_tidewisp", p -> new BlockItem(WFBlocks.TIDEWISP_JAR.get(), p),
         p -> p.useItemDescriptionPrefix());
 
+    // ================= Expansion 1.2: the Warden Cycle
+    public static final DeferredItem<Item> PACT_GLYPH_TIDE = simple("pact_glyph_tide", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> PACT_GLYPH_SHARDS = simple("pact_glyph_shards", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> PACT_GLYPH_ECHOES = simple("pact_glyph_echoes", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> PACT_GLYPH_HOARD = simple("pact_glyph_hoard", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> PACT_GLYPH_MEMORY = simple("pact_glyph_memory", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> PACT_GLYPH_STILLNESS = simple("pact_glyph_stillness", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> PACT_GLYPH_LONE = simple("pact_glyph_lone", p -> p.rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> PACT_GLYPH_DEPTHS = simple("pact_glyph_depths", p -> p.rarity(Rarity.RARE));
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> PACT_CRYSTAL_TIDE = pactCrystal(dev.worldsfall.warden.Pact.TIDE);
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> PACT_CRYSTAL_SHARDS = pactCrystal(dev.worldsfall.warden.Pact.SHARDS);
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> PACT_CRYSTAL_ECHOES = pactCrystal(dev.worldsfall.warden.Pact.ECHOES);
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> PACT_CRYSTAL_HOARD = pactCrystal(dev.worldsfall.warden.Pact.HOARD);
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> PACT_CRYSTAL_MEMORY = pactCrystal(dev.worldsfall.warden.Pact.MEMORY);
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> PACT_CRYSTAL_STILLNESS = pactCrystal(dev.worldsfall.warden.Pact.STILLNESS);
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> PACT_CRYSTAL_LONE = pactCrystal(dev.worldsfall.warden.Pact.LONE);
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> PACT_CRYSTAL_DEPTHS = pactCrystal(dev.worldsfall.warden.Pact.DEPTHS);
+    public static final DeferredItem<dev.worldsfall.warden.WardenCrystalItem> STILLNESS_CRYSTAL = reg("stillness_crystal",
+        p -> new dev.worldsfall.warden.WardenCrystalItem(p, null), p -> p.rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> DRAGON_SCALE = simple("dragon_scale", p -> p.rarity(Rarity.RARE));
+    public static final DeferredItem<Item> WYRM_BARDING = simple("wyrm_barding", p -> p.stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredItem<dev.worldsfall.nav.TuningForkItem> TUNING_FORK = reg("tuning_fork", dev.worldsfall.nav.TuningForkItem::new,
+        p -> p.stacksTo(1).rarity(Rarity.UNCOMMON));
+    public static final DeferredItem<Item> WARDEN_BANNER_PATTERN = simple("warden_banner_pattern", p -> p.stacksTo(1).rarity(Rarity.RARE)
+        .delayedComponent(net.minecraft.core.component.DataComponents.PROVIDES_BANNER_PATTERNS, ctx -> ctx.getOrThrow(
+            net.minecraft.tags.TagKey.create(Registries.BANNER_PATTERN, Identifier.fromNamespaceAndPath(Worldsfall.MODID, "pattern_item/warden")))));
+    public static final DeferredItem<Item> WARDENBORN_SEAL = simple("wardenborn_seal", p -> p.stacksTo(16).rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> MUSIC_DISC_WARDEN = simple("music_disc_warden", p -> p.stacksTo(1).rarity(Rarity.RARE)
+        .jukeboxPlayable(ResourceKey.create(Registries.JUKEBOX_SONG, Identifier.fromNamespaceAndPath(Worldsfall.MODID, "warden"))));
+
     private static final List<DeferredItem<Item>> SPAWN_EGGS = new ArrayList<>();
     public static final DeferredItem<Item> VOID_SKATE_SPAWN_EGG = egg("void_skate", WFEntities.VOID_SKATE);
     public static final DeferredItem<Item> CHORUS_GRAZER_SPAWN_EGG = egg("chorus_grazer", WFEntities.CHORUS_GRAZER);
@@ -120,6 +150,10 @@ public final class WFItems {
 
     static ResourceKey<TrimMaterial> trim(String name) {
         return ResourceKey.create(Registries.TRIM_MATERIAL, Identifier.fromNamespaceAndPath(Worldsfall.MODID, name));
+    }
+
+    private static DeferredItem<dev.worldsfall.warden.WardenCrystalItem> pactCrystal(dev.worldsfall.warden.Pact pact) {
+        return reg("pact_crystal_" + pact.id(), p -> new dev.worldsfall.warden.WardenCrystalItem(p, pact), p -> p.rarity(Rarity.RARE));
     }
 
     private static FoodProperties food(int nutrition, float saturation) {

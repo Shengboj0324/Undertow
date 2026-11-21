@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "M": "worldsfall:mirror_shard_fragment",
+    "D": "worldsfall:dragon_scale"
+  },
+  "pattern": [
+    "I I",
+    " M ",
+    " D "
+  ],
+  "result": {
+    "id": "worldsfall:tuning_fork"
+  }
+}

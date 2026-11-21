@@ -322,12 +322,22 @@ public final class CreatureRenderers {
             super(ctx, new CreatureModels.Wyrm(ctx.bakeLayer(WFLayers.WYRM_HATCHLING), "wyrm_hatchling"), 0.4f);
             models = new CreatureModels.Wyrm[] {model, new CreatureModels.Wyrm(ctx.bakeLayer(WFLayers.WYRM_FLEDGLING), "wyrm_fledgling"),
                 new CreatureModels.Wyrm(ctx.bakeLayer(WFLayers.WYRM_DRAKE), "wyrm_drake")};
-            addLayer(new EmissiveLayer<>(this, s -> GLOW[Mth.clamp(s.stage, 0, 2)], s -> true));
+            addLayer(new EmissiveLayer<>(this, s -> (s.look & Wyrm.LOOK_WARDENBORN) != 0 ? GLOW_WARDENBORN[Mth.clamp(s.stage, 0, 2)]
+                : GLOW[Mth.clamp(s.stage, 0, 2)], s -> true));
+            // Drake barding and saddlebags: overlays on the drake's own UV
+            addLayer(new OverlayLayer<>(this, s -> BARDING, s -> s.stage == 2 && (s.look & Wyrm.LOOK_BARDED) != 0));
+            addLayer(new OverlayLayer<>(this, s -> BAGS, s -> s.stage == 2 && (s.look & Wyrm.LOOK_BAGS) != 0));
         }
+
+        private static final Identifier[] TEX_WARDENBORN = {Tex.of("wyrm/wyrm_hatchling_wardenborn"), Tex.of("wyrm/wyrm_fledgling_wardenborn"),
+            Tex.of("wyrm/wyrm_drake_wardenborn")};
+        private static final Identifier[] GLOW_WARDENBORN = {Tex.of("wyrm/wyrm_hatchling_wardenborn_emissive"),
+            Tex.of("wyrm/wyrm_fledgling_wardenborn_emissive"), Tex.of("wyrm/wyrm_drake_wardenborn_emissive")};
+        private static final Identifier BARDING = Tex.of("wyrm/wyrm_drake_barding"), BAGS = Tex.of("wyrm/wyrm_drake_saddlebags");
 
         @Override
         public Identifier getTextureLocation(WFStates.Wyrm s) {
-            return TEX[Mth.clamp(s.stage, 0, 2)];
+            return (s.look & Wyrm.LOOK_WARDENBORN) != 0 ? TEX_WARDENBORN[Mth.clamp(s.stage, 0, 2)] : TEX[Mth.clamp(s.stage, 0, 2)];
         }
 
         @Override
@@ -339,6 +349,7 @@ public final class CreatureRenderers {
         public void extractRenderState(Wyrm e, WFStates.Wyrm s, float partial) {
             super.extractRenderState(e, s, partial);
             s.stage = e.stage().ordinal();
+            s.look = e.look();
             s.flying = !e.onGround();
             s.sitting = e.isInSittingPose();
             model = models[Mth.clamp(s.stage, 0, 2)];

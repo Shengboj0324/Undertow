@@ -91,6 +91,13 @@ public class EggCradleBlock extends BaseEntityBlock {
             }
             return InteractionResult.SUCCESS;
         }
+        if (stack.is(WFItems.WARDENBORN_SEAL.get())) {
+            if (!level.isClientSide() && cradle.sealWardenborn()) {
+                stack.consume(1, player);
+                level.playSound(null, pos, dev.worldsfall.registry.WFSounds.EVENT_EGG_PULSE.get(), net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 0.7f);
+            }
+            return InteractionResult.SUCCESS;
+        }
         if (stack.is(WFItems.GLOW_GLAND.get())) {
             if (player instanceof ServerPlayer sp) {
                 switch (cradle.feed(sp)) {

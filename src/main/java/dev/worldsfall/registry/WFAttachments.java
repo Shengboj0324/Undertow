@@ -23,6 +23,19 @@ public final class WFAttachments {
         () -> AttachmentType.<List<GravityWells.Well>>builder(() -> List.of()).serialize(GravityWells.Well.CODEC.listOf().fieldOf("wells"))
             .sync(net.minecraft.network.codec.ByteBufCodecs.fromCodecWithRegistries(GravityWells.Well.CODEC.listOf()))
             .build());
+    /** What a placed End Crystal carries: "" (plain), "pact:<id>" or "stillness" (the Warden Cycle). */
+    public static final Supplier<AttachmentType<String>> CRYSTAL_KIND = ATTACHMENTS.register("crystal_kind",
+        () -> AttachmentType.builder(() -> "").serialize(com.mojang.serialization.Codec.STRING.fieldOf("kind")).build());
+    /** Dragon pose flags for the renderer: bit 0 perched upside down on the Warden's Gallery ceiling, bit 1 calm (Release). */
+    public static final Supplier<AttachmentType<Integer>> DRAGON_POSE = ATTACHMENTS.register("dragon_pose",
+        () -> AttachmentType.builder(() -> 0).sync(net.minecraft.network.codec.ByteBufCodecs.VAR_INT).build());
+    /** Items a pact Hoarder has stolen during a Warden fight; returned (plus a bonus) when it dies. */
+    public static final Supplier<AttachmentType<List<net.minecraft.world.item.ItemStack>>> STOLEN = ATTACHMENTS.register("stolen",
+        () -> AttachmentType.<List<net.minecraft.world.item.ItemStack>>builder(() -> List.of())
+            .serialize(net.minecraft.world.item.ItemStack.OPTIONAL_CODEC.listOf().fieldOf("items")).build());
+    /** Wardensong lines a player has heard (bit per line, §1 of the Warden Cycle). */
+    public static final Supplier<AttachmentType<Integer>> WARDENSONG = ATTACHMENTS.register("wardensong",
+        () -> AttachmentType.builder(() -> 0).serialize(Codec.INT.fieldOf("lines")).copyOnDeath().build());
     /** Which shoulders hold a Hatchling Wyrm (bit 0 left, bit 1 right), synced so every client can draw it (§10.3). */
     public static final Supplier<AttachmentType<Integer>> WYRM_SHOULDERS = ATTACHMENTS.register("wyrm_shoulders",
         () -> AttachmentType.builder(() -> 0).sync(net.minecraft.network.codec.ByteBufCodecs.VAR_INT).build());

@@ -56,6 +56,9 @@ import java.util.function.Consumer;
 public final class WFTests {
     private WFTests() {}
 
+    /** 24 from 1.0 plus the expansion's (1.2 → 2.0). */
+    static final int EXPECTED_ADVANCEMENTS = 31;
+
     static void collect(Map<String, Consumer<GameTestHelper>> out) {
         out.put("tide_cycle_math", WFTests::tideCycleMath);
         out.put("stillwater_turns_water_to_stillstone", WFTests::stillwaterWater);
@@ -79,6 +82,12 @@ public final class WFTests {
         out.put("stillwater_cauldron_bottles", WFTests::stillwaterCauldron);
         out.put("wyrm_shoulder_sync", WFTests::wyrmShoulder);
         out.put("basin_shape_and_trims", WFTests::basinAndTrims);
+        // expansion 1.2: the Warden Cycle
+        out.put("warden_pact_weight_and_rewards", WFTests::pactWeights);
+        out.put("warden_crystal_kinds", WFTests::crystalKinds);
+        out.put("warden_release_needs_the_heart", WFTests::releaseGate);
+        out.put("elytra_styles_stack", WFTests::elytraStyles);
+        out.put("wyrm_barding_and_temperament", WFTests::wyrmBarding);
     }
 
     static int maxTicks(String name) {
@@ -351,7 +360,7 @@ public final class WFTests {
         long recipes = server.getRecipeManager().getRecipes().stream().filter(r -> r.id().identifier().getNamespace().equals("worldsfall")).count();
         h.assertTrue(recipes >= 80, "worldsfall recipes loaded: " + recipes);
         long advancements = server.getAdvancements().getAllAdvancements().stream().filter(a -> a.id().getNamespace().equals("worldsfall")).count();
-        h.assertTrue(advancements == 24, "24 advancements (root + 23): " + advancements);
+        h.assertTrue(advancements == EXPECTED_ADVANCEMENTS, EXPECTED_ADVANCEMENTS + " advancements: " + advancements);
         long loot = server.reloadableRegistries().lookup().lookupOrThrow(Registries.LOOT_TABLE).listElementIds()
             .filter(k -> k.identifier().getNamespace().equals("worldsfall")).count();
         h.assertTrue(loot >= 60, "worldsfall loot tables loaded: " + loot);
@@ -422,6 +431,78 @@ public final class WFTests {
                 Identifier.fromNamespaceAndPath("worldsfall", p))).isPresent(), "trim pattern " + p);
         }
         h.assertTrue(dev.worldsfall.world.VoidLensScan.wrecksNear(h.getLevel(), 0, 0).isEmpty(), "no Driftwrecks in the test world");
+        h.succeed();
+    }
+
+    // ------------------------------------------------------------------ expansion 1.2: the Warden Cycle
+    private static void pactWeights(GameTestHelper h) {
+        var all = java.util.EnumSet.allOf(dev.worldsfall.warden.Pact.class);
+        h.assertTrue(dev.worldsfall.warden.Pact.weight(all) == 12, "weight is capped at 12");
+        h.assertTrue(dev.worldsfall.warden.Pact.weight(java.util.EnumSet.of(dev.worldsfall.warden.Pact.TIDE, dev.worldsfall.warden.Pact.ECHOES)) == 3,
+            "tide 2 + echoes 1");
+        h.assertTrue(dev.worldsfall.warden.Pact.tier(0) == 0 && dev.worldsfall.warden.Pact.tier(3) == 1 && dev.worldsfall.warden.Pact.tier(4) == 2
+            && dev.worldsfall.warden.Pact.tier(11) == 3 && dev.worldsfall.warden.Pact.tier(12) == 4, "reward tiers 1-3 / 4-7 / 8-11 / 12");
+        var r = net.minecraft.util.RandomSource.create(7);
+        for (int k = 0; k < 50; k++) {
+            int t1 = dev.worldsfall.warden.WardenRewards.scales(1, r), t2 = dev.worldsfall.warden.WardenRewards.scales(3, r);
+            h.assertTrue(t1 >= 2 && t1 <= 4 && t2 >= 4 && t2 <= 8, "scale counts per tier");
+        }
+        h.succeed();
+    }
+
+    private static void crystalKinds(GameTestHelper h) {
+        var crystal = new net.minecraft.world.entity.boss.enderdragon.EndCrystal(h.getLevel(), 0, 0, 0);
+        h.assertTrue(dev.worldsfall.warden.WardenFight.pactOf(crystal) == null && !dev.worldsfall.warden.WardenFight.isStillness(crystal),
+            "a vanilla crystal carries nothing");
+        crystal.setData(dev.worldsfall.registry.WFAttachments.CRYSTAL_KIND, WFItems.PACT_CRYSTAL_DEPTHS.get().kind());
+        h.assertTrue(dev.worldsfall.warden.WardenFight.pactOf(crystal) == dev.worldsfall.warden.Pact.DEPTHS, "a Pact Crystal names its pact");
+        crystal.setData(dev.worldsfall.registry.WFAttachments.CRYSTAL_KIND, WFItems.STILLNESS_CRYSTAL.get().kind());
+        h.assertTrue(dev.worldsfall.warden.WardenFight.isStillness(crystal), "a Stillness Crystal is recognised");
+        h.succeed();
+    }
+
+    private static void releaseGate(GameTestHelper h) {
+        ServerLevel end = h.getLevel().getServer().getLevel(net.minecraft.world.level.Level.END);
+        h.assertTrue(end != null, "the End exists");
+        h.assertTrue(!dev.worldsfall.warden.WardenRelease.ready(end), "no Release before The Unmade falls and the Heart sits in the throne");
+        h.succeed();
+    }
+
+    private static void elytraStyles(GameTestHelper h) {
+        var server = h.getLevel().getServer();
+        SmithingRecipe scaled = (SmithingRecipe) server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE,
+            Identifier.fromNamespaceAndPath("worldsfall", "elytra_scaled"))).orElseThrow().value();
+        SmithingRecipe gale = (SmithingRecipe) server.getRecipeManager().byKey(ResourceKey.create(Registries.RECIPE,
+            Identifier.fromNamespaceAndPath("worldsfall", "elytra_gale_upgrade"))).orElseThrow().value();
+        ItemStack once = scaled.assemble(new SmithingRecipeInput(new ItemStack(WFItems.DRAGON_SCALE.get()), new ItemStack(Items.ELYTRA),
+            new ItemStack(WFItems.DRAGON_SCALE.get())));
+        ItemStack twice = gale.assemble(new SmithingRecipeInput(new ItemStack(WFItems.GALE_UPGRADE_TEMPLATE.get()), once,
+            new ItemStack(WFItems.SKATE_MEMBRANE.get())));
+        var eq = twice.get(net.minecraft.core.component.DataComponents.EQUIPPABLE);
+        h.assertTrue(eq != null && eq.assetId().orElseThrow().identifier().getPath().equals("elytra_gale_scaled"), "scales stack with the Gale look");
+        h.assertTrue(ElytraActionPayload.upgradeOf(twice) == ElytraUpgrade.GALE && Boolean.TRUE.equals(twice.get(WFComponents.ELYTRA_SCALED.get())),
+            "the upgrade and the overlay are both kept");
+        h.succeed();
+    }
+
+    private static void wyrmBarding(GameTestHelper h) {
+        ServerPlayer player = h.makeMockServerPlayerInLevel();
+        player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        var wyrm = WFEntities.WYRM.get().create(h.getLevel(), EntitySpawnReason.COMMAND);
+        h.assertTrue(wyrm != null, "wyrm constructs");
+        BlockPos at = h.absolutePos(new BlockPos(1, 2, 1));
+        wyrm.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0, 0);
+        h.getLevel().addFreshEntity(wyrm);
+        wyrm.tame(player);
+        wyrm.debugSetStage(dev.worldsfall.entity.Wyrm.Stage.DRAKE);
+        float before = wyrm.getMaxHealth();
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(WFItems.WYRM_BARDING.get()));
+        wyrm.mobInteract(player, net.minecraft.world.InteractionHand.MAIN_HAND);
+        h.assertTrue(wyrm.hasLook(dev.worldsfall.entity.Wyrm.LOOK_BARDED) && Math.abs(wyrm.getMaxHealth() - before * 2) < 0.01f,
+            "barding doubles a Drake's health: " + before + " -> " + wyrm.getMaxHealth());
+        wyrm.setTemperamentFromWorld(h.getLevel());
+        h.assertTrue(wyrm.temperament() != dev.worldsfall.entity.Wyrm.Temperament.NONE, "a temperament is set at hatching");
+        wyrm.discard();
         h.succeed();
     }
 }

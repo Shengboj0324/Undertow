@@ -5,6 +5,8 @@ For every PNG in a folder: 8x nearest-neighbour upscale on a dark and a light sw
 3x3 tiling (seam check). Animated strips show their frames in a row. Optional vanilla references next to them.
 
 usage: contact_sheet.py <folder: block|item|particle|gui|environment> [out.png] [--filter substr] [--anim]
+       contact_sheet.py expansion [blocks|items|particles|gui ...]
+           -> art/previews/expansion_<group>.png for the art/SPEC_EXPANSION.md textures only
 """
 import os
 import sys
@@ -148,8 +150,23 @@ def compare(out, S=4):
     print('wrote', out, img.size)
 
 
+def expansion(groups):
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'textures'))
+    import expansion_names as xn
+    sets = {'blocks': ['block/' + b for b in xn.BLOCKS], 'items': ['item/' + i for i in xn.ITEMS],
+            'particles': ['particle/' + p for p in xn.PARTICLES], 'gui': list(xn.GUI) + list(xn.ENV)}
+    for g in groups or list(sets):
+        files = [os.path.join(TEX, r + '.png') for r in sets[g]]
+        files = [f for f in files if os.path.exists(f)]
+        sheet(files, os.path.join(ROOT, 'art/previews/expansion_%s.png' % g), S=8 if g != 'gui' else 2,
+              tile=(g == 'blocks'), cols={'blocks': 5, 'items': 8, 'particles': 8, 'gui': 3}[g])
+
+
 if __name__ == '__main__':
     folder = sys.argv[1]
+    if folder == 'expansion':
+        expansion(sys.argv[2:])
+        sys.exit(0)
     if folder == 'compare':
         compare(os.path.join(ROOT, 'art/previews/textures_vanilla_compare.png'))
         sys.exit(0)

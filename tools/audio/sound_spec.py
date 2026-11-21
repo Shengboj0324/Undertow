@@ -162,3 +162,80 @@ MUSIC = {
     "music.unmade_3": ("music/unmade_3", "Boss phase 3: phase 2 + distorted high sustained tone; loopable ~64 s"),
     "music.stillness": ("music/stillness", "After boss & music disc: melody of Ladders to Nowhere now rising and resolved; ~120 s"),
 }
+
+# ---------------------------------------------------------------- expansion 1.2-2.0 (proposal: Expansion & Dragon)
+EVENTS.update({
+    # 1.2 the Warden Cycle
+    "event.warden.crystal_echo": ("A crystal remembers", ["event/warden/crystal_echo1", "event/warden/crystal_echo2"], "pale glassy sigh with a whispered vowel, 1.5 s, sacred and old"),
+    "event.warden.cracks": ("The island cracks", ["event/warden/cracks"], "deep stone stress groan with fine crackle, 2 s"),
+    "event.warden.portal_hum": ("The portal hums", ["event/warden/portal_hum"], "low bedrock drone that pulses like slow breathing, 3 s"),
+    "event.warden.tide_creep": ("The tide ring closes in", ["event/warden/tide_creep"], "rising teal swell with shimmer, 2 s"),
+    "event.warden.tide_recede": ("The tide ring recedes", ["event/warden/tide_recede"], "falling swell, relief, 1.5 s"),
+    "event.warden.shard_charge": ("Shards charge", ["event/warden/shard_charge"], "crystalline charge-up whine, 1 s"),
+    "event.warden.learn": ("The dragon learns", ["event/warden/learn"], "distant roar folded into a bright rising chime, 2 s"),
+    "event.warden.gale": ("A wing gale roars", ["event/warden/gale"], "huge wind gust, 1.5 s"),
+    "event.warden.dive_warning": ("Something rises beneath", ["event/warden/dive_warning"], "low rising rumble with a magenta shimmer, 1.5 s"),
+    "event.warden.breach": ("The dragon breaches the tide", ["event/warden/breach"], "huge rushing upward splash of light and wind, 2 s"),
+    "event.warden.dive": ("The dragon dives", ["event/warden/dive"], "steep falling whoosh, 2 s"),
+    "event.warden.release_chime": ("The crystals ring", ["event/warden/release_chime"], "four glass bells ringing into a calm major chord, 5 s"),
+    "event.warden.bow": ("The dragon lowers its head", ["event/warden/bow"], "soft deep exhale with a gentle chime, 2.5 s"),
+    "entity.elder_warden.call": ("The Elder Warden calls", ["mob/elder_warden/call1", "mob/elder_warden/call2"], "distant, calm, deep dragon call with a warm tail, 3 s"),
+    "entity.lumen_heart.pulse": ("A Lumen Heart pulses", ["mob/lumen_heart/pulse"], "soft crystal throb, teal, 1 s"),
+    "entity.lumen_heart.break": ("A Lumen Heart shatters", ["mob/lumen_heart/break"], "crystal cluster shatter with a falling sparkle, 1.5 s"),
+    # 1.3 the Gap
+    "block.causeway.restore": ("A span reassembles", ["event/causeway_restore"], "stone grinding into place then a lantern chime, 3 s"),
+    "block.drift_buoy.pop": ("A buoy pops", ["block/drift_buoy_pop"], "soft hollow pop with a tiny glass ring"),
+    # 1.4 cities and navigation
+    "entity.shulker_archivist.read": ("Archivist reads", ["mob/shulker_archivist/read"], "dusty shell creak with soft glyph shimmer, 1.5 s"),
+    "entity.shulker_archivist.trade": ("Archivist trades", ["mob/shulker_archivist/trade"], "shell clack and a pleased low hum"),
+    "block.ships_bell.ring": ("A ship's bell rings", ["block/ships_bell"], "old bronze ship bell, two strikes, long ring"),
+    "event.lattice.jump": ("The Lattice hums", ["event/lattice_jump"], "gateway whoosh with a harmonic tuning-fork ring, 1.5 s"),
+    "item.tuning_fork.strike": ("Tuning fork rings", ["item/tuning_fork"], "pure metallic fork ring with a slow beat, 2 s"),
+    # 1.5 living systems
+    "event.tide_fishing.bite": ("Something tugs from the tide", ["event/tide_bite"], "glassy splash with a teal shimmer"),
+    "event.courier.deliver": ("A courier delivers", ["event/courier_deliver"], "enderman warble with a soft drop thud"),
+    "event.starfall.streak": ("A star falls", ["event/starfall_streak"], "rising chime into a long descending whistle, 3 s"),
+    "event.starfall.land": ("A star lands", ["event/starfall_land"], "crystal impact with a bright shimmer tail"),
+    "event.king_tide.rise": ("The King Tide rises", ["event/king_tide"], "vast low swell, ocean-like but made of light, 4 s"),
+    "event.eclipse.begin": ("Stillness falls", ["event/eclipse_begin"], "everything drains to one soft high tone, 4 s"),
+    "event.eclipse.end": ("Stillness lifts", ["event/eclipse_end"], "the tone opens into a soft chord, 3 s"),
+    "event.migration.calls": ("Skates call in the distance", ["event/migration_calls"], "a chorus of distant whale-like calls, 6 s"),
+    "block.tide_bell.ring": ("Tide bell rings", ["block/tide_bell"], "small teal-bronze bell, bright single strike"),
+    "block.gravity_plate.lift": ("Gravity lifts", ["block/gravity_plate"], "soft upward whoosh with a warble"),
+    "entity.lantern_moth.flutter": ("Moth flutters", ["mob/lantern_moth/flutter"], "tiny papery wing flutter"),
+    "item.mirrorfish.flop": ("Mirrorfish flops", ["mob/mirrorfish_flop"], "small glassy flop"),
+    # 1.6 the Zenith
+    "entity.leviathan.song": ("A Leviathan sings", ["mob/leviathan/song"], "a long falling whale note, huge and calm, 6 s, carries far"),
+    "entity.leviathan.ambient": ("A Leviathan rumbles", ["mob/leviathan/ambient1", "mob/leviathan/ambient2"], "deep slow sub rumble with a soft overtone"),
+    "entity.gale_harrier.screech": ("Harrier screeches", ["mob/gale_harrier/screech1", "mob/gale_harrier/screech2"], "high thin hawk screech with wind"),
+    "entity.gale_harrier.dive": ("Harrier dives", ["mob/gale_harrier/dive"], "falling whistle, 1 s"),
+    "entity.gale_harrier.hurt": ("Harrier hurts", ["mob/gale_harrier/hurt"], "short shriek"),
+    "entity.gale_harrier.death": ("Harrier dies", ["mob/gale_harrier/death"], "falling shriek into wind"),
+    "event.sky_current.enter": ("The current takes you", ["event/sky_current"], "airy rushing swell with gold shimmer, 1.5 s"),
+    "block.orrery.turn": ("The Orrery turns", ["block/orrery_turn"], "huge stone ring grinding slowly with metallic ticks, 3 s"),
+    "block.orrery.align": ("The Orrery aligns", ["block/orrery_align"], "deep resonant chord rising to a bright star chime, 5 s"),
+    # 2.0 the Undertow and the Restoration
+    "entity.tide_eel.ambient": ("Tide Eel hisses", ["mob/tide_eel/ambient1", "mob/tide_eel/ambient2"], "wet glassy hiss, slow"),
+    "entity.tide_eel.drain": ("An eel drains the bell", ["mob/tide_eel/drain"], "sucking electrical drone, 1 s"),
+    "entity.tide_eel.hurt": ("Tide Eel hurts", ["mob/tide_eel/hurt"], "sharp glassy hiss"),
+    "entity.tide_eel.death": ("Tide Eel dies", ["mob/tide_eel/death"], "long dissolving hiss"),
+    "entity.drowned_ascendant.whisper": ("An Ascendant whispers", ["mob/drowned_ascendant/whisper1", "mob/drowned_ascendant/whisper2"], "unintelligible soft whisper under water, reverberant"),
+    "entity.void_bell.creak": ("The bell creaks", ["mob/void_bell/creak1", "mob/void_bell/creak2"], "metal hull creaking under pressure"),
+    "entity.void_bell.move": ("The bell hums", ["mob/void_bell/move"], "low steady hum, loopable 2 s"),
+    "entity.void_bell.lamp": ("Bell lamp toggles", ["mob/void_bell/lamp"], "click and a soft glass ring"),
+    "event.maw.open": ("A Tide Maw opens", ["event/maw_open"], "slow spiralling swell, 4 s"),
+    "event.maw.pull": ("The Maw pulls", ["event/maw_pull"], "deep downward rush, 2 s"),
+    "block.archive_shelf.read": ("Glyphs are read aloud", ["block/archive_read"], "soft glyph shimmer with a murmured vowel, 2 s"),
+    "event.restoration.stage": ("The End grows still", ["event/restoration_stage"], "warm rising chord with distant bells, 5 s"),
+})
+
+AMBIENT.update({
+    "zenith": ("ambient/zenith_loop", ["ambient/zenith_add1", "ambient/zenith_add2"], "high clean wind, airy, bright; additions: distant Leviathan song, gold shimmer"),
+    "undertow": ("ambient/undertow_loop", ["ambient/undertow_loop_add1", "ambient/undertow_loop_add2"], "heavy muffled hum like being underwater in light; additions: distant creak, slow bubble chords"),
+})
+
+MUSIC.update({
+    "music.warden": ("music/warden", "Music disc 'Warden': solemn, ancient, low brass-like pads and a slow dragon-call melody that resolves; ~150 s"),
+    "music.ladders": ("music/ladders", "Zenith: the melody of 'Ladders to Nowhere' now climbing and resolved upward, airy bells and high pads; ~150 s"),
+    "music.undertow": ("music/undertow", "Undertow: slow low piece built from the tide's hum, muffled piano, inverted swells; ~150 s"),
+})

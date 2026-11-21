@@ -46,5 +46,13 @@ public final class WFEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<TetherPylon>> TETHER_PYLON = ENTITIES.registerEntityType("tether_pylon",
         TetherPylon::new, MobCategory.MISC, b -> b.sized(1.4f, 2.0f).clientTrackingRange(16).fireImmune().noLootTable());
 
+    // ================= Expansion 1.2: the Warden Cycle
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.warden.LumenHeart>> LUMEN_HEART = ENTITIES.registerEntityType("lumen_heart",
+        dev.worldsfall.warden.LumenHeart::new, MobCategory.MISC, b -> b.sized(2.0f, 2.0f).clientTrackingRange(16).updateInterval(Integer.MAX_VALUE)
+            .fireImmune().noLootTable());
+    public static final DeferredHolder<EntityType<?>, EntityType<dev.worldsfall.warden.ElderWarden>> ELDER_WARDEN = ENTITIES.registerEntityType("elder_warden",
+        dev.worldsfall.warden.ElderWarden::new, MobCategory.MONSTER, b -> b.sized(16.0f, 8.0f).passengerAttachments(3.0f).fireImmune()
+            .clientTrackingRange(16).noLootTable());
+
     private WFEntities() {}
 }

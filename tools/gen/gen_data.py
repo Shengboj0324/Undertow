@@ -1,5 +1,6 @@
 """Generates data: loot tables, recipes, tags, advancements, damage types, trims, jukebox song, worldgen, dimensions."""
 import json, os
+import sys
 from common import *
 
 D = os.path.join(DATA, NS)
@@ -294,7 +295,7 @@ def gen_recipes():
             stonecut(i(chain[0]), i(target))
     stonecut("minecraft:purpur_block", i("weathered_purpur"))
     # elytra upgrades (§9.7): smithing writes the data component
-    for up, mat in (("gale", i("skate_membrane")), ("still", i("mirror_shard_fragment")), ("hover", i("glow_gland"))):
+    for up, mat in ():  # superseded by expansion.data(): worldsfall:elytra_style recipes
         smithing(f"elytra_{up}_upgrade", i(f"{up}_upgrade_template"), "minecraft:elytra", mat, "minecraft:elytra",
                  {"worldsfall:elytra_upgrade": up,
                   # swaps the wing equipment asset so the upgrade is visible on the player (§9.7 visual requirement)
@@ -332,7 +333,9 @@ def gen_tags():
     fam = []
     for base, wall in FAMILIES.items():
         fam += [f"{base}_slab", f"{base}_stairs"] + ([f"{base}_wall"] if wall else [])
-    tag("block", "minecraft", "mineable/pickaxe", [i(n) for n in stone_like + fam] + [i("stillwater_cauldron")])
+    import expansion
+    tag("block", "minecraft", "mineable/pickaxe", [i(n) for n in stone_like + fam] + [i("stillwater_cauldron")]
+        + [i(n) for n in expansion.pickaxe_blocks()])
     tag("block", "minecraft", "cauldrons", [i("stillwater_cauldron")])
     tag("block", "minecraft", "mineable/axe", [i("voidroot")])
     tag("block", "minecraft", "mineable/hoe", [i("ceiling_moss"), i("lilac_tuft")])
@@ -451,7 +454,7 @@ def gen_advancements():
         if aid == "three_keys":
             criteria = {"all": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": i("spire_sigil")},
                          {"items": i("tide_sigil")}, {"items": i("under_sigil")}]}}}
-        display = {"icon": {"id": i(icon)}, "title": {"translate": f"advancements.worldsfall.{aid}.title"},
+        display = {"icon": {"id": icon if ":" in icon else i(icon)}, "title": {"translate": f"advancements.worldsfall.{aid}.title"},
                    "description": {"translate": f"advancements.worldsfall.{aid}.description"}, "frame": frame,
                    "show_toast": aid != "root", "announce_to_chat": aid != "root", "hidden": hidden}
         if aid == "root":
@@ -477,5 +480,9 @@ def gen_misc():
                                               "palette_id": f"{NS}:trim/{m}"})
 
 if __name__ == "__main__":
+    import expansion
+    ADVANCEMENTS.extend(expansion.ADVANCEMENTS)
     gen_block_loot(); gen_entity_loot(); gen_chests(); gen_recipes(); gen_tags(); gen_advancements(); gen_misc()
+    expansion.data(sys.modules[__name__])
+    expansion.block_loot(sys.modules[__name__])
     print(f"data written: {len(WRITTEN)}")

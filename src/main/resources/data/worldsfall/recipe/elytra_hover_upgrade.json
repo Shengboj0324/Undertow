@@ -1,18 +1,6 @@
 {
-  "type": "minecraft:smithing_transform",
+  "type": "worldsfall:elytra_style",
   "template": "worldsfall:hover_upgrade_template",
-  "base": "minecraft:elytra",
   "addition": "worldsfall:glow_gland",
-  "result": {
-    "id": "minecraft:elytra",
-    "components": {
-      "worldsfall:elytra_upgrade": "hover",
-      "minecraft:equippable": {
-        "slot": "chest",
-        "asset_id": "worldsfall:elytra_hover",
-        "equip_sound": "minecraft:item.armor.equip_elytra",
-        "damage_on_hurt": false
-      }
-    }
-  }
+  "style": "hover"
 }

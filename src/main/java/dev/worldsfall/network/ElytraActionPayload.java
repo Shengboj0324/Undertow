@@ -48,7 +48,7 @@ public record ElytraActionPayload(int action) implements CustomPacketPayload {
             case STILL_SECOND -> ElytraUpgrade.STILL;
             default -> ElytraUpgrade.HOVER;
         };
-        if (up != needed) {
+        if (up != needed && !(needed == ElytraUpgrade.GALE && up == ElytraUpgrade.TEMPEST)) {
             return;
         }
         int cost = switch (p.action) {

@@ -14,6 +14,7 @@ public final class WFSetup {
 
     public static void attributes(EntityAttributeCreationEvent e) {
         e.put(WFEntities.VOID_SKATE.get(), VoidSkate.createAttributes().build());
+        e.put(WFEntities.ELDER_WARDEN.get(), net.minecraft.world.entity.boss.enderdragon.EnderDragon.createAttributes().build());
         e.put(WFEntities.CHORUS_GRAZER.get(), ChorusGrazer.createAttributes().build());
         e.put(WFEntities.UNDERSIDE_LURKER.get(), UndersideLurker.createAttributes().build());
         e.put(WFEntities.HOARDER.get(), Hoarder.createAttributes().build());

@@ -53,6 +53,7 @@ public class EggCradleBlockEntity extends WFBlockEntity {
     private long lastFeed = Long.MIN_VALUE / 2;
     private final Map<UUID, Integer> feeders = new HashMap<>();
     private CompoundTag slumberingWyrm = new CompoundTag();
+    private boolean wardenborn;
 
     public EggCradleBlockEntity(BlockPos pos, BlockState state) {
         super(WFBlockEntities.EGG_CRADLE.get(), pos, state);
@@ -218,6 +219,10 @@ public class EggCradleBlockEntity extends WFBlockEntity {
                 wyrm.tame(ownerPlayer);
                 Progress.award(ownerPlayer, "warm_hands");
             }
+            wyrm.setTemperamentFromWorld(server);
+            if (wardenborn) {
+                wyrm.setLook(Wyrm.LOOK_WARDENBORN, true);
+            }
             server.addFreshEntity(wyrm);
         }
         server.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5, 60, 0.4, 0.5, 0.4, 0.12);
@@ -238,6 +243,7 @@ public class EggCradleBlockEntity extends WFBlockEntity {
     }
 
     private void reset() {
+        wardenborn = false;
         stage = Stage.EMPTY;
         progress = 0;
         glands = 0;
@@ -255,6 +261,17 @@ public class EggCradleBlockEntity extends WFBlockEntity {
         out.putLong("last_feed", lastFeed);
         out.store("feeders", Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.INT), Map.copyOf(feeders));
         out.store("slumbering", CompoundTag.CODEC, slumberingWyrm);
+        out.putBoolean("wardenborn", wardenborn);
+    }
+
+    /** A Wardenborn Seal pressed onto an egg on the cradle: the Wyrm that hatches has slate-and-gold scales. */
+    public boolean sealWardenborn() {
+        if (wardenborn || stage == Stage.EMPTY) {
+            return false;
+        }
+        wardenborn = true;
+        setChanged();
+        return true;
     }
 
     @Override
@@ -267,5 +284,6 @@ public class EggCradleBlockEntity extends WFBlockEntity {
         feeders.clear();
         in.read("feeders", Codec.unboundedMap(UUIDUtil.STRING_CODEC, Codec.INT)).ifPresent(feeders::putAll);
         slumberingWyrm = in.read("slumbering", CompoundTag.CODEC).orElseGet(CompoundTag::new);
+        wardenborn = in.getBooleanOr("wardenborn", false);
     }
 }

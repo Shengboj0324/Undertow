@@ -65,6 +65,16 @@ public class Wyrm extends ShoulderRidingEntity {
     private static final EntityDataAccessor<Boolean> SADDLED = SynchedEntityData.defineId(Wyrm.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> STAMINA = SynchedEntityData.defineId(Wyrm.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<BlockPos> SENSE = SynchedEntityData.defineId(Wyrm.class, EntityDataSerializers.BLOCK_POS);
+    /** Bit 0 Wardenborn (slate and gold), bit 1 barded, bit 2 saddlebags. */
+    private static final EntityDataAccessor<Integer> LOOK = SynchedEntityData.defineId(Wyrm.class, EntityDataSerializers.INT);
+    public static final int LOOK_WARDENBORN = 1, LOOK_BARDED = 2, LOOK_BAGS = 4;
+    /** Temperament set at hatching by the tide (expansion "The Wyrm grows a personality"). */
+    public enum Temperament { NONE, CALM, BOLD, DREAMING }
+    public static final net.minecraft.resources.Identifier BARDING_HEALTH =
+        net.minecraft.resources.Identifier.fromNamespaceAndPath(dev.worldsfall.Worldsfall.MODID, "wyrm_barding");
+    private Temperament temperament = Temperament.NONE;
+    private final net.minecraft.world.SimpleContainer bags = new net.minecraft.world.SimpleContainer(9);
+    private BlockPos roost = BlockPos.ZERO;
     public static final int PODS_FOR_DRAKE = 16;
     public static final float MAX_STAMINA = 30 * 20;
     public static final double CRUISE = 8.0 / 20.0;
@@ -97,6 +107,63 @@ public class Wyrm extends ShoulderRidingEntity {
         builder.define(SADDLED, false);
         builder.define(STAMINA, MAX_STAMINA);
         builder.define(SENSE, BlockPos.ZERO);
+        builder.define(LOOK, 0);
+    }
+
+    // ------------------------------------------------------------ personality, barding, saddlebags (expansion)
+    public int look() {
+        return entityData.get(LOOK);
+    }
+
+    public boolean hasLook(int bit) {
+        return (look() & bit) != 0;
+    }
+
+    public void setLook(int bit, boolean on) {
+        entityData.set(LOOK, on ? look() | bit : look() & ~bit);
+    }
+
+    public Temperament temperament() {
+        return temperament;
+    }
+
+    /** Sets the temperament from the tide at the moment of hatching: Low → Calm, High → Bold, an Eclipse → Dreaming. */
+    public void setTemperamentFromWorld(ServerLevel level) {
+        if (dev.worldsfall.life.WorldEvents.current(level.getServer()) == dev.worldsfall.life.WorldEvents.ECLIPSE) {
+            temperament = Temperament.DREAMING;
+        } else if (Tides.appliesTo(level)) {
+            var phase = Tides.phase(level);
+            temperament = phase == dev.worldsfall.world.tide.TideCycle.Phase.HIGH || phase == dev.worldsfall.world.tide.TideCycle.Phase.RISING
+                ? Temperament.BOLD : Temperament.CALM;
+        } else {
+            temperament = Temperament.CALM;
+        }
+    }
+
+    public float maxStamina() {
+        return temperament == Temperament.BOLD ? MAX_STAMINA + 10 * 20 : MAX_STAMINA;
+    }
+
+    public BlockPos roost() {
+        return roost;
+    }
+
+    public void setRoost(BlockPos pos) {
+        roost = pos.immutable();
+    }
+
+    private void applyBarding() {
+        var attr = getAttribute(Attributes.MAX_HEALTH);
+        if (attr == null) {
+            return;
+        }
+        boolean on = hasLook(LOOK_BARDED) && stage() == Stage.DRAKE;
+        if (on && attr.getModifier(BARDING_HEALTH) == null) {
+            attr.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(BARDING_HEALTH, 1.0,
+                net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        } else if (!on && attr.getModifier(BARDING_HEALTH) != null) {
+            attr.removeModifier(BARDING_HEALTH);
+        }
     }
 
     @Override
@@ -131,7 +198,8 @@ public class Wyrm extends ShoulderRidingEntity {
         if (attr != null) {
             attr.setBaseValue(hp);
         }
-        setHealth((float) hp);
+        applyBarding();
+        setHealth(getMaxHealth());
         refreshDimensions();
     }
 
@@ -211,6 +279,32 @@ public class Wyrm extends ShoulderRidingEntity {
             }
             return InteractionResult.SUCCESS;
         }
+        if (stack.is(WFItems.WYRM_BARDING.get()) && stage() == Stage.DRAKE && !hasLook(LOOK_BARDED)) {
+            if (!level().isClientSide()) {
+                stack.consume(1, player);
+                setLook(LOOK_BARDED, true);
+                applyBarding();
+                heal(getMaxHealth());
+                playSound(net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_NETHERITE.value(), 1.0f, 0.9f);
+            }
+            return InteractionResult.SUCCESS;
+        }
+        if (stack.getItem() instanceof dev.worldsfall.item.ShulkerSatchelItem && stage() == Stage.DRAKE && isSaddled() && !hasLook(LOOK_BAGS)) {
+            if (!level().isClientSide()) {
+                stack.consume(1, player);
+                setLook(LOOK_BAGS, true);
+                playSound(WFSounds.ITEM_SATCHEL_CLOSE.get(), 1.0f, 1.0f);
+            }
+            return InteractionResult.SUCCESS;
+        }
+        if (hasLook(LOOK_BAGS) && stack.isEmpty() && player.isSecondaryUseActive()) {
+            if (player instanceof ServerPlayer sp) {
+                sp.openMenu(new net.minecraft.world.SimpleMenuProvider((id, inv, pl) -> new net.minecraft.world.inventory.ChestMenu(
+                    net.minecraft.world.inventory.MenuType.GENERIC_9x1, id, inv, bags, 1), getDisplayName()));
+                playSound(WFSounds.ITEM_SATCHEL_OPEN.get(), 1.0f, 1.0f);
+            }
+            return InteractionResult.SUCCESS;
+        }
         if (stage() == Stage.DRAKE && isSaddled() && stack.isEmpty() && !player.isSecondaryUseActive()) {
             if (!level().isClientSide()) {
                 player.startRiding(this);
@@ -249,8 +343,8 @@ public class Wyrm extends ShoulderRidingEntity {
                 fetch(level, p);
             }
         }
-        if (!isVehicle() && stamina() < MAX_STAMINA && onGround()) {
-            entityData.set(STAMINA, Math.min(MAX_STAMINA, stamina() + 2));
+        if (!isVehicle() && stamina() < maxStamina() && onGround()) {
+            entityData.set(STAMINA, Math.min(maxStamina(), stamina() + 2));
         }
     }
 
@@ -278,8 +372,10 @@ public class Wyrm extends ShoulderRidingEntity {
             return;
         }
         if (tickCount % 40 == 0) {
-            BlockPos found = level.findNearestMapStructure(WFTags.Structures.DRIFTWRECKS, blockPosition(), 4, false);
-            entityData.set(SENSE, found != null && found.closerThan(blockPosition(), 64) ? found : BlockPos.ZERO);
+            var target = temperament == Temperament.DREAMING ? WFTags.Structures.LORE : WFTags.Structures.DRIFTWRECKS;
+            int range = temperament == Temperament.DREAMING ? 128 : 64;
+            BlockPos found = level.findNearestMapStructure(target, blockPosition(), range / 16, false);
+            entityData.set(SENSE, found != null && found.closerThan(blockPosition(), range) ? found : BlockPos.ZERO);
         }
         if (!senseTarget().equals(BlockPos.ZERO)) {
             getLookControl().setLookAt(Vec3.atCenterOf(senseTarget()));
@@ -289,7 +385,8 @@ public class Wyrm extends ShoulderRidingEntity {
     /** Fetch (§10.3): dive to retrieve one item stack that fell off an island within the last 5 seconds. */
     private void fetch(ServerLevel level, Player owner) {
         if (fetching == null && tickCount % 10 == 0) {
-            List<ItemEntity> falling = level.getEntitiesOfClass(ItemEntity.class, owner.getBoundingBox().inflate(12, 24, 12),
+            double reach = temperament == Temperament.CALM ? 2.0 : 1.0;
+            List<ItemEntity> falling = level.getEntitiesOfClass(ItemEntity.class, owner.getBoundingBox().inflate(12 * reach, 24 * reach, 12 * reach),
                 e -> e.getAge() < 100 && e.getDeltaMovement().y < -0.3 && e.getY() < owner.getY() - 3);
             if (!falling.isEmpty()) {
                 fetching = falling.get(0);
@@ -427,6 +524,10 @@ public class Wyrm extends ShoulderRidingEntity {
         out.putLong("growth", growthTicks);
         out.putInt("pods", podsFed);
         out.putBoolean("saddled", isSaddled());
+        out.putInt("look", look());
+        out.putString("temperament", temperament.name());
+        out.putLong("roost", roost.asLong());
+        net.minecraft.world.ContainerHelper.saveAllItems(out.child("bags"), bags.getItems());
     }
 
     @Override
@@ -436,7 +537,24 @@ public class Wyrm extends ShoulderRidingEntity {
         growthTicks = in.getLongOr("growth", 0);
         podsFed = in.getIntOr("pods", 0);
         entityData.set(SADDLED, in.getBooleanOr("saddled", false));
+        entityData.set(LOOK, in.getIntOr("look", 0));
+        try {
+            temperament = Temperament.valueOf(in.getStringOr("temperament", "NONE"));
+        } catch (IllegalArgumentException e) {
+            temperament = Temperament.NONE;
+        }
+        roost = BlockPos.of(in.getLongOr("roost", 0L));
+        in.child("bags").ifPresent(c -> net.minecraft.world.ContainerHelper.loadAllItems(c, bags.getItems()));
         refreshDimensions();
+        applyBarding();
+    }
+
+    @Override
+    protected void dropEquipment(ServerLevel level) {
+        super.dropEquipment(level);
+        for (ItemStack s : bags.removeAllItems()) {
+            spawnAtLocation(level, s);
+        }
     }
 
     public void debugSetStage(Stage stage) {

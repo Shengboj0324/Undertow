@@ -2,6 +2,7 @@ package dev.worldsfall.client.fx;
 
 import dev.worldsfall.config.WFConfig;
 import dev.worldsfall.registry.WFParticles;
+import dev.worldsfall.world.sundering.SunderingData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -27,9 +28,67 @@ public final class SunderingFx {
         start = mc.level != null ? mc.level.getGameTime() : 0;
     }
 
+    private static BlockPos previewDescent;
+    private static long previewStart = -1;
+    private static int previewStage;
+    private static long pulseStart = -1;
+
+    /**
+     * Wardensong hairline cracks (first dragon fight): sparse sparks along the exact paths the Sundering will open,
+     * stage 1 at half health (half the cracks, short), stage 2 at a quarter (all cracks, full length). No blocks change.
+     */
+    public static void preview(BlockPos d, int stage) {
+        previewDescent = d;
+        previewStage = Math.max(previewStage, stage);
+        Minecraft mc = Minecraft.getInstance();
+        previewStart = mc.level != null ? mc.level.getGameTime() : 0;
+    }
+
+    /** The cracks pulse once with the dragon's breathing (last perch below 15 %). */
+    public static void pulse(BlockPos d) {
+        previewDescent = d;
+        Minecraft mc = Minecraft.getInstance();
+        pulseStart = mc.level != null ? mc.level.getGameTime() : 0;
+    }
+
+    private static void tickPreview(ClientLevel level) {
+        if (previewDescent == null || previewStage == 0) {
+            return;
+        }
+        long now = level.getGameTime();
+        boolean pulsing = pulseStart >= 0 && now - pulseStart < 30;
+        boolean fresh = previewStart >= 0 && now - previewStart < 200;
+        if (!pulsing && !fresh && now % 4 != 0) {
+            return; // after the first spread, cracks glow faintly for the rest of the fight
+        }
+        boolean reduced = WFConfig.get(WFConfig.CLIENT.reducedFlashing, false);
+        int cracks = previewStage == 1 ? 4 : 8;
+        double reachK = previewStage == 1 ? 0.55 : 1.0;
+        double baseAngle = Math.atan2(previewDescent.getZ(), previewDescent.getX());
+        for (int c = 0; c < cracks; c++) {
+            double ang = baseAngle + c * Math.PI / 4 + Math.sin(c * 3.1) * 0.15;
+            double reach = (c == 0 ? Math.hypot(previewDescent.getX(), previewDescent.getZ()) : 55 + (c * 13) % 25) * reachK;
+            int n = pulsing && !reduced ? 4 : 1;
+            for (int s = 0; s < n; s++) {
+                double r = reach * level.getRandom().nextDouble();
+                double wobble = Math.sin(r * 0.35 + c) * 2.2;
+                double x = Math.cos(ang) * r - Math.sin(ang) * wobble;
+                double z = Math.sin(ang) * r + Math.cos(ang) * wobble;
+                int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, (int) x, (int) z);
+                level.addParticle(WFParticles.SHARD_SPARK.get(), x, y + 0.05, z, 0, pulsing ? 0.05 : 0.008, 0);
+            }
+        }
+    }
+
     public static void tick(ClientTickEvent.Post e) {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
+        if (level != null) {
+            if (SunderingData.isSunderedClient(level)) {
+                previewStage = 0;
+            }
+            tickPreview(level);
+        }
         if (start < 0 || level == null || descent == null) {
             return;
         }

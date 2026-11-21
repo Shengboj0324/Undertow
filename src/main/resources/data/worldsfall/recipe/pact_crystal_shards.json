@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:end_crystal",
+    "worldsfall:pact_glyph_shards"
+  ],
+  "result": {
+    "id": "worldsfall:pact_crystal_shards"
+  }
+}

@@ -106,12 +106,13 @@ public final class ClientEvents {
         }
         Vec3 v = p.getDeltaMovement();
         switch (up) {
-            case GALE -> {
+            case GALE, TEMPEST -> {
                 if (in.jump() && !lastJump) {
                     if (jumpTapTimer > 0 && galeCooldown == 0) {
                         Vec3 look = p.getLookAngle();
-                        p.setDeltaMovement(v.add(look.scale(0.55)));
-                        galeCooldown = 160;
+                        boolean tempest = up == ElytraUpgrade.TEMPEST;
+                        p.setDeltaMovement(v.add(look.scale(tempest ? 0.8 : 0.55)));
+                        galeCooldown = tempest ? 100 : 160;
                         ClientPacketDistributor.sendToServer(new ElytraActionPayload(ElytraActionPayload.GALE));
                     }
                     jumpTapTimer = 7;

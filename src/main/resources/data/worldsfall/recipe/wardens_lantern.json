@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "D": "worldsfall:dragon_scale",
+    "L": "worldsfall:spire_lantern"
+  },
+  "pattern": [
+    " D ",
+    "DLD",
+    " D "
+  ],
+  "result": {
+    "id": "worldsfall:wardens_lantern"
+  }
+}

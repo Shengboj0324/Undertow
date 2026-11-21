@@ -14,10 +14,12 @@ public final class WFNetwork {
     private WFNetwork() {}
 
     public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar r = event.registrar("2");
+        PayloadRegistrar r = event.registrar("3");
         r.playToClient(TideSyncPayload.TYPE, TideSyncPayload.STREAM_CODEC, TideSyncPayload::handle);
         r.playToClient(SunderingFxPayload.TYPE, SunderingFxPayload.STREAM_CODEC, SunderingFxPayload::handle);
         r.playToClient(SunderingStatePayload.TYPE, SunderingStatePayload.STREAM_CODEC, SunderingStatePayload::handle);
+        r.playToClient(RestorationPayload.TYPE, RestorationPayload.STREAM_CODEC, RestorationPayload::handle);
+        r.playToClient(WardenFxPayload.TYPE, WardenFxPayload.STREAM_CODEC, WardenFxPayload::handle);
         r.playToClient(VoidLensPayload.TYPE, VoidLensPayload.STREAM_CODEC, VoidLensPayload::handle);
         r.playToClient(EchoTabletPayload.TYPE, EchoTabletPayload.STREAM_CODEC, EchoTabletPayload::handle);
         r.playToServer(SkateDismountPayload.TYPE, SkateDismountPayload.STREAM_CODEC, SkateDismountPayload::handle);
@@ -51,7 +53,19 @@ public final class WFNetwork {
         sendToAll(server, tidePayload(server));
     }
 
+    public static RestorationPayload restorationPayload(MinecraftServer server) {
+        var data = dev.worldsfall.restoration.RestorationData.get(server);
+        return new RestorationPayload(dev.worldsfall.restoration.RestorationEffects.stage(server),
+            (float) dev.worldsfall.restoration.Restoration.fraction(server), dev.worldsfall.zenith.Orreries.stars(server),
+            dev.worldsfall.life.WorldEvents.current(server), dev.worldsfall.life.WorldEvents.currentStart(server));
+    }
+
+    public static void syncRestorationToAll(MinecraftServer server) {
+        sendToAll(server, restorationPayload(server));
+    }
+
     public static void syncPlayer(ServerPlayer player) {
+        send(player, restorationPayload(player.level().getServer()));
         send(player, tidePayload(player.level().getServer()));
         send(player, new SunderingStatePayload(SunderingData.get(player.level().getServer()).done()));
     }

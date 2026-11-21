@@ -1,18 +1,6 @@
 {
-  "type": "minecraft:smithing_transform",
+  "type": "worldsfall:elytra_style",
   "template": "worldsfall:gale_upgrade_template",
-  "base": "minecraft:elytra",
   "addition": "worldsfall:skate_membrane",
-  "result": {
-    "id": "minecraft:elytra",
-    "components": {
-      "worldsfall:elytra_upgrade": "gale",
-      "minecraft:equippable": {
-        "slot": "chest",
-        "asset_id": "worldsfall:elytra_gale",
-        "equip_sound": "minecraft:item.armor.equip_elytra",
-        "damage_on_hurt": false
-      }
-    }
-  }
+  "style": "gale"
 }

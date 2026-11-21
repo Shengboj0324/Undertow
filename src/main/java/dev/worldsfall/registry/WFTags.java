@@ -64,5 +64,7 @@ public final class WFTags {
     public static final class Structures {
         public static final TagKey<Structure> DRIFTWRECKS = TagKey.create(Registries.STRUCTURE, id("driftwrecks"));
         public static final TagKey<Structure> FALLEN_SPIRES = TagKey.create(Registries.STRUCTURE, id("fallen_spires"));
+        /** Where lore lies: Fallen Spires (Echo Tablets) and Sunken Archives (Codices); what a Dreaming Wyrm senses. */
+        public static final TagKey<Structure> LORE = TagKey.create(Registries.STRUCTURE, id("lore"));
     }
 }

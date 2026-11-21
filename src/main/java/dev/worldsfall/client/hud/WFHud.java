@@ -29,7 +29,6 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
  * Stillwater underwater vignette) that can be switched off (§17.4).
  */
 public final class WFHud {
-    private static int tabletIndex;
     private static long tabletStart = -1;
     private static final String GLYPHS = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ";
 
@@ -47,8 +46,17 @@ public final class WFHud {
         return Identifier.fromNamespaceAndPath(Worldsfall.MODID, path);
     }
 
+    private static String lineKey = "tablet.worldsfall.0";
+    private static int lineColor = 0xE9DEFF;
+
     public static void showTablet(int index) {
-        tabletIndex = index;
+        showLine("tablet.worldsfall." + index, 0xE9DEFF);
+    }
+
+    /** A glyph line that resolves into readable text (Echo Tablets, the Wardensong, Archive Codices). */
+    public static void showLine(String key, int rgb) {
+        lineKey = key;
+        lineColor = rgb;
         tabletStart = System.currentTimeMillis();
     }
 
@@ -133,7 +141,7 @@ public final class WFHud {
             tabletStart = -1;
             return;
         }
-        String text = Component.translatable("tablet.worldsfall." + tabletIndex).getString();
+        String text = Component.translatable(lineKey).getString();
         boolean animate = WFConfig.get(WFConfig.CLIENT.glyphAnimation, true);
         float resolve = animate ? Mth.clamp(age / 1000f, 0, 1) : 1f;
         StringBuilder sb = new StringBuilder();
@@ -149,7 +157,8 @@ public final class WFHud {
         float alpha = age < 300 ? age / 300f : age > 6500 ? Math.max(0, 1 - (age - 6500) / 1000f) : 1f;
         Font font = mc.font;
         int y = g.guiHeight() / 2 + 34;
-        g.centeredText(font, Component.literal(sb.toString()), g.guiWidth() / 2, y, ARGB.color((int) (255 * alpha), 233, 222, 255));
+        g.centeredText(font, Component.literal(sb.toString()), g.guiWidth() / 2, y,
+            ARGB.color((int) (255 * alpha), (lineColor >> 16) & 255, (lineColor >> 8) & 255, lineColor & 255));
     }
 
     // ------------------------------------------------------------------ screen-edge effects

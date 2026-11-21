@@ -67,6 +67,7 @@ public final class WorldsfallClient {
         NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent.AfterTranslucentBlocks e) -> TidePlaneRenderer.afterTranslucent(e));
         NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent.AfterLevel e) -> TidePlaneRenderer.afterLevel(e));
         NeoForge.EVENT_BUS.addListener(SunderingFx::tick);
+        dev.worldsfall.client.expansion.ExpansionClient.init(modBus);
         RiderInput.clientProvider = p -> p instanceof LocalPlayer lp ? lp.input.keyPresses : net.minecraft.world.entity.player.Input.EMPTY;
         ClientBridge.sunderingFx = SunderingFx::start;
         ClientBridge.echoTablet = WFHud::showTablet;

@@ -26,6 +26,13 @@ public final class WFParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SHARD_SPARK = simple("shard_spark");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> TIDEWISP_TRAIL = simple("tidewisp_trail");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SHELL_FRAGMENT = simple("shell_fragment");
+    // expansion 1.2–2.0
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> WARDENSONG_GLYPH = simple("wardensong_glyph");
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SKY_CURRENT = simple("sky_current");
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> DOWNDRAFT_DUST = simple("downdraft_dust");
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> STARFALL_SPARK = simple("starfall_spark");
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> MAW_SWIRL = simple("maw_swirl");
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ECLIPSE_MOTE = simple("eclipse_mote");
 
     private WFParticles() {}
 

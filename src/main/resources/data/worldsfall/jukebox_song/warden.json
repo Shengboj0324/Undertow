@@ -1,0 +1,8 @@
+{
+  "comparator_output": 14,
+  "description": {
+    "translate": "jukebox_song.worldsfall.warden"
+  },
+  "length_in_seconds": 150.0,
+  "sound_event": "worldsfall:music_disc.warden"
+}
